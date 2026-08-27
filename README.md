@@ -55,3 +55,27 @@ npm run build                 # yayına hazırlık
   bu not açıkça yazılır.
 - **İkonlar:** `<x-ui.icon>` bileşeni kullanılır — `<x-icon>` adı Filament'in
   getirdiği `blade-ui-kit` paketine aittir, çakışır.
+
+## Bu projede tökezlenen tuzaklar
+
+Hepsi bir testle kapatıldı; yine de bilerek dolaşmakta fayda var.
+
+| Tuzak | Belirti | Koruma |
+| --- | --- | --- |
+| Blade yorumu içine `@php`/`@endphp` yazmak | Yorumlar ham PHP blokları çözüldükten **sonra** silinir; aradaki HTML PHP'nin içine yutulur, sayfa 500 verir | `BladeCompilationTest` her şablonu derleyip söz dizimini denetler |
+| Aynı dil dosyasında yinelenen anahtar | PHP hata vermez, sessizce sonuncuyu kullanır (site başlığı "Marka" oldu) | `TranslationTest` |
+| Kalıcı önbelleğe Eloquent nesnesi yazmak | `CACHE_STORE=database` iken geri okununca `__PHP_Incomplete_Class`, ikinci istekten sonra her sayfa 500 | `CurrencyTest::test_pages_still_render_with_a_persistent_cache_store` |
+| Markdown mail bileşenli şablonu `view:` ile vermek | "No hint path defined for [mail]" — e-posta hiç gitmez, hata `try/catch` içinde kaybolur | `OrderMailTest` + gönderim sonucu sipariş geçmişine yazılır |
+| Filament'te JSON sütunu `formatStateUsing` ile basmak | Değer her dil için bir kez tekrarlar ("Ergene Raf, Ergene Raf, …") | `state()` kullanılır |
+| `Vite::fonts()` çağrısını unutmak | `@font-face` üretilir ama sayfaya bağlanmaz, metin sistem fontuna düşer | Düzende çağrılıyor |
+| `.reveal { opacity: 0 }` | JS çalışmazsa sayfanın büyük bölümü görünmez | Gizleme `.js` sınıfına bağlandı |
+
+## Doğrulama
+
+```bash
+php artisan test          # birim + özellik testleri
+php tools/smoke.php       # gerçek veritabanıyla 69 adres, 4 dil
+```
+
+`tools/smoke.php` yalnızca durum koduna bakmaz; yanıt gövdesinde PHP uyarısı,
+yığın izi ve çevrilmemiş dil anahtarı arar.
