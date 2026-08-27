@@ -1,2 +1,13 @@
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /admin
+Disallow: /sepet
+Disallow: /odeme
+Disallow: /hesabim
+Disallow: /cart
+Disallow: /checkout
+Disallow: /account
+Disallow: /karsilastir
+Disallow: /favorilerim
+
+Sitemap: https://sevkurmobilya.com/sitemap.xml

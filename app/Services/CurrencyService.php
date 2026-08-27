@@ -21,6 +21,9 @@ class CurrencyService
 
     private const CACHE_KEY = 'sevkur.currencies';
 
+    /** Bulgar Levasi'nin euroya sabit kuru (para kurulu, 1 EUR = 1.95583 BGN). */
+    private const EUR_BGN_PEG = 1.95583;
+
     /** @var array<string, Currency>|null */
     private ?array $currencies = null;
 
@@ -142,6 +145,13 @@ class CurrencyService
                 if ($code !== '' && $selling > 0) {
                     $tryPerUnit[$code] = $selling / $unit;
                 }
+            }
+
+            // TCMB Bulgar Levasi yayinlamiyor. Leva 1999'dan beri para kurulu
+            // rejimiyle euroya SABIT kurla bagli: 1 EUR = 1.95583 BGN.
+            // Bu yuzden BGN, euro kurundan turetilir.
+            if (! isset($tryPerUnit['BGN']) && isset($tryPerUnit['EUR'])) {
+                $tryPerUnit['BGN'] = $tryPerUnit['EUR'] / self::EUR_BGN_PEG;
             }
 
             foreach (Currency::all() as $currency) {

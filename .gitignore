@@ -14,7 +14,6 @@
 /.zed
 /auth.json
 /node_modules
-/public/build
 /public/fonts-manifest.dev.json
 /public/hot
 /public/storage
@@ -26,5 +25,5 @@ Homestead.json
 Homestead.yaml
 Thumbs.db
 
-# Demo yer tutucu gorseller derleme aninda uretilebilir ama depoya girsin
-# (canliya cikarken gercek fotograflarla degistirilecek).
+# Turhost paylasimli hostingde Node.js yok: derlenmis varliklar (public/build)
+# ve demo yer tutucu gorseller (public/demo) BILEREK depoya dahildir.
