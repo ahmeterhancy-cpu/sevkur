@@ -13,8 +13,16 @@ class SettingsSeeder extends Seeder
         // yonetim panelinden gercek bilgilerle degistirilmelidir.
         Setting::putMany([
             'site_name' => 'Sevkur Mobilya',
+            // Baslik ve aciklama her dilde ayri girilebilir ("_en", "_bg", "_el").
             'site_title' => 'Sevkur Mobilya — Sade, dayanıklı, zamansız',
+            'site_title_en' => 'Sevkur Furniture — Simple, durable, timeless',
+            'site_title_bg' => 'Севкур Мебели — Прости, здрави, вечни',
+            'site_title_el' => 'Sevkur Έπιπλα — Απλά, ανθεκτικά, διαχρονικά',
+
             'site_description' => 'Oturma odasından yatak odasına, el işçiliğiyle üretilen modern mobilyalar. Türkiye geneli kurumsal kargo, güvenli ödeme.',
+            'site_description_en' => 'Handcrafted modern furniture for every room, from living room to bedroom. Nationwide delivery and secure payment.',
+            'site_description_bg' => 'Ръчно изработени модерни мебели за всяка стая — от хола до спалнята. Доставка и сигурно плащане.',
+            'site_description_el' => 'Χειροποίητα μοντέρνα έπιπλα για κάθε δωμάτιο, από το σαλόνι ως το υπνοδωμάτιο. Αποστολή και ασφαλής πληρωμή.',
             'logo' => null,
             'logo_light' => null,
             'favicon' => null,

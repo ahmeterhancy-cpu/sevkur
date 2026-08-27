@@ -69,7 +69,7 @@ class CurrencyResource extends Resource
             ->columns([
                 TextColumn::make('code')->label('Kod')->badge(),
                 TextColumn::make('name')->label('Ad')
-                    ->formatStateUsing(fn ($record) => $record->t('name', Locales::default())),
+                    ->state(fn ($record) => $record->t('name', Locales::default())),
                 TextColumn::make('rate')->label('Otomatik kur')
                     ->formatStateUsing(fn ($state) => rtrim(rtrim(number_format((float) $state, 6, ',', '.'), '0'), ',')),
                 TextColumn::make('manual_rate')->label('Manuel kur')->placeholder('—'),

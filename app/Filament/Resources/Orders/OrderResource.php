@@ -144,7 +144,7 @@ class OrderResource extends Resource
                     ->formatStateUsing(fn ($state, Order $record) => $record->customerName())
                     ->description(fn (Order $record) => $record->customer_email)
                     ->searchable(['customer_first_name', 'customer_last_name', 'customer_email']),
-                TextColumn::make('grand_total')->label('Tutar')->money('TRY')->sortable(),
+                TextColumn::make('grand_total')->label('Tutar')->formatStateUsing(fn ($state) => money_base($state))->sortable(),
                 TextColumn::make('payment_status')
                     ->label('Ödeme')->badge()
                     ->formatStateUsing(fn (string $state) => self::paymentOptions()[$state] ?? $state)

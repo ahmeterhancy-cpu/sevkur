@@ -56,7 +56,7 @@ class BrandResource extends Resource
             ->columns([
                 ImageColumn::make('logo')->label(''),
                 TextColumn::make('name')->label('Ad')
-                    ->formatStateUsing(fn ($record) => $record->t('name', Locales::default()))
+                    ->state(fn ($record) => $record->t('name', Locales::default()))
                     ->searchable(query: fn ($query, string $search) => $query->whereRaw('LOWER(name) LIKE ?', ['%'.mb_strtolower($search).'%'])),
                 TextColumn::make('products_count')->label('Ürün')->counts('products'),
                 TextColumn::make('position')->label('Sıra')->sortable(),

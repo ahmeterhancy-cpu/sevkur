@@ -10,11 +10,16 @@
         // ayarlardaki tam baslik kullanilir (marka adi iki kez tekrarlamasin).
         $siteName = setting('site_name', __('shop.brand'));
         $pageTitle = trim($__env->yieldContent('title'));
-        $documentTitle = $pageTitle !== '' ? $pageTitle.' — '.$siteName : setting('site_title', $siteName);
+        $documentTitle = $pageTitle !== '' ? $pageTitle.' — '.$siteName : setting_t('site_title', $siteName);
+
+        $pageDescription = trim($__env->yieldContent('meta_description'));
+        $documentDescription = $pageDescription !== ''
+            ? $pageDescription
+            : setting_t('site_description', __('shop.footer_about'));
     @endphp
 
     <title>{{ $documentTitle }}</title>
-    <meta name="description" content="@yield('meta_description', setting('site_description', __('shop.footer_about')))">
+    <meta name="description" content="{{ $documentDescription }}">
 
     {{-- Dil alternatifleri --}}
     @foreach (\App\Support\Locales::all() as $altLocale)
@@ -25,7 +30,7 @@
 
     <meta property="og:site_name" content="{{ $siteName }}">
     <meta property="og:title" content="{{ $documentTitle }}">
-    <meta property="og:description" content="@yield('meta_description', setting('site_description', __('shop.footer_about')))">
+    <meta property="og:description" content="{{ $documentDescription }}">
     <meta property="og:type" content="@yield('og_type', 'website')">
     <meta property="og:url" content="{{ url()->current() }}">
     @hasSection('og_image')

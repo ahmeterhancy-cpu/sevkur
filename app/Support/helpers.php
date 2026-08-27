@@ -75,6 +75,26 @@ if (! function_exists('setting')) {
     }
 }
 
+if (! function_exists('setting_t')) {
+    /**
+     * Dile gore ayar okur: once "anahtar_bg", yoksa "anahtar", o da yoksa
+     * verilen varsayilan. Site basligi/aciklamasi gibi SEO metinleri her dilde
+     * ayri girilebilsin diye.
+     */
+    function setting_t(string $key, mixed $default = null): mixed
+    {
+        $locale = current_locale();
+
+        $localised = Setting::get($key.'_'.$locale);
+
+        if (is_string($localised) && trim($localised) !== '') {
+            return $localised;
+        }
+
+        return Setting::get($key, $default);
+    }
+}
+
 if (! function_exists('money')) {
     /**
      * TRY cinsinden tutari, ziyaretcinin secili para biriminde bicimler.

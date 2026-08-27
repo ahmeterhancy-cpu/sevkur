@@ -56,8 +56,8 @@ class ShippingMethodResource extends Resource
             ->defaultSort('position')
             ->columns([
                 TextColumn::make('name')->label('Yöntem')
-                    ->formatStateUsing(fn ($record) => $record->t('name', Locales::default())),
-                TextColumn::make('price')->label('Ücret')->money('TRY'),
+                    ->state(fn ($record) => $record->t('name', Locales::default())),
+                TextColumn::make('price')->label('Ücret')->formatStateUsing(fn ($state) => money_base($state)),
                 TextColumn::make('free_over')->label('Ücretsiz sınırı')
                     ->formatStateUsing(fn ($state) => $state ? money_base($state) : '—'),
                 TextColumn::make('eta_days')->label('Gün'),

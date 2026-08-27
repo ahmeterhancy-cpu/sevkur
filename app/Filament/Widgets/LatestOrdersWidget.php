@@ -27,7 +27,7 @@ class LatestOrdersWidget extends TableWidget
                 TextColumn::make('customer_first_name')
                     ->label('Müşteri')
                     ->formatStateUsing(fn ($state, Order $record) => $record->customerName()),
-                TextColumn::make('grand_total')->label('Tutar')->money('TRY'),
+                TextColumn::make('grand_total')->label('Tutar')->formatStateUsing(fn ($state) => money_base($state)),
                 TextColumn::make('status')
                     ->label('Durum')->badge()
                     ->formatStateUsing(fn (string $state) => OrderResource::statusOptions()[$state] ?? $state)

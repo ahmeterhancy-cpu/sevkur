@@ -53,7 +53,7 @@ class PageResource extends Resource
             ->defaultSort('position')
             ->columns([
                 TextColumn::make('title')->label('Başlık')
-                    ->formatStateUsing(fn ($record) => $record->t('title', Locales::default()))
+                    ->state(fn ($record) => $record->t('title', Locales::default()))
                     ->searchable(query: fn ($query, string $search) => $query->whereRaw('LOWER(title) LIKE ?', ['%'.mb_strtolower($search).'%'])),
                 TextColumn::make('slug')->label('URL'),
                 ToggleColumn::make('show_in_footer')->label('Alt menü'),

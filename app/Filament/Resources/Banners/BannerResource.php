@@ -72,7 +72,7 @@ class BannerResource extends Resource
             ->columns([
                 ImageColumn::make('image')->label('')->width(110)->height(60),
                 TextColumn::make('title')->label('Başlık')
-                    ->formatStateUsing(fn ($record) => $record->t('title', Locales::default()) ?: '—'),
+                    ->state(fn ($record) => $record->t('title', Locales::default()) ?: '—'),
                 TextColumn::make('placement')->label('Konum')->badge()
                     ->formatStateUsing(fn (string $state) => self::placements()[$state] ?? $state),
                 TextColumn::make('position')->label('Sıra')->sortable(),

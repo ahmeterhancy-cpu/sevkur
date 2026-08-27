@@ -65,7 +65,7 @@ class PostResource extends Resource
             ->columns([
                 ImageColumn::make('cover')->label('')->square(),
                 TextColumn::make('title')->label('Başlık')
-                    ->formatStateUsing(fn ($record) => $record->t('title', Locales::default()))
+                    ->state(fn ($record) => $record->t('title', Locales::default()))
                     ->wrap()
                     ->searchable(query: fn ($query, string $search) => $query->whereRaw('LOWER(title) LIKE ?', ['%'.mb_strtolower($search).'%'])),
                 TextColumn::make('category.slug')->label('Kategori')

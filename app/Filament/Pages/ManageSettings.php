@@ -3,6 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Models\Setting;
+use App\Support\Locales;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
@@ -40,6 +41,9 @@ class ManageSettings extends Page implements HasSchemas
     /** @var array<string, mixed> */
     public ?array $data = [];
 
+    /** Dile gore ayri girilen SEO metinleri. */
+    private const LOCALISED_KEYS = ['site_title', 'site_description'];
+
     /** Sayfada yonetilen ayar anahtarlari. */
     private const KEYS = [
         'site_name', 'site_title', 'site_description', 'logo', 'logo_light', 'favicon',
@@ -56,11 +60,38 @@ class ManageSettings extends Page implements HasSchemas
     {
         $values = [];
 
-        foreach (self::KEYS as $key) {
+        foreach ($this->managedKeys() as $key) {
             $values[$key] = Setting::get($key);
         }
 
         $this->form->fill($values);
+    }
+
+    /**
+     * Varsayilan dil "site_title" anahtarini kullanir, digerleri
+     * "site_title_en" gibi son ekli anahtarlara yazilir.
+     *
+     * @return array<int, string>
+     */
+    private function managedKeys(): array
+    {
+        $keys = self::KEYS;
+
+        foreach (self::LOCALISED_KEYS as $key) {
+            foreach (Locales::all() as $locale) {
+                if ($locale !== Locales::default()) {
+                    $keys[] = $key.'_'.$locale;
+                }
+            }
+        }
+
+        return array_values(array_unique($keys));
+    }
+
+    /** Bir SEO metninin dile gore anahtar adi. */
+    private static function localisedKey(string $key, string $locale): string
+    {
+        return $locale === Locales::default() ? $key : $key.'_'.$locale;
     }
 
     public function form(Schema $schema): Schema
@@ -71,9 +102,23 @@ class ManageSettings extends Page implements HasSchemas
                     ->columnSpanFull()
                     ->tabs([
                         Tab::make('Kimlik')->schema([
-                            TextInput::make('site_name')->label('Site adı')->required(),
-                            TextInput::make('site_title')->label('Tarayıcı başlığı'),
-                            Textarea::make('site_description')->label('Site açıklaması (SEO)')->rows(2)->columnSpanFull(),
+                            TextInput::make('site_name')->label('Site adı')->required()
+                                ->helperText('Her dilde aynı kalır (marka adı).'),
+
+                            Tabs::make('SEO metinleri')
+                                ->columnSpanFull()
+                                ->tabs(array_map(
+                                    fn (string $locale) => Tab::make(strtoupper($locale))->schema([
+                                        TextInput::make(self::localisedKey('site_title', $locale))
+                                            ->label('Tarayıcı başlığı')
+                                            ->helperText('Ana sayfada ve sekmede görünür.'),
+                                        Textarea::make(self::localisedKey('site_description', $locale))
+                                            ->label('Site açıklaması (arama sonuçları)')
+                                            ->rows(2),
+                                    ]),
+                                    Locales::all()
+                                )),
+
                             FileUpload::make('logo')->label('Logo (açık zemin)')->image()->directory('marka'),
                             FileUpload::make('logo_light')->label('Logo (koyu zemin)')->image()->directory('marka'),
                             FileUpload::make('favicon')->label('Favicon')->directory('marka'),

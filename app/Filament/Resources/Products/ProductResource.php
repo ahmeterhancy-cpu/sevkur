@@ -30,6 +30,8 @@ use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use UnitEnum;
 
@@ -176,7 +178,7 @@ class ProductResource extends Resource
                 ImageColumn::make('cover')->label('')->square(),
                 TextColumn::make('name')
                     ->label('Ürün')
-                    ->formatStateUsing(fn ($record) => $record->t('name', Locales::default()))
+                    ->state(fn ($record) => $record->t('name', Locales::default()))
                     ->description(fn (Product $record) => $record->sku)
                     ->searchable(query: fn ($query, string $search) => $query
                         ->whereRaw('LOWER(name) LIKE ?', ['%'.mb_strtolower($search).'%'])
@@ -185,7 +187,7 @@ class ProductResource extends Resource
                     ->label('Kategori')
                     ->formatStateUsing(fn ($state, Product $record) => $record->category?->t('name', Locales::default()) ?? '—')
                     ->toggleable(),
-                TextColumn::make('price')->label('Fiyat')->money('TRY')->sortable(),
+                TextColumn::make('price')->label('Fiyat')->formatStateUsing(fn ($state) => money_base($state))->sortable(),
                 TextColumn::make('stock')->label('Stok')->sortable()
                     ->badge()
                     ->color(fn (Product $record) => match (true) {
@@ -219,6 +221,12 @@ class ProductResource extends Resource
                     }),
             ])
             ->toolbarActions([BulkActionGroup::make([DeleteBulkAction::make()])]);
+    }
+
+    /** Baslikta slug yerine urunun adi gorunsun. */
+    public static function getRecordTitle(?Model $record): string|Htmlable|null
+    {
+        return $record?->t('name', Locales::default());
     }
 
     public static function getPages(): array

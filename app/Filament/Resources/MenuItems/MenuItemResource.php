@@ -83,7 +83,7 @@ class MenuItemResource extends Resource
             ->defaultSort('position')
             ->columns([
                 TextColumn::make('label')->label('Etiket')
-                    ->formatStateUsing(fn ($record) => $record->t('label', Locales::default()))
+                    ->state(fn ($record) => $record->t('label', Locales::default()))
                     ->description(fn (MenuItem $record) => $record->parent?->t('label', Locales::default())),
                 TextColumn::make('type')->label('Tür')->badge(),
                 TextColumn::make('target_slug')->label('Hedef')->placeholder('—'),

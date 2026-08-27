@@ -73,7 +73,7 @@ class AttributeResource extends Resource
             ->defaultSort('position')
             ->columns([
                 TextColumn::make('name')->label('Özellik')
-                    ->formatStateUsing(fn ($record) => $record->t('name', Locales::default())),
+                    ->state(fn ($record) => $record->t('name', Locales::default())),
                 TextColumn::make('slug')->label('URL'),
                 TextColumn::make('type')->label('Tür')->badge(),
                 TextColumn::make('values_count')->label('Seçenek')->counts('values'),

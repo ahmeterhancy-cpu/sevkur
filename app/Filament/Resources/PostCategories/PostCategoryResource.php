@@ -51,7 +51,7 @@ class PostCategoryResource extends Resource
             ->defaultSort('position')
             ->columns([
                 TextColumn::make('name')->label('Ad')
-                    ->formatStateUsing(fn ($record) => $record->t('name', Locales::default())),
+                    ->state(fn ($record) => $record->t('name', Locales::default())),
                 TextColumn::make('slug')->label('URL'),
                 TextColumn::make('posts_count')->label('Yazı')->counts('posts'),
                 ToggleColumn::make('is_active')->label('Yayında'),

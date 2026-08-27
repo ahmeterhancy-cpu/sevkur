@@ -52,7 +52,7 @@ class FaqResource extends Resource
             ->defaultSort('position')
             ->columns([
                 TextColumn::make('question')->label('Soru')
-                    ->formatStateUsing(fn ($record) => $record->t('question', Locales::default()))->wrap(),
+                    ->state(fn ($record) => $record->t('question', Locales::default()))->wrap(),
                 TextColumn::make('position')->label('Sıra')->sortable(),
                 ToggleColumn::make('is_active')->label('Yayında'),
             ])

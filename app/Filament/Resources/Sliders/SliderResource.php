@@ -65,7 +65,7 @@ class SliderResource extends Resource
             ->columns([
                 ImageColumn::make('image')->label('')->width(120)->height(60),
                 TextColumn::make('title')->label('Başlık')
-                    ->formatStateUsing(fn ($record) => $record->t('title', Locales::default()) ?: '—')->wrap(),
+                    ->state(fn ($record) => $record->t('title', Locales::default()) ?: '—')->wrap(),
                 TextColumn::make('position')->label('Sıra')->sortable(),
                 ToggleColumn::make('is_active')->label('Yayında'),
             ])

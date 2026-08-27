@@ -51,7 +51,7 @@ class AnnouncementResource extends Resource
             ->defaultSort('position')
             ->columns([
                 TextColumn::make('text')->label('Metin')
-                    ->formatStateUsing(fn ($record) => $record->t('text', Locales::default()))->wrap(),
+                    ->state(fn ($record) => $record->t('text', Locales::default()))->wrap(),
                 TextColumn::make('position')->label('Sıra')->sortable(),
                 ToggleColumn::make('is_active')->label('Yayında'),
             ])
