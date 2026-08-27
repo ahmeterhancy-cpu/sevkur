@@ -88,14 +88,32 @@ class CurrencyTest extends ShopTestCase
     {
         $service = app(CurrencyService::class);
 
+        // Bulgarca da euro gosterir; leva vitrinden kaldirildi
         app()->setLocale('bg');
-        $this->assertSame('BGN', $service->current()->code);
+        $this->assertSame('EUR', $service->current()->code);
 
         app()->setLocale('el');
         $this->assertSame('EUR', $service->current()->code);
 
         app()->setLocale('tr');
         $this->assertSame('TRY', $service->current()->code);
+    }
+
+    public function test_the_bulgarian_lev_is_gone_everywhere(): void
+    {
+        // Bulgaristan euroya gecti. Leva'nin geri sizmamasi icin:
+        // ne para birimi listesinde, ne bir dilin varsayilaninda,
+        // ne de secicide gorunmeli.
+        $this->assertNull(Currency::where('code', 'BGN')->first());
+
+        foreach (config('shop.locales') as $locale => $config) {
+            $this->assertNotSame('BGN', $config['currency'], "$locale hala leva kullaniyor.");
+        }
+
+        $this->get(localized_route('home', [], 'bg'))
+            ->assertSuccessful()
+            ->assertDontSee('лв.', false)
+            ->assertDontSee('BGN', false);
     }
 
     public function test_orders_are_always_stored_in_try_regardless_of_display_currency(): void

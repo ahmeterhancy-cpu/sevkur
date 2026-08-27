@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Log;
  * PayTR iFrame API entegrasyonu.
  *
  * PayTR yalnizca TRY tahsil eder; siparisin grand_total alani zaten TRY'dir,
- * vitrindeki EUR/BGN gosterimi tahsilati etkilemez.
+ * vitrindeki EUR gosterimi tahsilati etkilemez.
  */
 class PayTrService
 {

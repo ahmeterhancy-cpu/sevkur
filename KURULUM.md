@@ -1,7 +1,7 @@
 # Sevkur Mobilya — Kurulum ve Yayına Alma
 
 Laravel 13 + Filament 5 üzerine kurulu, dört dilli (TR / EN / BG / EL) mobilya
-e-ticaret sitesi. Ödeme PayTR, vitrin para birimleri TRY / EUR / BGN.
+e-ticaret sitesi. Ödeme PayTR, vitrin para birimleri TRY / EUR.
 
 ---
 
@@ -129,7 +129,7 @@ cPanel → **Cron Jobs**, dakikada bir:
 
 Bu iki işi yürütür:
 
-- **09:15** — TCMB kurlarından EUR/BGN güncellemesi (`kur:guncelle`)
+- **09:15** — TCMB kurundan EUR güncellemesi (`kur:guncelle`)
 - **Saat başı** — 24 saattir ödemesi alınmayan siparişleri iptal edip stoğu
   geri yükleme
 
@@ -149,10 +149,8 @@ tutmayan istekler `400` ile reddedilir.
 ## 3. Para birimi mantığı
 
 - Bütün fiyatlar veritabanında **TRY** tutulur.
-- Vitrinde EUR ve BGN gösterilir; kurlar TCMB'nin günlük XML'inden alınır.
-- **TCMB Bulgar Levası yayınlamaz.** Leva 1999'dan beri para kurulu rejimiyle
-  euroya sabit kurla bağlıdır (1 EUR = 1,95583 BGN); BGN bu sabit üzerinden
-  euro kurundan türetilir.
+- Vitrinde EUR gösterilir; kur TCMB'nin günlük XML'inden alınır.
+- **Bulgar Levası (BGN) kaldırıldı.** Bulgarca mağaza da euro gösterir.
 - Yönetim panelinden her para birimi için **manuel kur** ve **kur marjı (%)**
   girilebilir. Manuel kur otomatik kuru ezer.
 - **Tahsilat her zaman TRY üzerinden yapılır** (PayTR başka para birimi kabul

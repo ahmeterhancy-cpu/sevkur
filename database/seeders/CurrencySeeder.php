@@ -20,10 +20,6 @@ class CurrencySeeder extends Seeder
                 'code' => 'EUR', 'symbol' => '€', 'is_base' => false, 'rate' => 0.021, 'position' => 1,
                 'name' => ['tr' => 'Euro', 'en' => 'Euro', 'bg' => 'Евро', 'el' => 'Ευρώ'],
             ],
-            [
-                'code' => 'BGN', 'symbol' => 'лв', 'is_base' => false, 'rate' => 0.041, 'position' => 2,
-                'name' => ['tr' => 'Bulgar Levası', 'en' => 'Bulgarian Lev', 'bg' => 'Български лев', 'el' => 'Βουλγαρικό λεβ'],
-            ],
         ];
 
         foreach ($rows as $row) {

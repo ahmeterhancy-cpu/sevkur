@@ -9,7 +9,7 @@ class RefreshExchangeRates extends Command
 {
     protected $signature = 'kur:guncelle';
 
-    protected $description = 'TCMB gunluk kurlarindan EUR/BGN degerlerini gunceller';
+    protected $description = 'TCMB gunluk kurlarindan EUR degerini gunceller';
 
     public function handle(CurrencyService $currencies): int
     {

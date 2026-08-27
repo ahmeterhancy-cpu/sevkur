@@ -15,7 +15,7 @@ return [
     'locales' => [
         'tr' => ['name' => 'Turkce', 'native' => 'Turkce', 'iso' => 'tr_TR', 'currency' => 'TRY', 'dir' => 'ltr'],
         'en' => ['name' => 'Ingilizce', 'native' => 'English', 'iso' => 'en_GB', 'currency' => 'EUR', 'dir' => 'ltr'],
-        'bg' => ['name' => 'Bulgarca', 'native' => 'Български', 'iso' => 'bg_BG', 'currency' => 'BGN', 'dir' => 'ltr'],
+        'bg' => ['name' => 'Bulgarca', 'native' => 'Български', 'iso' => 'bg_BG', 'currency' => 'EUR', 'dir' => 'ltr'],
         'el' => ['name' => 'Yunanca', 'native' => 'Ελληνικά', 'iso' => 'el_GR', 'currency' => 'EUR', 'dir' => 'ltr'],
     ],
 

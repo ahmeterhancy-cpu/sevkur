@@ -87,7 +87,7 @@ class ProductResource extends Resource
                         TextInput::make('price')
                             ->label('Satış fiyatı (₺)')
                             ->numeric()->required()->minValue(0)->step('0.01')
-                            ->helperText('Tüm fiyatlar TRY girilir; vitrindeki EUR/BGN karşılığı kurdan hesaplanır.'),
+                            ->helperText('Tüm fiyatlar TRY girilir; vitrindeki EUR karşılığı kurdan hesaplanır.'),
                         TextInput::make('compare_at_price')
                             ->label('Üstü çizili fiyat (₺)')
                             ->numeric()->minValue(0)->step('0.01')

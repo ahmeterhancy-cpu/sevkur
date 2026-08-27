@@ -496,7 +496,7 @@ class ContentSeeder extends Seeder
             ],
             [
                 ['tr' => 'Ödeme hangi para biriminden alınır?', 'en' => 'Which currency am I charged in?', 'bg' => 'В каква валута се таксувам?', 'el' => 'Σε ποιο νόμισμα χρεώνομαι;'],
-                ['tr' => 'Tahsilat her zaman Türk Lirası (₺) üzerinden yapılır. Euro ve Leva fiyatları TCMB kuruyla hesaplanan bilgi amaçlı gösterimlerdir.', 'en' => 'You are always charged in Turkish Lira (₺). Euro and Lev prices are indicative, converted at the Turkish Central Bank rate.', 'bg' => 'Таксуването е винаги в турски лири (₺). Цените в евро и лева са ориентировъчни.', 'el' => 'Η χρέωση γίνεται πάντα σε τουρκική λίρα (₺). Οι τιμές σε ευρώ και λεβ είναι ενδεικτικές.'],
+                ['tr' => 'Tahsilat her zaman Türk Lirası (₺) üzerinden yapılır. Euro fiyatları TCMB kuruyla hesaplanan bilgi amaçlı gösterimlerdir.', 'en' => 'You are always charged in Turkish Lira (₺). Euro prices are indicative, converted at the Turkish Central Bank rate.', 'bg' => 'Таксуването е винаги в турски лири (₺). Цените в евро са ориентировъчни, преизчислени по курса на Турската централна банка.', 'el' => 'Η χρέωση γίνεται πάντα σε τουρκική λίρα (₺). Οι τιμές σε ευρώ είναι ενδεικτικές, με βάση την ισοτιμία της Κεντρικής Τράπεζας της Τουρκίας.'],
             ],
             [
                 ['tr' => 'Ölçüye özel üretim yapıyor musunuz?', 'en' => 'Do you make custom sizes?', 'bg' => 'Изработвате ли по поръчка?', 'el' => 'Κατασκευάζετε σε ειδικές διαστάσεις;'],

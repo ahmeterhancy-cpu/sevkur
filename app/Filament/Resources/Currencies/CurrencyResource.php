@@ -39,7 +39,7 @@ class CurrencyResource extends Resource
     {
         return $schema->components([
             TextInput::make('code')->label('Kod')->required()->maxLength(3)
-                ->helperText('ISO kodu: TRY, EUR, BGN…'),
+                ->helperText('ISO kodu: TRY, EUR…'),
             TextInput::make('symbol')->label('Simge')->required()->maxLength(8),
             Translatable::text('name', 'Ad'),
             TextInput::make('rate')->label('Otomatik kur (1 ₺ = ?)')->numeric()->step('0.000001')

@@ -4,7 +4,7 @@ Dört dilli (TR / EN / BG / EL) mobilya e-ticaret sitesi ve yönetim paneli.
 
 - **Yığın:** Laravel 13, Filament 5, Tailwind 4, sıfır JS kütüphanesi
 - **Ödeme:** PayTR iFrame API (3D Secure)
-- **Para birimi:** TRY taban; EUR ve BGN vitrinde gösterilir, kurlar TCMB'den
+- **Para birimi:** TRY taban; EUR vitrinde gösterilir, kur TCMB'den
 - **Hedef ortam:** Turhost / cPanel paylaşımlı hosting
 
 Kurulum, yayına alma ve canlıya çıkış listesi için **[KURULUM.md](KURULUM.md)**.
@@ -51,8 +51,8 @@ npm run build                 # yayına hazırlık
   `/bg/magazin`, `/el/katastima`). Varsayılan dil ön ek almaz.
 - **Stok:** sipariş oluşturulurken koşullu `UPDATE … WHERE stock >= ?` ile
   düşülür; yetersizse işlem geri alınır. Ödeme başarısız olursa stok iade edilir.
-- **Tahsilat:** her zaman TRY. EUR/BGN yalnızca vitrin gösterimidir ve müşteriye
-  bu not açıkça yazılır.
+- **Tahsilat:** her zaman TRY. EUR yalnızca vitrin gösterimidir ve müşteriye
+  bu not açıkça yazılır. Bulgarca mağaza da euro gösterir — leva kaldırıldı.
 - **İkonlar:** `<x-ui.icon>` bileşeni kullanılır — `<x-icon>` adı Filament'in
   getirdiği `blade-ui-kit` paketine aittir, çakışır.
 - **Varyantlar seçenek kombinasyonudur.** Bir varyant serbest bir isim değil,
