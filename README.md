@@ -55,6 +55,19 @@ npm run build                 # yayına hazırlık
   bu not açıkça yazılır.
 - **İkonlar:** `<x-ui.icon>` bileşeni kullanılır — `<x-icon>` adı Filament'in
   getirdiği `blade-ui-kit` paketine aittir, çakışır.
+- **Varyantlar seçenek kombinasyonudur.** Bir varyant serbest bir isim değil,
+  `options` sütunundaki `{"renk": "ceviz", "olcu": "3lu"}` eşleşmesidir.
+  Eksenler (Renk, Ölçü) `attributes.is_variant` ile işaretlenir; ürünün hangi
+  eksenleri sunduğu varyantlarından türetilir, ayrı bir tabloda tutulmaz. Ad boş
+  bırakılırsa `ProductVariant::label()` dört dilde üretir ("Ceviz / 3'lü").
+  Müşterinin seçimi **sunucuda** varyanta çevrilir; tarayıcıdan gelen
+  `variant_id` yalnızca ürüne aitse kabul edilir. Varyantı olan ürün, varyant
+  seçilmeden sepete eklenemez — aksi halde stok yanlış havuzdan düşerdi.
+  Seçiciler radyo düğmesidir, JS kapalıyken de çalışır.
+- **Medya tek diskte.** `medya` diski `public/` kökünü kullanır; hem depoyla
+  gelen demo görselleri hem panelden yüklenenler oradadır. Filament tek disk
+  bildiği için ikiye bölünürse mevcut görseller panelde görünmez ve kaydetme
+  onları siler. `storage:link` gerekmez.
 
 ## Bu projede tökezlenen tuzaklar
 

@@ -77,6 +77,7 @@ return [
     'review_submitted' => 'Değerlendirmeniz alındı, onay sonrası yayınlanacak.',
     'variant' => 'Seçenek',
     'select_variant' => 'Seçenek seçin',
+    'variant_unavailable' => 'Seçtiğiniz kombinasyon şu an mevcut değil.',
     'countdown_ends' => 'Kampanyanın bitmesine',
     'days' => 'Gün',
     'hours' => 'Saat',

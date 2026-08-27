@@ -101,7 +101,7 @@
             @endif
 
             <div class="mt-5 flex items-end gap-3">
-                <span class="text-[1.75rem] font-medium leading-none">{{ money($product->price) }}</span>
+                <span class="text-[1.75rem] font-medium leading-none" data-product-price>{{ money($product->price) }}</span>
                 @if ($product->isOnSale())
                     <span class="price-old text-[1.125rem]">{{ money($product->compare_at_price) }}</span>
                 @endif
@@ -147,14 +147,65 @@
                 @csrf
                 <input type="hidden" name="product_id" value="{{ $product->id }}">
 
-                @if ($product->variants->isNotEmpty())
+                @php
+                    $axes = $product->variantAxes();
+                    // Stokta olan ilk kombinasyon acilista secili gelir; her eksenden
+                    // rastgele ilk degeri secmek var olmayan bir kombinasyon uretebilirdi.
+                    $defaultVariant = $product->variants->firstWhere(fn ($v) => $v->isInStock())
+                        ?? $product->variants->first();
+                @endphp
+
+                @if ($axes !== [])
+                    {{--
+                        Secenekler radyo dugmesi: JS kapaliyken de secilebilir ve
+                        form sunucuya secim olarak gider. JS varsa fiyat, stok ve
+                        gorsel aninda guncellenir.
+                    --}}
+                    <div class="mb-6 space-y-5" data-variant-picker
+                         data-variants="{{ json_encode($product->variantMap(), JSON_UNESCAPED_UNICODE) }}">
+                        @foreach ($axes as $axis)
+                            @php $attribute = $axis['attribute']; @endphp
+                            <fieldset>
+                                <legend class="field-label mb-2">
+                                    {{ $attribute->t('name') }}
+                                    <span class="text-muted font-normal" data-axis-value="{{ $attribute->slug }}"></span>
+                                </legend>
+
+                                <div class="flex flex-wrap gap-2">
+                                    @foreach ($axis['values'] as $value)
+                                        @php $inputId = 'secenek-'.$attribute->slug.'-'.$value->slug; @endphp
+                                        <input type="radio" class="sr-only"
+                                               name="secenek[{{ $attribute->slug }}]" value="{{ $value->slug }}"
+                                               id="{{ $inputId }}" required
+                                               @checked(($defaultVariant?->options[$attribute->slug] ?? null) === $value->slug)>
+
+                                        <label for="{{ $inputId }}"
+                                               class="variant-option {{ $attribute->type === 'color' ? 'variant-option--color' : '' }}"
+                                               title="{{ $value->t('name') }}">
+                                            @if ($attribute->type === 'color' && $value->color_hex)
+                                                <span class="variant-swatch" style="background: {{ $value->color_hex }}"></span>
+                                                <span class="sr-only">{{ $value->t('name') }}</span>
+                                            @else
+                                                {{ $value->t('name') }}
+                                            @endif
+                                        </label>
+                                    @endforeach
+                                </div>
+                            </fieldset>
+                        @endforeach
+
+                        <p class="text-[0.875rem] text-danger hidden" data-variant-unavailable>
+                            {{ __('shop.variant_unavailable') }}
+                        </p>
+                    </div>
+                @elseif ($product->variants->isNotEmpty())
                     <div class="mb-5">
                         <label class="field-label" for="variant">{{ __('shop.variant') }}</label>
                         <select name="variant_id" id="variant" class="field" required>
                             <option value="">{{ __('shop.select_variant') }}</option>
                             @foreach ($product->variants as $variant)
                                 <option value="{{ $variant->id }}" @disabled(! $variant->isInStock())>
-                                    {{ $variant->t('name') }}
+                                    {{ $variant->label() }}
                                     @if ($variant->price) — {{ money($variant->price) }} @endif
                                     @if (! $variant->isInStock()) ({{ __('shop.out_of_stock') }}) @endif
                                 </option>

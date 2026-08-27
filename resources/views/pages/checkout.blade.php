@@ -173,7 +173,7 @@
                     <div class="flex-1 min-w-0">
                         <span class="block text-[0.9375rem] truncate">{{ $item->product->t('name') }}</span>
                         @if ($item->variant)
-                            <span class="block text-[0.8125rem] text-muted">{{ $item->variant->t('name') }}</span>
+                            <span class="block text-[0.8125rem] text-muted">{{ $item->variant->label() }}</span>
                         @endif
                         <span class="block text-[0.8125rem] text-muted">{{ $item->quantity }} × {{ money($item->unit_price) }}</span>
                     </div>

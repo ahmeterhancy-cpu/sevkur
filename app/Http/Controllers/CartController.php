@@ -29,6 +29,8 @@ class CartController extends Controller
         $data = $request->validate([
             'product_id' => ['required', 'exists:products,id'],
             'variant_id' => ['nullable', 'exists:product_variants,id'],
+            'secenek' => ['nullable', 'array'],
+            'secenek.*' => ['nullable', 'string', 'max:80'],
             'quantity' => ['nullable', 'integer', 'min:1', 'max:99'],
         ]);
 
@@ -39,11 +41,52 @@ class CartController extends Controller
             $variant = null;
         }
 
-        $result = $this->cart->add($product, (int) ($data['quantity'] ?? 1), $variant);
+        // Secenekli urunlerde (Renk, Olcu…) varyant secimden cozulur.
+        // Musteri tarayicisindaki id'ye guvenilmez; eslesme sunucuda yapilir.
+        if (! $variant && ! empty($data['secenek'])) {
+            $variant = $product->findVariantByOptions($data['secenek']);
 
+            if (! $variant) {
+                return $this->addResponse($request, [
+                    'ok' => false,
+                    'reason' => 'variant_unavailable',
+                    'quantity' => 0,
+                ]);
+            }
+        }
+
+        // Varyanti olan urun varyantsiz sepete atilamaz: hangi renk/olcu
+        // oldugu belirsiz kalir, stok da yanlis havuzdan dusulurdu.
+        if (! $variant && $product->variants->isNotEmpty()) {
+            return $this->addResponse($request, [
+                'ok' => false,
+                'reason' => 'variant_required',
+                'quantity' => 0,
+            ]);
+        }
+
+        return $this->addResponse(
+            $request,
+            $this->cart->add($product, (int) ($data['quantity'] ?? 1), $variant)
+        );
+    }
+
+    /**
+     * Sepete ekleme sonucunu yanita cevirir.
+     *
+     * Hem basarili ekleme hem de erken cikislar (varyant secilmemis, secilen
+     * kombinasyon yok) ayni yerden doner ki AJAX ve normal form gonderimi
+     * arasinda davranis farki olusmasin.
+     *
+     * @param  array{ok: bool, reason: string|null, quantity: int}  $result
+     */
+    private function addResponse(Request $request, array $result)
+    {
         $message = match ($result['reason']) {
             'out_of_stock' => __('shop.out_of_stock'),
             'unavailable' => __('shop.product_unavailable'),
+            'variant_unavailable' => __('shop.variant_unavailable'),
+            'variant_required' => __('shop.select_variant'),
             'stock_capped' => __('shop.stock_capped', ['count' => $result['quantity']]),
             default => __('shop.added_to_cart'),
         };

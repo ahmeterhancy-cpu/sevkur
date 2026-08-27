@@ -181,28 +181,7 @@ class ProductSeeder extends Seeder
                 ]);
                 $product->attributeValues()->sync($ids);
 
-                // Renk varyantlari (koltuk, berjer, sandalye, kirlent)
-                if (in_array($shape, ['sofa', 'armchair', 'chair', 'cushion'], true)) {
-                    $product->variants()->delete();
-
-                    foreach ([0, 1, 2] as $variantPosition) {
-                        $variantColor = $colorSlugs[($index + $variantPosition) % count($colorSlugs)];
-                        $value = $colorValues[$variantColor] ?? null;
-
-                        if (! $value) {
-                            continue;
-                        }
-
-                        $product->variants()->create([
-                            'name' => $value->translations('name'),
-                            'sku' => $product->sku.'-'.strtoupper(substr($variantColor, 0, 3)),
-                            'price' => $variantPosition === 0 ? null : $price + ($variantPosition * 350),
-                            'stock' => 3 + (($index + $variantPosition * 4) % 12),
-                            'options' => ['renk' => $variantColor],
-                            'position' => $variantPosition,
-                        ]);
-                    }
-                }
+                $this->seedVariants($product, $shape, $index, $price, $colorSlugs);
 
                 $index++;
             }
@@ -210,6 +189,75 @@ class ProductSeeder extends Seeder
 
         $this->linkRelated();
     }
+
+    /**
+     * Urun tipine gore renk ve/veya olcu eksenlerinden varyant uretir.
+     *
+     * Iki eksen varsa TUM kombinasyonlar acilir (3 renk x 3 olcu = 9 varyant);
+     * musteri once rengi, sonra olcuyu secer. Varyant adi bilerek bos birakilir:
+     * ProductVariant::label() adi seceneklerden dort dilde uretir, boylece
+     * "Ceviz / 3'lu" cevirisi ayrica girilmek zorunda kalmaz.
+     *
+     * @param  array<int, string>  $colorSlugs
+     */
+    private function seedVariants(Product $product, string $shape, int $index, float $price, array $colorSlugs): void
+    {
+        $sizes = self::SIZES_BY_SHAPE[$shape] ?? [];
+        $hasColour = in_array($shape, ['sofa', 'armchair', 'chair', 'cushion'], true);
+
+        if (! $hasColour && $sizes === []) {
+            return;
+        }
+
+        $product->variants()->delete();
+
+        $colours = $hasColour
+            ? array_map(fn (int $offset) => $colorSlugs[($index + $offset) % count($colorSlugs)], [0, 1, 2])
+            : [null];
+
+        $position = 0;
+
+        foreach ($colours as $colour) {
+            foreach ($sizes ?: [null] as $sizeIndex => $size) {
+                $options = array_filter(['renk' => $colour, 'olcu' => $size]);
+
+                if ($options === []) {
+                    continue;
+                }
+
+                // Buyuk olcu daha pahali; ilk kombinasyon urun fiyatini kullanir
+                $surcharge = ($position === 0) ? null : $price + ($position * 350) + ($sizeIndex * 900);
+
+                $product->variants()->create([
+                    'name' => [],
+                    'sku' => $product->sku.'-'.strtoupper(substr(implode('', $options), 0, 6)),
+                    'price' => $surcharge,
+                    'stock' => 3 + (($index + $position * 4) % 12),
+                    'options' => $options,
+                    'position' => $position,
+                ]);
+
+                $position++;
+            }
+        }
+    }
+
+    /**
+     * Hangi urun tipi hangi olculerle satilir.
+     *
+     * Olculer tipe ozgudur: koltuk oturma sayisiyla, hali ve perde ende-boya,
+     * calisma masasi genislikle olculur.
+     *
+     * @var array<string, array<int, string>>
+     */
+    private const SIZES_BY_SHAPE = [
+        'sofa' => ['2li', '3lu', 'kose'],
+        'bed' => ['140x190', '160x200', '180x200'],
+        'rug' => ['120x180', '160x230', '200x290'],
+        'curtain' => ['140x260', '200x260'],
+        'cushion' => ['40x40', '45x45', '50x50'],
+        'desk' => ['120cm', '140cm', '160cm'],
+    ];
 
     /** Ayni kategorideki urunleri birbirine bagla. */
     private function linkRelated(): void

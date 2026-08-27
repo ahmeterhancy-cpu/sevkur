@@ -38,7 +38,7 @@
                                     {{ $item->product->t('name') }}
                                 </a>
                                 @if ($item->variant)
-                                    <span class="block text-[0.875rem] text-muted">{{ $item->variant->t('name') }}</span>
+                                    <span class="block text-[0.875rem] text-muted">{{ $item->variant->label() }}</span>
                                 @endif
                                 @if ($item->product->sku)
                                     <span class="block text-[0.8125rem] text-muted">{{ __('shop.sku') }}: {{ $item->variant?->sku ?: $item->product->sku }}</span>

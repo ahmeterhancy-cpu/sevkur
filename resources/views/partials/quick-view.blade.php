@@ -48,7 +48,7 @@
                 <select name="variant_id" class="field" required>
                     <option value="">{{ __('shop.select_variant') }}</option>
                     @foreach ($product->variants as $variant)
-                        <option value="{{ $variant->id }}" @disabled(! $variant->isInStock())>{{ $variant->t('name') }}</option>
+                        <option value="{{ $variant->id }}" @disabled(! $variant->isInStock())>{{ $variant->label() }}</option>
                     @endforeach
                 </select>
             @endif

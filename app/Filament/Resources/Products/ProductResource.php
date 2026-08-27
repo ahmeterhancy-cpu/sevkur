@@ -6,6 +6,8 @@ use App\Filament\Resources\Products\Pages\CreateProduct;
 use App\Filament\Resources\Products\Pages\EditProduct;
 use App\Filament\Resources\Products\Pages\ListProducts;
 use App\Filament\Support\Translatable;
+use App\Models\Attribute;
+use App\Models\AttributeValue;
 use App\Models\Category;
 use App\Models\Product;
 use App\Support\Locales;
@@ -135,18 +137,28 @@ class ProductResource extends Resource
                             ->label('Varyantlar')
                             ->relationship()
                             ->schema([
-                                Translatable::text('name', 'Varyant adı'),
+                                // Her varyant secenek KOMBINASYONUDUR: Renk + Ölçü gibi.
+                                // Ad bos birakilirsa seceneklerden dört dilde üretilir.
+                                ...self::variantOptionFields(),
+
                                 TextInput::make('sku')->label('Kod'),
                                 TextInput::make('price')->label('Fiyat (₺)')->numeric()
                                     ->helperText('Boşsa ürün fiyatı geçerlidir.'),
                                 TextInput::make('stock')->label('Stok')->numeric()->default(0),
                                 FileUpload::make('image')->label('Görsel')->image()->directory('urunler'),
                                 Toggle::make('is_active')->label('Aktif')->default(true),
+
+                                // Ad zorunlu DEGIL: bos birakilirsa ProductVariant::label()
+                                // adi seceneklerden dort dilde uretir.
+                                Translatable::text('name', 'Varyant adı (isteğe bağlı)', requiredDefault: false),
                             ])
+                            ->itemLabel(fn (array $state): ?string => self::variantItemLabel($state))
                             ->orderColumn('position')
                             ->columns(3)
                             ->columnSpanFull()
-                            ->defaultItems(0),
+                            ->defaultItems(0)
+                            ->helperText('Seçenekleri boş bırakırsanız varyant tek başına satılır. '
+                                .'Renk ve Ölçü seçerseniz müşteri ürün sayfasında bunları seçebilir.'),
 
                         Select::make('related')
                             ->label('Benzer ürünler')
@@ -168,6 +180,55 @@ class ProductResource extends Resource
                     ])->columns(2),
                 ]),
         ]);
+    }
+
+    /**
+     * Varyant satirindaki secenek seciciler (Renk, Ölçü…).
+     *
+     * Alanlar `is_variant` isaretli niteliklerden uretilir; yeni bir eksen
+     * eklemek icin Nitelikler ekranindan isaretlemek yeterlidir, burasi
+     * degismez.
+     *
+     * @return array<int, Select>
+     */
+    protected static function variantOptionFields(): array
+    {
+        return Attribute::with('values')
+            ->where('is_variant', true)
+            ->orderBy('position')
+            ->get()
+            ->map(fn (Attribute $attribute) => Select::make('options.'.$attribute->slug)
+                ->label($attribute->t('name', Locales::default()))
+                ->options(
+                    $attribute->values
+                        ->mapWithKeys(fn (AttributeValue $value) => [
+                            $value->slug => $value->t('name', Locales::default()),
+                        ])
+                        ->all()
+                )
+                ->searchable()
+                ->placeholder('—'))
+            ->all();
+    }
+
+    /** Katlanmis varyant satirinda gorunen baslik: "Ceviz / 3’lü". */
+    protected static function variantItemLabel(array $state): ?string
+    {
+        $name = trim((string) ($state['name'][Locales::default()] ?? ''));
+
+        if ($name !== '') {
+            return $name;
+        }
+
+        $dictionary = AttributeValue::dictionary();
+        $parts = [];
+
+        foreach (array_filter($state['options'] ?? []) as $attributeSlug => $valueSlug) {
+            $value = $dictionary[$attributeSlug][$valueSlug] ?? null;
+            $parts[] = $value ? $value->t('name', Locales::default()) : $valueSlug;
+        }
+
+        return $parts === [] ? null : implode(' / ', $parts);
     }
 
     public static function table(Table $table): Table

@@ -147,6 +147,33 @@ class TaxonomySeeder extends Seeder
                 ],
             ],
             [
+                // Olculer urun tipine gore degisir (koltuk 3'lu, hali 160x230…);
+                // hepsi tek nitelik altinda toplanir, her urun kendi alt kumesini
+                // kullanir. Magaza filtresinde gosterilmez: farkli urun tiplerinin
+                // olculeri yan yana anlamsiz olurdu.
+                'slug' => 'olcu', 'type' => 'select', 'is_variant' => true, 'is_filterable' => false,
+                'name' => ['tr' => 'Ölçü', 'en' => 'Size', 'bg' => 'Размер', 'el' => 'Μέγεθος'],
+                'values' => [
+                    ['2li', '2’li', '2-Seater', '2-местен', '2 θέσεων', null],
+                    ['3lu', '3’lü', '3-Seater', '3-местен', '3 θέσεων', null],
+                    ['kose', 'Köşe', 'Corner', 'Ъглов', 'Γωνιακό', null],
+                    ['140x190', '140×190 cm', '140×190 cm', '140×190 см', '140×190 εκ.', null],
+                    ['160x200', '160×200 cm', '160×200 cm', '160×200 см', '160×200 εκ.', null],
+                    ['180x200', '180×200 cm', '180×200 cm', '180×200 см', '180×200 εκ.', null],
+                    ['120x180', '120×180 cm', '120×180 cm', '120×180 см', '120×180 εκ.', null],
+                    ['160x230', '160×230 cm', '160×230 cm', '160×230 см', '160×230 εκ.', null],
+                    ['200x290', '200×290 cm', '200×290 cm', '200×290 см', '200×290 εκ.', null],
+                    ['140x260', '140×260 cm', '140×260 cm', '140×260 см', '140×260 εκ.', null],
+                    ['200x260', '200×260 cm', '200×260 cm', '200×260 см', '200×260 εκ.', null],
+                    ['40x40', '40×40 cm', '40×40 cm', '40×40 см', '40×40 εκ.', null],
+                    ['45x45', '45×45 cm', '45×45 cm', '45×45 см', '45×45 εκ.', null],
+                    ['50x50', '50×50 cm', '50×50 cm', '50×50 см', '50×50 εκ.', null],
+                    ['120cm', '120 cm', '120 cm', '120 см', '120 εκ.', null],
+                    ['140cm', '140 cm', '140 cm', '140 см', '140 εκ.', null],
+                    ['160cm', '160 cm', '160 cm', '160 см', '160 εκ.', null],
+                ],
+            ],
+            [
                 'slug' => 'stil', 'type' => 'select', 'is_variant' => false,
                 'name' => ['tr' => 'Stil', 'en' => 'Style', 'bg' => 'Стил', 'el' => 'Στυλ'],
                 'values' => [
@@ -163,7 +190,7 @@ class TaxonomySeeder extends Seeder
             $attribute = Attribute::updateOrCreate(['slug' => $definition['slug']], [
                 'name' => $definition['name'],
                 'type' => $definition['type'],
-                'is_filterable' => true,
+                'is_filterable' => $definition['is_filterable'] ?? true,
                 'is_variant' => $definition['is_variant'],
                 'position' => $index,
             ]);

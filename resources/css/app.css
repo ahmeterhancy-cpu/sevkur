@@ -187,6 +187,74 @@
         margin-top: 0.3rem;
     }
 
+    /* ----------------------------------------------------- varyant secenekleri */
+    /*
+     * Radyo dugmesi gorsel olarak gizlenir (sr-only), secili durum kardes
+     * secici ile etiketten okunur. Boylece JS kapaliyken de secim calisir ve
+     * klavye/ekran okuyucu dogal davranisini korur.
+     */
+    .variant-option {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 2.9rem;
+        min-height: 2.9rem;
+        padding: 0 0.95rem;
+        border: 1px solid var(--color-line);
+        border-radius: 999px;
+        font-size: 0.875rem;
+        line-height: 1;
+        cursor: pointer;
+        transition: border-color 0.18s ease, color 0.18s ease, background-color 0.18s ease;
+    }
+
+    .variant-option:hover {
+        border-color: var(--color-ink);
+    }
+
+    input:checked + .variant-option {
+        border-color: var(--color-ink);
+        background: var(--color-ink);
+        color: #ffffff;
+    }
+
+    input:focus-visible + .variant-option {
+        outline: 2px solid var(--color-brand);
+        outline-offset: 2px;
+    }
+
+    /* Renk kutucugunda zemin rengin kendisi oldugu icin dolgu degil cerceve secilir */
+    .variant-option--color {
+        min-width: 0;
+        padding: 0.28rem;
+        border-radius: 999px;
+    }
+
+    input:checked + .variant-option--color {
+        background: transparent;
+        border-color: var(--color-ink);
+        border-width: 2px;
+        padding: 0.22rem;
+    }
+
+    .variant-swatch {
+        display: block;
+        width: 2rem;
+        height: 2rem;
+        border-radius: 999px;
+        border: 1px solid rgb(0 0 0 / 0.12);
+    }
+
+    /* Stokta olmayan kombinasyon: tiklanabilir kalir, sunucu da ayrica reddeder */
+    .variant-option.is-unavailable {
+        opacity: 0.4;
+        text-decoration: line-through;
+    }
+
+    .variant-option--color.is-unavailable {
+        opacity: 0.4;
+        text-decoration: none;
+    }
     /* --------------------------------------------------------------- basliklar */
     .eyebrow {
         font-size: 0.75rem;

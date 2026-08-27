@@ -74,6 +74,7 @@ return [
     'review_submitted' => 'Thanks! Your review will appear once approved.',
     'variant' => 'Option',
     'select_variant' => 'Choose an option',
+    'variant_unavailable' => 'That combination is not available right now.',
     'countdown_ends' => 'Offer ends in',
     'days' => 'Days',
     'hours' => 'Hours',

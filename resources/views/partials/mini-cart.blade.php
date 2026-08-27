@@ -16,7 +16,7 @@
                         {{ $item->product->t('name') }}
                     </a>
                     @if ($item->variant)
-                        <span class="block text-[0.8125rem] text-muted">{{ $item->variant->t('name') }}</span>
+                        <span class="block text-[0.8125rem] text-muted">{{ $item->variant->label() }}</span>
                     @endif
                     <span class="block text-[0.875rem] text-muted mt-1">
                         {{ $item->quantity }} × {{ money($item->unit_price) }}

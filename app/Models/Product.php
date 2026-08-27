@@ -89,6 +89,80 @@ class Product extends Model
         return $this->belongsToMany(self::class, 'product_related', 'product_id', 'related_id');
     }
 
+    // ----------------------------------------------------------------- varyant
+
+    /**
+     * Varyantlarin dayandigi secenek eksenleri: Renk, Olcu gibi.
+     *
+     * Eksenler varyantlarin kendi `options` alanindan turetilir; boylece bir
+     * urune hangi seceneklerin sunuldugu ayri bir tabloda tutulmak zorunda
+     * kalmaz. Donen sira yoneticinin belirledigi sirayla ayni olur.
+     *
+     * @return array<int, array{attribute: Attribute, values: array<int, AttributeValue>}>
+     */
+    public function variantAxes(): array
+    {
+        $used = [];
+
+        foreach ($this->variants as $variant) {
+            foreach ($variant->options ?? [] as $attributeSlug => $valueSlug) {
+                $used[$attributeSlug][$valueSlug] = true;
+            }
+        }
+
+        if ($used === []) {
+            return [];
+        }
+
+        $attributes = Attribute::with('values')
+            ->whereIn('slug', array_keys($used))
+            ->orderBy('position')
+            ->get();
+
+        $axes = [];
+
+        foreach ($attributes as $attribute) {
+            $values = $attribute->values
+                ->filter(fn (AttributeValue $value) => isset($used[$attribute->slug][$value->slug]))
+                ->values()
+                ->all();
+
+            if ($values !== []) {
+                $axes[] = ['attribute' => $attribute, 'values' => $values];
+            }
+        }
+
+        return $axes;
+    }
+
+    /** Secilen seceneklere karsilik gelen varyant; yoksa null. */
+    public function findVariantByOptions(array $selection): ?ProductVariant
+    {
+        $selection = array_filter($selection, fn ($value) => $value !== null && $value !== '');
+
+        if ($selection === []) {
+            return null;
+        }
+
+        return $this->variants->first(fn (ProductVariant $variant) => $variant->matches($selection));
+    }
+
+    /**
+     * Tarayicinin fiyat/stok guncellemesi icin varyant tablosu.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function variantMap(): array
+    {
+        return $this->variants->map(fn (ProductVariant $variant) => [
+            'id' => $variant->id,
+            'options' => $variant->options ?? [],
+            'price' => $variant->effectivePrice(),
+            'price_label' => money($variant->effectivePrice()),
+            'in_stock' => $variant->isInStock(),
+            'image' => $variant->image ? media_url($variant->image) : null,
+        ])->all();
+    }
     // ------------------------------------------------------------------ kapsam
 
     public function scopeActive(Builder $query): Builder

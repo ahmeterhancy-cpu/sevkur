@@ -80,7 +80,12 @@ class OrderService
                     'unit_price' => $item->unit_price,
                     'quantity' => $item->quantity,
                     'line_total' => $item->lineTotal(),
-                    'options' => $variant ? ['variant' => $variant->t('name', $order->locale)] : null,
+                    // Siparis kalemi anlik kopyadir: varyant sonradan silinse ya da
+                    // secenekleri degisse bile musterinin aldigi sey burada kalir.
+                    'options' => $variant ? array_filter([
+                        'variant' => $variant->label($order->locale),
+                        'secenekler' => $variant->options,
+                    ]) : null,
                 ]);
             }
 

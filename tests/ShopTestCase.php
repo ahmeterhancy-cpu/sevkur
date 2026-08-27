@@ -77,13 +77,25 @@ abstract class ShopTestCase extends TestCase
                 }
             }
 
+            // Urun 5 secenekli: renk x olcu kombinasyonlari. Varyant testleri
+            // bunu kullanir, digerleri secenekvsiz kalir.
             if ($i === 5) {
-                $product->variants()->create([
-                    'name' => ['tr' => 'Ceviz', 'en' => 'Walnut'],
-                    'sku' => 'TST-0005-CEV',
-                    'stock' => 4,
-                    'position' => 0,
-                ]);
+                $position = 0;
+
+                foreach (['ceviz', 'antrasit'] as $colour) {
+                    foreach (['2li', '3lu'] as $size) {
+                        $product->variants()->create([
+                            'name' => [],
+                            'sku' => 'TST-0005-'.strtoupper(substr($colour, 0, 3)).'-'.$size,
+                            'price' => $position === 0 ? null : 5000 + ($position * 250),
+                            'stock' => $position === 3 ? 0 : 4,
+                            'options' => ['renk' => $colour, 'olcu' => $size],
+                            'position' => $position,
+                        ]);
+
+                        $position++;
+                    }
+                }
             }
         }
     }

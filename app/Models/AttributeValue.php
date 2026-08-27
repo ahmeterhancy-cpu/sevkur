@@ -21,6 +21,43 @@ class AttributeValue extends Model
         return ['name' => 'array'];
     }
 
+    /**
+     * Istek boyunca gecerli "nitelik slug -> deger slug -> deger" sozlugu.
+     *
+     * Varyant etiketleri sepette her satir icin cozuluyor; sozluk olmadan her
+     * satir ayri sorgu acardi. Seceneklerin sayisi az oldugu icin tek seferde
+     * yuklemek en ucuzu.
+     *
+     * @return array<string, array<string, AttributeValue>>
+     */
+    public static function dictionary(): array
+    {
+        if (self::$dictionary !== null) {
+            return self::$dictionary;
+        }
+
+        $dictionary = [];
+
+        foreach (self::with('attribute')->get() as $value) {
+            $attributeSlug = $value->attribute?->slug;
+
+            if ($attributeSlug !== null) {
+                $dictionary[$attributeSlug][$value->slug] = $value;
+            }
+        }
+
+        return self::$dictionary = $dictionary;
+    }
+
+    /** Testlerde ve seeder sonrasinda sozlugu tazelemek icin. */
+    public static function forgetDictionary(): void
+    {
+        self::$dictionary = null;
+    }
+
+    /** @var array<string, array<string, AttributeValue>>|null */
+    private static ?array $dictionary = null;
+
     public function attribute(): BelongsTo
     {
         return $this->belongsTo(Attribute::class);

@@ -52,14 +52,16 @@ class CheckoutTest extends ShopTestCase
 
     public function test_free_shipping_threshold_applies(): void
     {
-        $product = $this->product(5); // 5000 TL
+        // Urun 5 seceneklidir; secenekli urun varyant secilmeden sepete
+        // eklenemez. Kargo esigi icin varyantsiz urun 4 kullanilir.
+        $product = $this->product(4); // 4000 TL
         $this->postJson(localized_route('cart.add'), ['product_id' => $product->id, 'quantity' => 4]);
 
         $this->post(localized_route('checkout.store'), $this->payload())->assertRedirect();
 
         $order = Order::first();
 
-        $this->assertSame(20000.0, (float) $order->subtotal);
+        $this->assertSame(16000.0, (float) $order->subtotal);
         $this->assertSame(0.0, (float) $order->shipping_total);
     }
 

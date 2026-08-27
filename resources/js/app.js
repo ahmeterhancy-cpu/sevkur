@@ -544,6 +544,107 @@ function initFlash() {
 
 /* ---------------------------------------------------------------------- ana */
 
+/**
+ * Varyant secenekleri (Renk, Olcu…).
+ *
+ * Secim radyo dugmeleriyle yapilir, yani JS olmadan da calisir ve form
+ * sunucuya secenek olarak gider. Buradaki is yalnizca anlik geri bildirim:
+ * fiyat, stok durumu, gorsel ve "bu kombinasyon yok" uyarisi.
+ */
+function initVariantPicker() {
+    document.querySelectorAll('[data-variant-picker]').forEach((picker) => {
+        let variants = [];
+
+        try {
+            variants = JSON.parse(picker.dataset.variants || '[]');
+        } catch {
+            return;
+        }
+
+        const form = picker.closest('form');
+        const priceEl = document.querySelector('[data-product-price]');
+        const submit = form?.querySelector('button[type="submit"]');
+        const notice = picker.querySelector('[data-variant-unavailable]');
+
+        const selection = () => {
+            const chosen = {};
+
+            picker.querySelectorAll('input[type="radio"]:checked').forEach((input) => {
+                const axis = input.name.match(/secenek\[(.+)\]/);
+
+                if (axis) {
+                    chosen[axis[1]] = input.value;
+                }
+            });
+
+            return chosen;
+        };
+
+        const find = (chosen) => variants.find((variant) => {
+            const keys = Object.keys(variant.options || {});
+
+            return keys.length === Object.keys(chosen).length
+                && keys.every((key) => chosen[key] === variant.options[key]);
+        });
+
+        // Bir secenek, DIGER eksenlerdeki mevcut secimle birlikte stokta mi?
+        const markAvailability = (chosen) => {
+            picker.querySelectorAll('input[type="radio"]').forEach((input) => {
+                const axis = input.name.match(/secenek\[(.+)\]/)?.[1];
+                const label = input.nextElementSibling;
+
+                if (!axis || !label) {
+                    return;
+                }
+
+                const candidate = { ...chosen, [axis]: input.value };
+                const match = find(candidate);
+
+                label.classList.toggle('is-unavailable', !match || !match.in_stock);
+            });
+        };
+
+        const update = () => {
+            const chosen = selection();
+            const variant = find(chosen);
+
+            markAvailability(chosen);
+
+            picker.querySelectorAll('[data-axis-value]').forEach((el) => {
+                const axis = el.dataset.axisValue;
+                const input = picker.querySelector(`input[name="secenek[${axis}]"]:checked`);
+                const label = input?.nextElementSibling;
+
+                el.textContent = label ? `— ${label.title || label.textContent.trim()}` : '';
+            });
+
+            if (priceEl && variant?.price_label) {
+                priceEl.textContent = variant.price_label;
+            }
+
+            if (variant?.image) {
+                const main = document.querySelector('[data-gallery-main]');
+
+                if (main) {
+                    main.src = variant.image;
+                }
+            }
+
+            const usable = Boolean(variant && variant.in_stock);
+
+            notice?.classList.toggle('hidden', usable);
+
+            if (submit) {
+                submit.disabled = !usable;
+                submit.classList.toggle('is-disabled', !usable);
+            }
+        };
+
+        picker.addEventListener('change', update);
+        update();
+    });
+}
+
 function boot() {
     initReveal();
     initHeader();
@@ -555,6 +656,7 @@ function boot() {
     initListToggles();
     initQuickView();
     initProductGallery();
+    initVariantPicker();
     initTabs();
     initAccordions();
     initCountdowns();
