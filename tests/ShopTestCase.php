@@ -5,6 +5,7 @@ namespace Tests;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
+use App\Support\DemoPhotos;
 use Database\Seeders\ContentSeeder;
 use Database\Seeders\CurrencySeeder;
 use Database\Seeders\SettingsSeeder;
@@ -64,6 +65,17 @@ abstract class ShopTestCase extends TestCase
                 'position' => $i,
                 'published_at' => now()->subDay(),
             ]);
+
+            // Ilk urune gercek demo gorselleri baglanir: panelin gorselleri
+            // bulup bulamadigini test edebilmek icin diskte var olan bir yol lazim.
+            if ($i === 1) {
+                $photos = DemoPhotos::forShape('sofa');
+
+                if (count($photos) >= 3) {
+                    $product->update(['cover' => $photos[0], 'hover_image' => $photos[1]]);
+                    $product->images()->create(['path' => $photos[2], 'position' => 0]);
+                }
+            }
 
             if ($i === 5) {
                 $product->variants()->create([

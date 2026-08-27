@@ -9,6 +9,7 @@ use App\Models\Page;
 use App\Services\CartService;
 use App\Services\CurrencyService;
 use App\Services\FavoritesService;
+use App\Services\Import\RemoteFetcher;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -20,6 +21,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(CurrencyService::class);
         $this->app->singleton(CartService::class);
         $this->app->singleton(FavoritesService::class);
+        // Testlerin cozumleyiciyi degistirebilmesi icin tekil
+        $this->app->singleton(RemoteFetcher::class);
     }
 
     public function boot(): void

@@ -162,10 +162,8 @@ if (! function_exists('media_url')) {
             return $path;
         }
 
-        if (str_starts_with($path, 'images/') || str_starts_with($path, 'demo/')) {
-            return asset($path);
-        }
-
-        return asset('storage/'.ltrim($path, '/'));
+        // Tum medya 'medya' diskinde, yani public/ altinda durur.
+        // Eski kayitlarda kalmis 'storage/...' onekli yollar da calissin.
+        return asset(ltrim($path, '/'));
     }
 }

@@ -100,7 +100,6 @@ SSH varsa:
 ```bash
 php artisan migrate --force
 php artisan db:seed --force        # yalnızca ilk kurulumda, demo içerik ister
-php artisan storage:link
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
@@ -109,9 +108,16 @@ php artisan view:cache
 SSH yoksa cPanel → **Terminal** ya da **Setup PHP App**'in komut alanını
 kullanın.
 
-`storage:link` sembolik bağ oluşturamıyorsa (bazı paylaşımlı sunucularda
-kapalıdır) `public/storage` klasörünü elle oluşturup `storage/app/public`
-içeriğini oraya kopyalayın; yüklenen görseller oradan sunulur.
+**`storage:link` gerekmez.** Tüm medya (demo görselleri ve panelden
+yüklenenler) `public/` altında, `medya` diskinde durur — paylaşımlı
+sunucularda sembolik bağ çoğu zaman kapalı olduğu için bu yol seçildi.
+Panelden yükleme yapılabilmesi için şu klasörlerin yazılabilir (755) olması
+yeterlidir: `public/urunler`, `public/afisler`, `public/blog`, `public/marka`,
+`public/markalar`, `public/slider`, `public/kategoriler`. Yoksa panel ilk
+yüklemede kendisi oluşturur.
+
+Bu klasörler depoya dahil DEĞİLDİR; sunucudaki yüklemeler bir sonraki
+kurulumda silinmez. `public/demo` ise depoyla birlikte gelir.
 
 ### 2.5 Zamanlanmış görevler (cron)
 

@@ -47,6 +47,24 @@ return [
             'report' => false,
         ],
 
+        /*
+         * Magaza medyasi (urun gorselleri, afisler, logo).
+         *
+         * Kok DOGRUDAN public/ — boylece hem depoyla gelen demo gorselleri hem
+         * panelden yuklenenler TEK diskte olur. Filament tek disk bildigi icin
+         * ikiye bolunurse yonetici mevcut gorseli goremez ve kaydettiginde
+         * alan bos gidip gorsel silinir. Ayrica paylasimli hostingde
+         * storage:link sembolik bagina gerek kalmaz.
+         */
+        'medya' => [
+            'driver' => 'local',
+            'root' => public_path(),
+            'url' => rtrim(env('APP_URL', 'http://localhost'), '/'),
+            'visibility' => 'public',
+            'throw' => false,
+            'report' => false,
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

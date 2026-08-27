@@ -27,3 +27,12 @@ Thumbs.db
 
 # Turhost paylasimli hostingde Node.js yok: derlenmis varliklar (public/build)
 # ve demo yer tutucu gorseller (public/demo) BILEREK depoya dahildir.
+
+# Panelden yuklenen medya (depoda tutulmaz; demo gorselleri public/demo altinda kalir)
+/public/urunler/
+/public/afisler/
+/public/blog/
+/public/marka/
+/public/markalar/
+/public/slider/
+/public/kategoriler/
