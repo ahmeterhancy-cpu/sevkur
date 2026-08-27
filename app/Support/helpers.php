@@ -3,6 +3,7 @@
 use App\Models\Setting;
 use App\Services\CurrencyService;
 use App\Support\Locales;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Route;
 
 if (! function_exists('current_locale')) {
@@ -54,7 +55,7 @@ if (! function_exists('locale_switch_url')) {
 
         // Model baglamalarini yeniden rota anahtarina cevir.
         foreach ($parameters as $paramKey => $value) {
-            if ($value instanceof Illuminate\Database\Eloquent\Model) {
+            if ($value instanceof Model) {
                 $parameters[$paramKey] = $value->getRouteKey();
             }
         }

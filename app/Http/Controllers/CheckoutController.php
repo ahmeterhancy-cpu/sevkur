@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\OrderPlaced;
 use App\Models\Order;
 use App\Models\ShippingMethod;
+use App\Models\User;
 use App\Services\CartService;
 use App\Services\OrderService;
 use App\Services\PayTrService;
@@ -222,7 +224,7 @@ class CheckoutController extends Controller
                 return true;
             }
 
-            if (in_array($user->role, [\App\Models\User::ROLE_ADMIN, \App\Models\User::ROLE_STAFF], true)) {
+            if (in_array($user->role, [User::ROLE_ADMIN, User::ROLE_STAFF], true)) {
                 return true;
             }
         }
@@ -241,7 +243,7 @@ class CheckoutController extends Controller
     private function sendConfirmation(Order $order): void
     {
         try {
-            Mail::to($order->customer_email)->send(new \App\Mail\OrderPlaced($order));
+            Mail::to($order->customer_email)->send(new OrderPlaced($order));
         } catch (\Throwable $e) {
             report($e);
         }

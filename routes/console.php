@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Order;
+use App\Services\OrderService;
 use Illuminate\Support\Facades\Schedule;
 
 /*
@@ -14,12 +16,12 @@ Schedule::command('kur:guncelle')
 
 // Odemesi 24 saattir alinmayan siparisleri iptal edip stogu geri yukle.
 Schedule::call(function () {
-    $orders = App\Models\Order::where('payment_status', 'pending')
+    $orders = Order::where('payment_status', 'pending')
         ->where('status', 'pending')
         ->where('created_at', '<', now()->subDay())
         ->get();
 
     foreach ($orders as $order) {
-        app(App\Services\OrderService::class)->cancel($order, 'Odeme alinmadi (24 saat)');
+        app(OrderService::class)->cancel($order, 'Odeme alinmadi (24 saat)');
     }
 })->hourly()->name('bekleyen-siparisleri-temizle')->withoutOverlapping();

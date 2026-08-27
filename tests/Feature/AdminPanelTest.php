@@ -2,8 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Filament\Pages\ManageSettings;
+use App\Filament\Resources\Products\ProductResource;
+use App\Models\Setting;
 use App\Models\User;
 use Filament\Facades\Filament;
+use Livewire\Livewire;
 use Tests\ShopTestCase;
 
 class AdminPanelTest extends ShopTestCase
@@ -48,17 +52,17 @@ class AdminPanelTest extends ShopTestCase
     {
         $product = $this->product(1);
 
-        $this->get(\App\Filament\Resources\Products\ProductResource::getUrl('edit', ['record' => $product]))
+        $this->get(ProductResource::getUrl('edit', ['record' => $product]))
             ->assertSuccessful();
     }
 
     public function test_settings_are_persisted(): void
     {
-        \Livewire\Livewire::test(\App\Filament\Pages\ManageSettings::class)
+        Livewire::test(ManageSettings::class)
             ->fillForm(['site_name' => 'Sevkur Test'])
             ->call('save')
             ->assertHasNoFormErrors();
 
-        $this->assertSame('Sevkur Test', \App\Models\Setting::get('site_name'));
+        $this->assertSame('Sevkur Test', Setting::get('site_name'));
     }
 }

@@ -66,8 +66,8 @@ class TaxonomySeeder extends Seeder
                 'description' => [
                     'tr' => "$tr için sade çizgili, dayanıklı ve zamansız parçalar.",
                     'en' => "Simple, durable and timeless pieces for your $en.",
-                    'bg' => "Прости, здрави и вечни мебели за вашия дом.",
-                    'el' => "Απλά, ανθεκτικά και διαχρονικά κομμάτια για τον χώρο σας.",
+                    'bg' => 'Прости, здрави и вечни мебели за вашия дом.',
+                    'el' => 'Απλά, ανθεκτικά και διαχρονικά κομμάτια για τον χώρο σας.',
                 ],
                 'image' => DemoImages::category($shape, $slug),
                 'is_active' => true,

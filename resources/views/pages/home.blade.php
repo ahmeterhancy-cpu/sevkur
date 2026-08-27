@@ -186,26 +186,25 @@
     {{-- ------------------------------------------------------------- yeni gelen --}}
     @if ($newArrivals->isNotEmpty())
         <section class="bg-cream py-14 lg:py-20">
-            <div class="container-x">
+            {{-- Oklar ile ray ayni [data-rail] kabugunda olmali --}}
+            <div class="container-x" data-rail>
                 <div class="flex flex-wrap items-end justify-between gap-4 mb-8">
                     <div>
                         <span class="eyebrow">{{ __('shop.badge_new') }}</span>
                         <h2 class="section-title mt-2">{{ setting('home_new_title', 'Yeni Gelenler') }}</h2>
                     </div>
-                    <div class="flex gap-2" data-rail>
+                    <div class="flex gap-2">
                         <button type="button" data-rail-prev class="icon-btn" aria-label="{{ __('shop.back') }}"><x-ui.icon name="chevron-left" :size="18" /></button>
                         <button type="button" data-rail-next class="icon-btn" aria-label="{{ __('shop.view') }}"><x-ui.icon name="chevron-right" :size="18" /></button>
                     </div>
                 </div>
 
-                <div data-rail>
-                    <div class="rail gap-4 lg:gap-6 -mx-4 px-4" data-rail-track>
-                        @foreach ($newArrivals as $product)
-                            <div class="w-[16rem] lg:w-[19rem]">
-                                <x-product-card :product="$product" />
-                            </div>
-                        @endforeach
-                    </div>
+                <div class="rail gap-4 lg:gap-6 -mx-4 px-4" data-rail-track>
+                    @foreach ($newArrivals as $product)
+                        <div class="w-[16rem] lg:w-[19rem]">
+                            <x-product-card :product="$product" />
+                        </div>
+                    @endforeach
                 </div>
             </div>
         </section>

@@ -2,6 +2,9 @@
 
 namespace Tests;
 
+use App\Models\Brand;
+use App\Models\Category;
+use App\Models\Product;
 use Database\Seeders\ContentSeeder;
 use Database\Seeders\CurrencySeeder;
 use Database\Seeders\SettingsSeeder;
@@ -39,11 +42,11 @@ abstract class ShopTestCase extends TestCase
     /** Testler icin hafif urun kumesi (gorsel uretmez). */
     protected function seedProducts(): void
     {
-        $category = \App\Models\Category::where('slug', 'koltuk-takimlari')->firstOrFail();
-        $brand = \App\Models\Brand::first();
+        $category = Category::where('slug', 'koltuk-takimlari')->firstOrFail();
+        $brand = Brand::first();
 
         foreach (range(1, 5) as $i) {
-            $product = \App\Models\Product::create([
+            $product = Product::create([
                 'category_id' => $category->id,
                 'brand_id' => $brand?->id,
                 'name' => ['tr' => "Test Koltuk $i", 'en' => "Test Sofa $i", 'bg' => "Тест диван $i", 'el' => "Δοκιμή καναπές $i"],
@@ -73,8 +76,8 @@ abstract class ShopTestCase extends TestCase
         }
     }
 
-    protected function product(int $index = 1): \App\Models\Product
+    protected function product(int $index = 1): Product
     {
-        return \App\Models\Product::where('slug', "test-koltuk-$index")->firstOrFail();
+        return Product::where('slug', "test-koltuk-$index")->firstOrFail();
     }
 }

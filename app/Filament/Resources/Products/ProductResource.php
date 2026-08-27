@@ -6,7 +6,6 @@ use App\Filament\Resources\Products\Pages\CreateProduct;
 use App\Filament\Resources\Products\Pages\EditProduct;
 use App\Filament\Resources\Products\Pages\ListProducts;
 use App\Filament\Support\Translatable;
-use App\Models\Attribute;
 use App\Models\Category;
 use App\Models\Product;
 use App\Support\Locales;
@@ -22,7 +21,6 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
-use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
@@ -235,11 +233,5 @@ class ProductResource extends Resource
     public static function getNavigationBadge(): ?string
     {
         return (string) static::getModel()::where('is_active', true)->count();
-    }
-
-    /** Filtre panelinde kullanilan ozellik listesi. */
-    public static function filterableAttributes(): array
-    {
-        return Attribute::where('is_filterable', true)->pluck('slug')->all();
     }
 }

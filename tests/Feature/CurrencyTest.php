@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\Currency;
+use App\Models\Order;
+use App\Models\ShippingMethod;
 use App\Services\CurrencyService;
 use Tests\ShopTestCase;
 
@@ -90,12 +92,12 @@ class CurrencyTest extends ShopTestCase
             'phone' => '+90 555 111 22 33',
             'city' => 'Edirne',
             'address' => 'Sanayi Mah. No: 1',
-            'shipping_method_id' => \App\Models\ShippingMethod::where('code', 'standart')->first()->id,
+            'shipping_method_id' => ShippingMethod::where('code', 'standart')->first()->id,
             'billing_same' => 1,
             'terms' => 1,
         ]);
 
-        $order = \App\Models\Order::firstOrFail();
+        $order = Order::firstOrFail();
 
         $this->assertSame(1000.0, (float) $order->subtotal);
         $this->assertSame('EUR', $order->display_currency);

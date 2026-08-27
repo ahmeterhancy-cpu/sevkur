@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Models\Order;
+use App\Models\ShippingMethod;
 use App\Models\User;
 use Tests\ShopTestCase;
 
@@ -115,11 +117,11 @@ class AccountTest extends ShopTestCase
             'first_name' => 'Deniz', 'last_name' => 'Yılmaz',
             'email' => 'deniz@example.com', 'phone' => '1',
             'city' => 'Edirne', 'address' => 'Adres',
-            'shipping_method_id' => \App\Models\ShippingMethod::where('code', 'standart')->first()->id,
+            'shipping_method_id' => ShippingMethod::where('code', 'standart')->first()->id,
             'billing_same' => 1, 'terms' => 1,
         ]);
 
-        $order = \App\Models\Order::firstOrFail();
+        $order = Order::firstOrFail();
 
         $intruder = User::create([
             'name' => 'Davetsiz', 'email' => 'davetsiz2@example.com',

@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Attribute;
 use App\Models\AttributeValue;
 use App\Models\Brand;
 use App\Models\Category;
@@ -238,22 +237,22 @@ class ProductSeeder extends Seeder
         $m = fn (string $locale) => $material ? mb_strtolower($material->t('name', $locale)) : '';
 
         return [
-            'tr' => "Atölyemizde tek tek üretilen bu {$typeNames[0]}, ".$m('tr')." kullanılarak hazırlandı. "
+            'tr' => "Atölyemizde tek tek üretilen bu {$typeNames[0]}, ".$m('tr').' kullanılarak hazırlandı. '
                 ."Gövde bağlantıları zıvanalı geçmeyle güçlendirildi; yüzey su bazlı, kokusuz vernikle korundu.\n\n"
                 ."Ölçüler: {$dimensions}. Ürün montajlı teslim edilir; nakliye sırasında köşe koruma köpüğü ve çift katlı koli kullanılır.\n\n"
-                ."İki yıl üretim hatalarına karşı garantilidir. Nemli bezle silinerek temizlenmesi yeterlidir; çözücü içeren temizleyicilerden kaçının.",
-            'en' => "Each {$typeNames[1]} is built one at a time in our own workshop using ".$m('en').". "
+                .'İki yıl üretim hatalarına karşı garantilidir. Nemli bezle silinerek temizlenmesi yeterlidir; çözücü içeren temizleyicilerden kaçının.',
+            'en' => "Each {$typeNames[1]} is built one at a time in our own workshop using ".$m('en').'. '
                 ."Frame joints are reinforced with mortise-and-tenon work and the surface is protected with a water-based, odourless lacquer.\n\n"
                 ."Dimensions: {$dimensions}. Delivered assembled, packed with corner protection foam and double-wall cartons.\n\n"
-                ."Covered by a two-year warranty against manufacturing defects. Wipe with a damp cloth; avoid solvent-based cleaners.",
-            'bg' => "Всеки екземпляр се изработва поединично в собствената ни работилница от ".$m('bg').". "
+                .'Covered by a two-year warranty against manufacturing defects. Wipe with a damp cloth; avoid solvent-based cleaners.',
+            'bg' => 'Всеки екземпляр се изработва поединично в собствената ни работилница от '.$m('bg').'. '
                 ."Сглобките на рамката са подсилени, а повърхността е защитена с лак на водна основа без мирис.\n\n"
                 ."Размери: {$dimensions}. Доставя се сглобен, с ъглова защита и двуслоен кашон.\n\n"
-                ."Две години гаранция срещу производствени дефекти. Почиства се с влажна кърпа; избягвайте препарати с разтворители.",
-            'el' => "Κάθε κομμάτι κατασκευάζεται ξεχωριστά στο εργαστήριό μας από ".$m('el').". "
+                .'Две години гаранция срещу производствени дефекти. Почиства се с влажна кърпа; избягвайте препарати с разтворители.',
+            'el' => 'Κάθε κομμάτι κατασκευάζεται ξεχωριστά στο εργαστήριό μας από '.$m('el').'. '
                 ."Οι ενώσεις του σκελετού είναι ενισχυμένες και η επιφάνεια προστατεύεται με άοσμο βερνίκι νερού.\n\n"
                 ."Διαστάσεις: {$dimensions}. Παραδίδεται συναρμολογημένο, με προστασία γωνιών και διπλό χαρτοκιβώτιο.\n\n"
-                ."Δύο χρόνια εγγύηση για κατασκευαστικά ελαττώματα. Καθαρίζεται με υγρό πανί· αποφύγετε διαλύτες.",
+                .'Δύο χρόνια εγγύηση για κατασκευαστικά ελαττώματα. Καθαρίζεται με υγρό πανί· αποφύγετε διαλύτες.',
         ];
     }
 

@@ -2,7 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Models\CartItem;
 use App\Models\Coupon;
+use App\Services\CartService;
 use Tests\ShopTestCase;
 
 class CartTest extends ShopTestCase
@@ -86,7 +88,7 @@ class CartTest extends ShopTestCase
         $product = $this->product(2);
         $this->postJson(localized_route('cart.add'), ['product_id' => $product->id]);
 
-        $item = \App\Models\CartItem::first();
+        $item = CartItem::first();
 
         $this->postJson(localized_route('cart.update'), ['item_id' => $item->id, 'quantity' => 4])
             ->assertOk()->assertJson(['count' => 4]);
@@ -99,7 +101,7 @@ class CartTest extends ShopTestCase
     {
         $product = $this->product(2);
         $this->postJson(localized_route('cart.add'), ['product_id' => $product->id]);
-        $item = \App\Models\CartItem::first();
+        $item = CartItem::first();
 
         // Yeni oturum = yeni sepet
         $this->flushSession();
@@ -116,7 +118,7 @@ class CartTest extends ShopTestCase
         $this->post(localized_route('cart.coupon'), ['code' => 'HOSGELDIN10'])
             ->assertRedirect();
 
-        $totals = app(\App\Services\CartService::class)->totals();
+        $totals = app(CartService::class)->totals();
 
         $this->assertSame(3000.0, $totals['subtotal']);
         $this->assertSame(300.0, $totals['discount']);
@@ -131,7 +133,7 @@ class CartTest extends ShopTestCase
         $this->post(localized_route('cart.coupon'), ['code' => 'HOSGELDIN10'])
             ->assertSessionHas('error');
 
-        $this->assertNull(app(\App\Services\CartService::class)->totals()['coupon']);
+        $this->assertNull(app(CartService::class)->totals()['coupon']);
     }
 
     public function test_expired_coupon_is_rejected(): void
@@ -156,7 +158,7 @@ class CartTest extends ShopTestCase
         $this->postJson(localized_route('cart.add'), ['product_id' => $this->product(1)->id]);
         $this->post(localized_route('cart.coupon'), ['code' => 'BUYUK']);
 
-        $totals = app(\App\Services\CartService::class)->totals();
+        $totals = app(CartService::class)->totals();
 
         $this->assertSame(1000.0, $totals['discount']);
         $this->assertSame(0.0, $totals['total']);

@@ -32,7 +32,7 @@ class ShopController extends Controller
 
     private function renderList(Request $request, ?Category $category, bool $isSearch = false)
     {
-        $query = Product::active()->with(['category', 'brand']);
+        $query = Product::active()->with(['category', 'brand', 'variants']);
 
         if ($category) {
             $query->whereIn('category_id', $category->descendantIds());
@@ -121,7 +121,6 @@ class ShopController extends Controller
             'isSearch' => $isSearch,
             'minPrice' => (float) ($priceBounds->min_price ?? 0),
             'maxPrice' => (float) ($priceBounds->max_price ?? 0),
-            'activeView' => $request->query('gorunum', 'grid'),
         ]);
     }
 
@@ -136,10 +135,11 @@ class ShopController extends Controller
 
         $product->incrementQuietly('views');
 
-        $related = $product->related()->active()->take(8)->get();
+        $related = $product->related()->active()->with(['category', 'variants'])->take(8)->get();
 
         if ($related->isEmpty() && $product->category_id) {
             $related = Product::active()
+                ->with(['category', 'variants'])
                 ->where('category_id', $product->category_id)
                 ->whereKeyNot($product->id)
                 ->inRandomOrder()

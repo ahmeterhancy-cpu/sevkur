@@ -398,8 +398,8 @@ class ContentSeeder extends Seeder
                 'body' => [
                     'tr' => "Bu metin örnek içeriktir; yayına almadan önce hukuk danışmanınızla birlikte güncelleyin.\n\nSözleşme, alıcı ile satıcı arasında elektronik ortamda kurulan satışın koşullarını düzenler. Sipariş onayı ile birlikte alıcı, bu koşulları kabul etmiş sayılır.",
                     'en' => "This is placeholder content; review it with your legal adviser before going live.\n\nThe agreement sets out the conditions of the sale concluded electronically between buyer and seller.",
-                    'bg' => "Това е примерно съдържание; прегледайте го с юрист преди публикуване.",
-                    'el' => "Αυτό είναι ενδεικτικό περιεχόμενο· ελέγξτε το με νομικό σύμβουλο πριν τη δημοσίευση.",
+                    'bg' => 'Това е примерно съдържание; прегледайте го с юрист преди публикуване.',
+                    'el' => 'Αυτό είναι ενδεικτικό περιεχόμενο· ελέγξτε το με νομικό σύμβουλο πριν τη δημοσίευση.',
                 ],
             ],
         ];

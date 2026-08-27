@@ -13,21 +13,21 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $bestSellers = Product::active()->with('category')
+        $bestSellers = Product::active()->with(['category', 'variants'])
             ->orderByDesc('sold_count')->orderByDesc('rating_avg')
             ->take(8)->get();
 
-        $newArrivals = Product::active()->with('category')
+        $newArrivals = Product::active()->with(['category', 'variants'])
             ->where('is_new', true)
             ->orderByDesc('created_at')
             ->take(8)->get();
 
         if ($newArrivals->count() < 4) {
-            $newArrivals = Product::active()->with('category')->latest()->take(8)->get();
+            $newArrivals = Product::active()->with(['category', 'variants'])->latest()->take(8)->get();
         }
 
         // Sayacli firsat urunleri (Furnob'daki "Sold X / Y" bloklari).
-        $deals = Product::active()->with('category')
+        $deals = Product::active()->with(['category', 'variants'])
             ->whereNotNull('compare_at_price')
             ->whereColumn('compare_at_price', '>', 'price')
             ->orderByRaw('CASE WHEN sale_ends_at IS NULL THEN 1 ELSE 0 END')
@@ -39,7 +39,7 @@ class HomeController extends Controller
             'featuredCategories' => Category::active()->where('is_featured', true)->orderBy('position')->take(6)->get(),
             'bestSellers' => $bestSellers,
             'newArrivals' => $newArrivals,
-            'featured' => Product::active()->with('category')->where('is_featured', true)->orderBy('position')->take(8)->get(),
+            'featured' => Product::active()->with(['category', 'variants'])->where('is_featured', true)->orderBy('position')->take(8)->get(),
             'deals' => $deals,
             'midBanners' => Banner::active()->placement('home_mid')->get(),
             'gridBanners' => Banner::active()->placement('home_grid')->get(),
