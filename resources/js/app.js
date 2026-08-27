@@ -4,6 +4,10 @@
  |  JS kapaliyken icerik gorunur kalir, hareket tercihi kapaliysa animasyon durur.
  */
 
+// JS calisiyor: beliren bloklar CSS'te ancak bu sinif varken gizlenir.
+// Boylece JS kapaliyken hicbir icerik kaybolmaz.
+document.documentElement.classList.add('js');
+
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
