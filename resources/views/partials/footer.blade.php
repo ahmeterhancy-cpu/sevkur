@@ -11,10 +11,10 @@
 <section class="border-t border-line">
     <div class="container-x grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-8 py-12">
         @foreach ([
-            ['truck', __('shop.free_shipping_over', ['amount' => money((float) setting('free_shipping_over', 5000))]), setting('promise_shipping', 'Türkiye geneli kurumsal kargo')],
-            ['refresh', setting('promise_return_title', '14 gün içinde iade'), setting('promise_return', 'Koşulsuz değişim ve iade hakkı')],
-            ['shield', setting('promise_secure_title', 'Güvenli ödeme'), setting('promise_secure', '3D Secure ile korumalı alışveriş')],
-            ['headset', setting('promise_support_title', 'Uzman desteği'), setting('promise_support', 'Hafta içi 09:00 - 18:00 arası')],
+            ['truck', __('shop.free_shipping_over', ['amount' => money((float) setting('free_shipping_over', 5000))]), setting_t('promise_shipping', 'Türkiye geneli kurumsal kargo')],
+            ['refresh', setting_t('promise_return_title', '14 gün içinde iade'), setting_t('promise_return', 'Koşulsuz değişim ve iade hakkı')],
+            ['shield', setting_t('promise_secure_title', 'Güvenli ödeme'), setting_t('promise_secure', '3D Secure ile korumalı alışveriş')],
+            ['headset', setting_t('promise_support_title', 'Uzman desteği'), setting_t('promise_support', 'Hafta içi 09:00 - 18:00 arası')],
         ] as [$icon, $title, $text])
             <div class="flex gap-4 reveal">
                 <x-ui.icon :name="$icon" :size="30" class="text-brand shrink-0" :stroke="1.2" />
@@ -57,7 +57,7 @@
                     </span>
                 @endif
             </a>
-            <p class="text-[0.9375rem] leading-relaxed">{{ setting('footer_about', __('shop.footer_about')) }}</p>
+            <p class="text-[0.9375rem] leading-relaxed">{{ setting_t('footer_about', __('shop.footer_about')) }}</p>
 
             <div class="flex items-center gap-3 mt-6">
                 @foreach ($socials as $network => $url)
@@ -107,8 +107,8 @@
                 @if (setting('email'))
                     <li class="flex gap-3"><x-ui.icon name="mail" :size="18" class="shrink-0 mt-0.5 text-brand" /><a href="mailto:{{ setting('email') }}" class="hover:text-white">{{ setting('email') }}</a></li>
                 @endif
-                @if (setting('working_hours'))
-                    <li class="flex gap-3"><x-ui.icon name="clock" :size="18" class="shrink-0 mt-0.5 text-brand" /><span>{{ setting('working_hours') }}</span></li>
+                @if (setting_t('working_hours'))
+                    <li class="flex gap-3"><x-ui.icon name="clock" :size="18" class="shrink-0 mt-0.5 text-brand" /><span>{{ setting_t('working_hours') }}</span></li>
                 @endif
             </ul>
         </div>

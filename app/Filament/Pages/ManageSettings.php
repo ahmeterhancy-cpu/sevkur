@@ -7,6 +7,7 @@ use App\Support\Locales;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
@@ -42,7 +43,21 @@ class ManageSettings extends Page implements HasSchemas
     public ?array $data = [];
 
     /** Dile gore ayri girilen SEO metinleri. */
-    private const LOCALISED_KEYS = ['site_title', 'site_description'];
+    /**
+     * Musteriye GORUNEN metinler dile gore ayri saklanir.
+     *
+     * Bunlar disarida kalirsa 4 dilli sitede ana sayfa basliklari ve alt
+     * bilgi vaatleri her dilde Turkce gorunur.
+     */
+    private const LOCALISED_KEYS = [
+        'site_title', 'site_description',
+        'top_bar_text', 'working_hours',
+        'promise_shipping', 'promise_return_title', 'promise_return',
+        'promise_secure_title', 'promise_secure',
+        'promise_support_title', 'promise_support',
+        'home_categories_title', 'home_bestsellers_title', 'home_bestsellers_sub',
+        'home_deals_title', 'home_new_title', 'home_blog_title', 'footer_about',
+    ];
 
     /** Sayfada yonetilen ayar anahtarlari. */
     private const KEYS = [
@@ -127,7 +142,6 @@ class ManageSettings extends Page implements HasSchemas
                         Tab::make('İletişim')->schema([
                             TextInput::make('phone')->label('Telefon'),
                             TextInput::make('email')->label('E-posta')->email(),
-                            TextInput::make('working_hours')->label('Çalışma saatleri'),
                             Textarea::make('address')->label('Adres')->rows(2),
                             Textarea::make('map_embed')->label('Harita gömme kodu')->rows(3)->columnSpanFull()
                                 ->helperText('OpenStreetMap veya Google Haritalar iframe kodu.'),
@@ -140,26 +154,67 @@ class ManageSettings extends Page implements HasSchemas
                         Tab::make('Mağaza')->schema([
                             TextInput::make('free_shipping_over')->label('Ücretsiz kargo alt sınırı (₺)')->numeric()
                                 ->helperText('Üst şeritte ve alt bilgide gösterilir. Kargo yöntemlerindeki sınır ayrıca ayarlanır.'),
-                            TextInput::make('top_bar_text')->label('Üst şerit yazısı'),
-                            Section::make('Güvence kutuları')->schema([
-                                TextInput::make('promise_shipping')->label('Kargo açıklaması'),
-                                TextInput::make('promise_return_title')->label('İade başlığı'),
-                                TextInput::make('promise_return')->label('İade açıklaması'),
-                                TextInput::make('promise_secure_title')->label('Ödeme başlığı'),
-                                TextInput::make('promise_secure')->label('Ödeme açıklaması'),
-                                TextInput::make('promise_support_title')->label('Destek başlığı'),
-                                TextInput::make('promise_support')->label('Destek açıklaması'),
-                            ])->columns(2)->columnSpanFull(),
+                            Section::make('Üst şerit ve güvence kutuları')
+                                ->description('Her dil için ayrı girilir; boş bırakılan dil Türkçeye düşer.')
+                                ->schema([
+                                    Tabs::make('Güvence metinleri')
+                                        ->columnSpanFull()
+                                        ->tabs(array_map(
+                                            fn (string $locale) => Tab::make(strtoupper($locale))->schema([
+                                                TextInput::make(self::localisedKey('top_bar_text', $locale))
+                                                    ->label('Üst şerit yazısı')->columnSpanFull(),
+                                                TextInput::make(self::localisedKey('promise_shipping', $locale))
+                                                    ->label('Kargo açıklaması'),
+                                                TextInput::make(self::localisedKey('working_hours', $locale))
+                                                    ->label('Çalışma saatleri'),
+                                                TextInput::make(self::localisedKey('promise_return_title', $locale))
+                                                    ->label('İade başlığı'),
+                                                TextInput::make(self::localisedKey('promise_return', $locale))
+                                                    ->label('İade açıklaması'),
+                                                TextInput::make(self::localisedKey('promise_secure_title', $locale))
+                                                    ->label('Ödeme başlığı'),
+                                                TextInput::make(self::localisedKey('promise_secure', $locale))
+                                                    ->label('Ödeme açıklaması'),
+                                                TextInput::make(self::localisedKey('promise_support_title', $locale))
+                                                    ->label('Destek başlığı'),
+                                                TextInput::make(self::localisedKey('promise_support', $locale))
+                                                    ->label('Destek açıklaması'),
+                                            ])->columns(2),
+                                            Locales::all()
+                                        )),
+                                ])->columnSpanFull(),
                         ])->columns(2),
 
                         Tab::make('Ana sayfa')->schema([
-                            TextInput::make('home_categories_title')->label('Kategoriler bölümü başlığı'),
-                            TextInput::make('home_bestsellers_title')->label('Çok satanlar başlığı'),
-                            TextInput::make('home_bestsellers_sub')->label('Çok satanlar alt başlığı'),
-                            TextInput::make('home_deals_title')->label('Fırsatlar başlığı'),
-                            TextInput::make('home_new_title')->label('Yeni gelenler başlığı'),
-                            TextInput::make('home_blog_title')->label('Blog bölümü başlığı'),
-                            Textarea::make('footer_about')->label('Alt bilgi tanıtım metni')->rows(3)->columnSpanFull(),
+                            Tabs::make('Bölüm başlıkları')
+                                ->columnSpanFull()
+                                ->tabs(array_map(
+                                    fn (string $locale) => Tab::make(strtoupper($locale))->schema([
+                                        TextInput::make(self::localisedKey('home_categories_title', $locale))
+                                            ->label('Kategoriler bölümü başlığı'),
+                                        TextInput::make(self::localisedKey('home_bestsellers_title', $locale))
+                                            ->label('Çok satanlar başlığı'),
+                                        TextInput::make(self::localisedKey('home_bestsellers_sub', $locale))
+                                            ->label('Çok satanlar alt başlığı'),
+                                        TextInput::make(self::localisedKey('home_deals_title', $locale))
+                                            ->label('Fırsatlar başlığı'),
+                                        TextInput::make(self::localisedKey('home_new_title', $locale))
+                                            ->label('Yeni gelenler başlığı'),
+                                        TextInput::make(self::localisedKey('home_blog_title', $locale))
+                                            ->label('Blog bölümü başlığı'),
+                                        Textarea::make(self::localisedKey('footer_about', $locale))
+                                            ->label('Alt bilgi tanıtım metni')->rows(3)->columnSpanFull(),
+                                    ])->columns(2),
+                                    Locales::all()
+                                )),
+
+                            Placeholder::make('bolum_notu')
+                                ->label('Ana sayfada başka neler yönetilir?')
+                                ->content('Slider görselleri → Slider, ara afişler → Afişler, öne çıkan '
+                                    .'kategoriler → Kategoriler, fırsat ürünleri → ürünün üstü çizili fiyatı '
+                                    .'ve indirim bitişi, blog → Yazılar. Bir bölümün verisi yoksa o bölüm '
+                                    .'ana sayfada hiç görünmez.')
+                                ->columnSpanFull(),
                         ])->columns(2),
                     ]),
             ])

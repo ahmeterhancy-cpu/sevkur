@@ -67,12 +67,12 @@
                 </div>
             </div>
         @endif
-        @if (setting('working_hours'))
+        @if (setting_t('working_hours'))
             <div class="flex gap-3">
                 <x-ui.icon name="clock" :size="20" class="text-brand shrink-0 mt-0.5" />
                 <div>
                     <h3 class="font-medium">{{ __('shop.working_hours') }}</h3>
-                    <p class="text-muted text-[0.9375rem]">{{ setting('working_hours') }}</p>
+                    <p class="text-muted text-[0.9375rem]">{{ setting_t('working_hours') }}</p>
                 </div>
             </div>
         @endif

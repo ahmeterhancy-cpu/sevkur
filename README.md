@@ -68,6 +68,31 @@ npm run build                 # yayına hazırlık
   gelen demo görselleri hem panelden yüklenenler oradadır. Filament tek disk
   bildiği için ikiye bölünürse mevcut görseller panelde görünmez ve kaydetme
   onları siler. `storage:link` gerekmez.
+- **Müşteriye görünen her ayar dile göre saklanır.** `setting_t('anahtar')`
+  önce `anahtar_en` gibi son ekli kaydı arar, yoksa Türkçeye düşer. Panelde
+  hangi alanların dil sekmesi göstereceğini `ManageSettings::LOCALISED_KEYS`
+  belirler — yeni bir görünür metin eklerken o listeye de eklenmezse dört
+  dilli sitede her dilde Türkçe görünür. Ham `setting()` yalnızca dilden
+  bağımsız değerler içindir (logo, telefon, kargo sınırı).
+
+## Ana sayfa nasıl yönetilir
+
+Tamamı panelden; Blade'de sabit metin yok.
+
+| Bölüm | Nereden |
+|---|---|
+| Üstteki slider | **Slider** kaynağı (görsel, başlık, buton, sıra) |
+| Ara ve geniş afişler | **Afişler** — `home_mid`, `home_grid`, `home_wide` yerleşimi |
+| Öne çıkan kategoriler | **Kategoriler** → "öne çıkar" + sıra |
+| Çok satanlar | Otomatik: `sold_count` sıralaması |
+| Haftanın fırsatları | Ürünün üstü çizili fiyatı + indirim bitiş tarihi |
+| Yeni gelenler | Ürün → "yeni" bayrağı |
+| Blog | **Yazılar** (son 3 yayınlanmış) |
+| Markalar | **Markalar** (aktif, sıraya göre) |
+| Bölüm başlıkları | **Ayarlar → Ana sayfa**, dört dilde ayrı |
+
+Bir bölümün verisi yoksa o bölüm sayfada hiç görünmez. Bölümlerin **sırası**
+Blade'de sabittir — panelden değiştirilemez.
 
 ## Bu projede tökezlenen tuzaklar
 

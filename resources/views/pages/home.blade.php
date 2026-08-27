@@ -69,7 +69,7 @@
             <div class="flex flex-wrap items-end justify-between gap-4 mb-8">
                 <div>
                     <span class="eyebrow">{{ __('shop.categories') }}</span>
-                    <h2 class="section-title mt-2">{{ setting('home_categories_title', 'Odalarına göre keşfet') }}</h2>
+                    <h2 class="section-title mt-2">{{ setting_t('home_categories_title', 'Odalarına göre keşfet') }}</h2>
                 </div>
                 <a href="{{ localized_route('shop') }}" class="btn btn-ghost btn-sm">{{ __('shop.view_all') }}</a>
             </div>
@@ -120,8 +120,8 @@
     @if ($bestSellers->isNotEmpty())
         <section class="container-x pb-14 lg:pb-20">
             <div class="text-center mb-10">
-                <h2 class="section-title">{{ setting('home_bestsellers_title', 'Çok Satanlar') }}</h2>
-                <p class="section-sub mt-2">{{ setting('home_bestsellers_sub', 'Müşterilerimizin en çok tercih ettiği parçalar.') }}</p>
+                <h2 class="section-title">{{ setting_t('home_bestsellers_title', 'Çok Satanlar') }}</h2>
+                <p class="section-sub mt-2">{{ setting_t('home_bestsellers_sub', 'Müşterilerimizin en çok tercih ettiği parçalar.') }}</p>
             </div>
 
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-10 lg:gap-x-6">
@@ -159,7 +159,7 @@
             <div class="flex flex-wrap items-end justify-between gap-4 mb-8">
                 <div>
                     <span class="eyebrow">{{ __('shop.badge_sale') }}</span>
-                    <h2 class="section-title mt-2">{{ setting('home_deals_title', 'Haftanın Fırsatları') }}</h2>
+                    <h2 class="section-title mt-2">{{ setting_t('home_deals_title', 'Haftanın Fırsatları') }}</h2>
                 </div>
                 @php($countdownProduct = $deals->first(fn ($p) => $p->hasCountdown()))
                 @if ($countdownProduct)
@@ -195,7 +195,7 @@
                 <div class="flex flex-wrap items-end justify-between gap-4 mb-8">
                     <div>
                         <span class="eyebrow">{{ __('shop.badge_new') }}</span>
-                        <h2 class="section-title mt-2">{{ setting('home_new_title', 'Yeni Gelenler') }}</h2>
+                        <h2 class="section-title mt-2">{{ setting_t('home_new_title', 'Yeni Gelenler') }}</h2>
                     </div>
                     <div class="flex gap-2">
                         <button type="button" data-rail-prev class="icon-btn" aria-label="{{ __('shop.back') }}"><x-ui.icon name="chevron-left" :size="18" /></button>
@@ -219,7 +219,7 @@
         <section class="container-x py-14 lg:py-20">
             <div class="text-center mb-10">
                 <span class="eyebrow">{{ __('shop.blog') }}</span>
-                <h2 class="section-title mt-2">{{ setting('home_blog_title', 'Yaşam Alanı Notları') }}</h2>
+                <h2 class="section-title mt-2">{{ setting_t('home_blog_title', 'Yaşam Alanı Notları') }}</h2>
             </div>
 
             <div class="grid md:grid-cols-3 gap-6 lg:gap-8">

@@ -16,7 +16,7 @@
             @if ($freeOver > 0)
                 <span>{{ __('shop.free_shipping_over', ['amount' => money($freeOver)]) }}</span>
             @else
-                <span>{{ setting('top_bar_text', __('shop.footer_about')) }}</span>
+                <span>{{ setting_t('top_bar_text', __('shop.footer_about')) }}</span>
             @endif
         </div>
 
