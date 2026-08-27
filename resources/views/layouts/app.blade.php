@@ -5,7 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', setting('site_title', __('shop.brand'))) — {{ setting('site_name', __('shop.brand')) }}</title>
+    @php
+        // Sayfa kendi basligini verdiyse "Baslik — Marka", vermediyse yalnizca
+        // ayarlardaki tam baslik kullanilir (marka adi iki kez tekrarlamasin).
+        $siteName = setting('site_name', __('shop.brand'));
+        $pageTitle = trim($__env->yieldContent('title'));
+        $documentTitle = $pageTitle !== '' ? $pageTitle.' — '.$siteName : setting('site_title', $siteName);
+    @endphp
+
+    <title>{{ $documentTitle }}</title>
     <meta name="description" content="@yield('meta_description', setting('site_description', __('shop.footer_about')))">
 
     {{-- Dil alternatifleri --}}
@@ -15,8 +23,8 @@
     <link rel="alternate" hreflang="x-default" href="{{ locale_switch_url(\App\Support\Locales::default()) }}">
     <link rel="canonical" href="{{ url()->current() }}">
 
-    <meta property="og:site_name" content="{{ setting('site_name', __('shop.brand')) }}">
-    <meta property="og:title" content="@yield('title', setting('site_title', __('shop.brand')))">
+    <meta property="og:site_name" content="{{ $siteName }}">
+    <meta property="og:title" content="{{ $documentTitle }}">
     <meta property="og:description" content="@yield('meta_description', setting('site_description', __('shop.footer_about')))">
     <meta property="og:type" content="@yield('og_type', 'website')">
     <meta property="og:url" content="{{ url()->current() }}">
@@ -25,6 +33,9 @@
     @endif
 
     <link rel="icon" href="{{ setting('favicon') ? media_url(setting('favicon')) : asset('images/favicon.svg') }}" type="image/svg+xml">
+
+    {{-- Self-host edilmis Jost + Manrope (on yukleme + @font-face). --}}
+    {{ Illuminate\Support\Facades\Vite::fonts() }}
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 

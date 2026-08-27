@@ -240,12 +240,19 @@ class CheckoutController extends Controller
         session(['recent_orders' => array_slice(array_unique($seen), -10)]);
     }
 
+    /**
+     * Onay e-postasi. Gonderilemezse siparis yine de gecerlidir; ama hata
+     * sessizce kaybolmasin diye siparis gecmisine yazilir ve yonetim
+     * panelindeki zaman cizelgesinde gorunur.
+     */
     private function sendConfirmation(Order $order): void
     {
         try {
             Mail::to($order->customer_email)->send(new OrderPlaced($order));
+            $order->log('mail_sent', 'Onay e-postası gönderildi');
         } catch (\Throwable $e) {
             report($e);
+            $order->log('mail_failed', 'Onay e-postası gönderilemedi: '.$e->getMessage());
         }
     }
 }

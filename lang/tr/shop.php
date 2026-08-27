@@ -50,7 +50,7 @@ return [
     'only_left' => 'Son :count adet!',
     'sku' => 'Ürün Kodu',
     'category' => 'Kategori',
-    'brand' => 'Marka',
+    'brand_label' => 'Marka',
     'quantity' => 'Adet',
     'description' => 'Açıklama',
     'specifications' => 'Teknik Özellikler',

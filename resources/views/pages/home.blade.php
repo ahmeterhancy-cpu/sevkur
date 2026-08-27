@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', setting('home_title', __('shop.brand').' — '.__('shop.shop')))
+{{-- Ana sayfa kendi basligini vermez: ayarlardaki "site_title" kullanilir. --}}
 @section('page_key', 'home')
 
 @section('content')

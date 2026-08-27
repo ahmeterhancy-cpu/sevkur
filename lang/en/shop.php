@@ -47,7 +47,7 @@ return [
     'only_left' => 'Only :count left!',
     'sku' => 'SKU',
     'category' => 'Category',
-    'brand' => 'Brand',
+    'brand_label' => 'Brand',
     'quantity' => 'Quantity',
     'description' => 'Description',
     'specifications' => 'Specifications',

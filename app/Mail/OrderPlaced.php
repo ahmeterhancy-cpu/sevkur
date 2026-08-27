@@ -24,8 +24,10 @@ class OrderPlaced extends Mailable
 
     public function content(): Content
     {
+        // Sablon markdown mail bilesenleri (x-mail::message) kullaniyor;
+        // "view:" ile verilirse "No hint path defined for [mail]" hatasi olur.
         return new Content(
-            view: 'mail.order-placed',
+            markdown: 'mail.order-placed',
             with: ['order' => $this->order->load('items', 'shippingMethod')],
         );
     }

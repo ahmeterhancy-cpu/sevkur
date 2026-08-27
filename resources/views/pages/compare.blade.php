@@ -75,7 +75,7 @@
                 </tr>
 
                 <tr class="border-t border-line">
-                    <th class="text-left p-3 text-muted font-normal">{{ __('shop.brand') }}</th>
+                    <th class="text-left p-3 text-muted font-normal">{{ __('shop.brand_label') }}</th>
                     @foreach ($products as $product)
                         <td class="p-3 border-l border-line-soft">{{ $product->brand?->t('name') ?: '—' }}</td>
                     @endforeach

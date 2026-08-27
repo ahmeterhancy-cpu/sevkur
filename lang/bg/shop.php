@@ -47,7 +47,7 @@ return [
     'only_left' => 'Останали само :count!',
     'sku' => 'Артикулен номер',
     'category' => 'Категория',
-    'brand' => 'Марка',
+    'brand_label' => 'Марка',
     'quantity' => 'Количество',
     'description' => 'Описание',
     'specifications' => 'Спецификации',

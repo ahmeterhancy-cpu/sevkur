@@ -59,8 +59,12 @@ class PayTrWebhookController extends Controller
 
             try {
                 Mail::to($order->customer_email)->send(new OrderPlaced($order));
+                $order->log('mail_sent', 'Onay e-postası gönderildi');
             } catch (\Throwable $e) {
+                // Postayi gonderemesek de PayTR'ye OK donmeliyiz; aksi halde
+                // bildirim tekrar tekrar gelir. Hata siparis gecmisine yazilir.
                 report($e);
+                $order->log('mail_failed', 'Onay e-postası gönderilemedi: '.$e->getMessage());
             }
         } else {
             $orders->markFailed($order, (string) ($payload['failed_reason_msg'] ?? ''));

@@ -47,7 +47,7 @@ return [
     'only_left' => 'Απομένουν μόνο :count!',
     'sku' => 'Κωδικός',
     'category' => 'Κατηγορία',
-    'brand' => 'Μάρκα',
+    'brand_label' => 'Μάρκα',
     'quantity' => 'Ποσότητα',
     'description' => 'Περιγραφή',
     'specifications' => 'Χαρακτηριστικά',

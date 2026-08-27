@@ -17,7 +17,11 @@
                 <h2 class="text-[1.125rem] font-medium mb-4">{{ __('shop.use_saved_address') }}</h2>
                 <div class="grid sm:grid-cols-2 gap-3">
                     @foreach ($addresses as $address)
-                        @php($snapshot = json_encode($address->toSnapshot(), JSON_UNESCAPED_UNICODE))
+                        {{-- Not: Blade yorumlari, ham PHP bloklari cozuldukten SONRA silinir;
+                             bu yuzden yorum icine PHP direktifi yazilmaz. --}}
+                        @php
+                            $snapshot = json_encode($address->toSnapshot(), JSON_UNESCAPED_UNICODE);
+                        @endphp
                         <button type="button" class="text-left border border-line p-4 hover:border-ink transition-colors"
                                 data-fill-address="{{ $snapshot }}">
                             <span class="block font-medium">{{ $address->title ?: $address->city }}</span>
@@ -118,7 +122,10 @@
                             <span class="flex items-center justify-between gap-3">
                                 <span class="font-medium">{{ $method->t('name') }}</span>
                                 <span>
-                                    @php($cost = $method->costFor($totals['subtotal'] - $totals['discount']))
+                                    {{-- Kargo ucreti sunucu tarafinda hesaplanir. --}}
+                                    @php
+                                        $cost = $method->costFor($totals['subtotal'] - $totals['discount']);
+                                    @endphp
                                     {{ $cost > 0 ? money($cost) : __('shop.free') }}
                                 </span>
                             </span>
