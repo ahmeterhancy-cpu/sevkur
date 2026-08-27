@@ -101,6 +101,26 @@ class DemoPhotos
         return json_decode(file_get_contents($file), true) ?: [];
     }
 
+    /**
+     * Hero slider / afis / blog kapagi kompozisyonu.
+     * tools/build-demo-scenes.php uretir; yoksa null doner ve cagiran taraf
+     * SVG panele duser.
+     */
+    public static function scene(string $slot): ?string
+    {
+        $path = 'demo/sahneler/'.$slot.'.jpg';
+
+        return is_file(public_path($path)) ? $path : null;
+    }
+
+    /** @return array<string, array<string, string>> sahne kaynak bilgileri */
+    public static function sceneCredits(): array
+    {
+        $file = public_path('demo/sahneler/KAYNAKLAR.json');
+
+        return is_file($file) ? (json_decode(file_get_contents($file), true) ?: []) : [];
+    }
+
     public static function forget(): void
     {
         self::$index = null;

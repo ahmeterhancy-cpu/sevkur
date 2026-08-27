@@ -13,6 +13,8 @@
                     <div class="w-full shrink-0 relative" data-slide>
                         <div class="absolute inset-0">
                             <img src="{{ media_url($slide->image) }}" alt="" class="w-full h-full object-cover" @if($loop->first) fetchpriority="high" @else loading="lazy" @endif>
+                            {{-- Fotograf uzerindeki yazi okunabilir kalsin --}}
+                            <div class="absolute inset-0 {{ contrast_scrim($slide->text_color, $slide->text_align) }}"></div>
                         </div>
                         <div class="container-x relative min-h-[26rem] lg:min-h-[38rem] flex items-center py-16">
                             <div class="max-w-lg {{ $slide->text_align === 'center' ? 'mx-auto text-center' : ($slide->text_align === 'right' ? 'ml-auto text-right' : '') }}"
@@ -97,6 +99,7 @@
                        class="group relative block overflow-hidden bg-cream aspect-[4/3] reveal">
                         <img src="{{ media_url($banner->image) }}" alt="{{ $banner->t('title') }}"
                              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy">
+                        <div class="absolute inset-0 {{ contrast_scrim($banner->text_color) }}"></div>
                         <div class="absolute inset-0 flex flex-col justify-center px-8" style="color: {{ $banner->text_color }}">
                             @if ($banner->t('subtitle'))
                                 <span class="text-[0.8125rem] uppercase tracking-widest opacity-80">{{ $banner->t('subtitle') }}</span>
@@ -136,6 +139,7 @@
         <section class="relative bg-cream">
             <div class="absolute inset-0">
                 <img src="{{ media_url($wideBanner->image) }}" alt="" class="w-full h-full object-cover" loading="lazy">
+                <div class="absolute inset-0 {{ contrast_scrim($wideBanner->text_color) }}"></div>
             </div>
             <div class="container-x relative py-20 lg:py-28">
                 <div class="max-w-md" style="color: {{ $wideBanner->text_color }}">

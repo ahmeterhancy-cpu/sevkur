@@ -75,6 +75,40 @@ if (! function_exists('setting')) {
     }
 }
 
+if (! function_exists('contrast_scrim')) {
+    /**
+     * Slider/afis gorseli uzerine binen yazinin okunabilir kalmasi icin
+     * yumusak bir perde. Yazi koyuysa beyaz, aciksa siyah perde uretilir;
+     * yon, yazinin hizasina gore secilir.
+     *
+     * Fotograf yerine duz renk paneller kullanildiginda da zarar vermez.
+     */
+    function contrast_scrim(?string $textColor = '#111111', string $align = 'left'): string
+    {
+        $hex = ltrim((string) $textColor, '#');
+
+        if (strlen($hex) === 3) {
+            $hex = $hex[0].$hex[0].$hex[1].$hex[1].$hex[2].$hex[2];
+        }
+
+        $rgb = strlen($hex) === 6 ? array_map('hexdec', str_split($hex, 2)) : [17, 17, 17];
+        $luminance = ($rgb[0] * 0.299 + $rgb[1] * 0.587 + $rgb[2] * 0.114) / 255;
+
+        // Acik yazi -> koyu perde, koyu yazi -> acik perde
+        $shades = $luminance > 0.6
+            ? ['from-black/70', 'via-black/40']
+            : ['from-white/85', 'via-white/55'];
+
+        $direction = match ($align) {
+            'right' => 'bg-gradient-to-l',
+            'center' => 'bg-gradient-to-t',
+            default => 'bg-gradient-to-r',
+        };
+
+        return $direction.' '.$shades[0].' '.$shades[1].' to-transparent';
+    }
+}
+
 if (! function_exists('setting_t')) {
     /**
      * Dile gore ayar okur: once "anahtar_bg", yoksa "anahtar", o da yoksa

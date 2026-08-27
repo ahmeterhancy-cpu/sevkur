@@ -9,6 +9,18 @@
  |  KESINLIKLE bulunmamasi gereken kelimeler tanimli.
  */
 
+/*
+ |  HER TURDE gecersiz: bunlar urun fotografi degil. Kategori uyeligi bunlari
+ |  elemiyor — Commons'ta "Beds" kategorisinde 19. yuzyil gravurleri de var.
+ |  subjectAllowed() cagrilirken bu liste tur yasaklarina eklenir.
+ */
+const GLOBAL_FORBIDDEN = [
+    'drawing', 'drawings', 'engraving', 'etching', 'lithograph', 'woodcut',
+    'sketch', 'blueprint', 'floorplan', 'plan', 'diagram', 'patent',
+    'painting', 'illustration', 'miniature', 'manuscript', 'postcard',
+    'stamp', 'coat of arms', 'logo', 'icon', 'map', 'poster', 'catalogue page',
+];
+
 return [
     'sofa' => [
         'gerekli' => ['sofa', 'couch', 'settee', 'divan', 'canape'],

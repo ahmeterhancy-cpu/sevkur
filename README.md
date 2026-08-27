@@ -92,6 +92,22 @@ Kaynak ve lisans bilgileri `KAYNAKLAR.json` içinde tutulur ve alt bilgideki
 Klasör boşsa katalog otomatik olarak `DemoImages` SVG çizimlerine döner —
 uygulama görsel olmadan da çalışır.
 
+### Hero, tanıtım şeritleri ve blog kapakları
+
+```bash
+php tools/build-demo-scenes.php
+```
+
+Bu alanlar hazır sahne fotoğrafı **indirmez**; indirmeyi denedim ve Commons'ın
+"oturma odası" kategorileri amatör, kalabalık, markanın sade diline zıt kareler
+verdi — hero sitenin en marka-tanımlayıcı alanı olduğu için bu, mevcut soyut
+panellerden kötüydü.
+
+Onun yerine betik, **zaten seçilmiş ürün fotoğraflarından** bölünmüş kompozisyon
+üretiyor: solda markanın krem zemini (yazı buraya oturur), sağda tam boy
+fotoğraf, ikisi arasında yumuşak geçiş. Yazının okunması için Blade tarafında
+`contrast_scrim()` ile ayrıca bir perde konuyor.
+
 > Bu fotoğraflar **tanıtım içindir**; gösterilen mobilyalar satılan ürünler
 > değildir. Canlıya çıkmadan önce gerçek ürün fotoğraflarıyla değiştirin.
 

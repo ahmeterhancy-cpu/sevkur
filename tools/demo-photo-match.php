@@ -29,7 +29,9 @@ if (! function_exists('subjectAllowed')) {
      */
     function subjectAllowed(string $haystack, array $rule): array
     {
-        foreach ($rule['yasak'] as $word) {
+        $forbidden = array_merge($rule['yasak'], defined('GLOBAL_FORBIDDEN') ? GLOBAL_FORBIDDEN : []);
+
+        foreach ($forbidden as $word) {
             if (subjectMatches($haystack, $word)) {
                 return ['uygun' => false, 'sebep' => "yasakli: $word"];
             }

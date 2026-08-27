@@ -24,6 +24,7 @@
  */
 
 require __DIR__.'/demo-photo-match.php';
+require __DIR__.'/demo-photo-colour.php';
 
 $SUBJECT_RULES = require __DIR__.'/demo-photo-rules.php';
 
@@ -424,6 +425,11 @@ foreach (SUBJECTS as $key => $source) {
         $image = @imagecreatefromstring($bytes);
 
         if (! $image) {
+            continue;
+        }
+
+        // Siyah-beyaz arsiv fotograflari ve gravurler vitrine uymuyor
+        if (! isColourPhoto($image)) {
             continue;
         }
 

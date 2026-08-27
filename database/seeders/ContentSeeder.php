@@ -88,8 +88,13 @@ class ContentSeeder extends Seeder
         ];
 
         foreach ($rows as $index => $row) {
+            // Kompozisyon varsa (tools/build-demo-scenes.php) onu kullan,
+            // yoksa soyut SVG panele don.
+            $image = DemoPhotos::scene($row['key'])
+                ?? DemoImages::banner($row['key'], '', 1600, 760, $row['tone']);
+
             Slider::updateOrCreate(
-                ['image' => DemoImages::banner($row['key'], '', 1600, 760, $row['tone'])],
+                ['image' => $image],
                 [
                     'badge' => $row['badge'],
                     'title' => $row['title'],
@@ -117,8 +122,11 @@ class ContentSeeder extends Seeder
         foreach ($rows as $index => [$placement, $key, $title, $subtitle, $categorySlug, $tone]) {
             $isWide = $placement === 'home_wide';
 
+            $image = DemoPhotos::scene($key)
+                ?? DemoImages::banner($key, '', $isWide ? 1600 : 900, $isWide ? 620 : 680, $tone);
+
             Banner::updateOrCreate(
-                ['image' => DemoImages::banner($key, '', $isWide ? 1600 : 900, $isWide ? 620 : 680, $tone)],
+                ['image' => $image],
                 [
                     'placement' => $placement,
                     'title' => $title,
@@ -299,7 +307,7 @@ class ContentSeeder extends Seeder
                 'title' => $post['title'],
                 'excerpt' => $post['excerpt'],
                 'body' => $this->postBody($post['title'], $post['excerpt']),
-                'cover' => DemoImages::post($post['slug']),
+                'cover' => DemoPhotos::scene('blog-'.$post['slug']) ?? DemoImages::post($post['slug']),
                 'is_active' => true,
                 'is_featured' => $index < 2,
                 'published_at' => now()->subDays(($index + 1) * 9),
