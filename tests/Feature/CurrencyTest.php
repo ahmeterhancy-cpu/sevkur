@@ -6,6 +6,7 @@ use App\Models\Currency;
 use App\Models\Order;
 use App\Models\ShippingMethod;
 use App\Services\CurrencyService;
+use Illuminate\Support\Facades\Cache;
 use Tests\ShopTestCase;
 
 class CurrencyTest extends ShopTestCase
@@ -13,6 +14,24 @@ class CurrencyTest extends ShopTestCase
     public function test_base_currency_is_try(): void
     {
         $this->assertSame('TRY', app(CurrencyService::class)->base()->code);
+    }
+
+    /**
+     * Canlida CACHE_STORE=database. Eloquent nesneleri kalici onbellege
+     * yazilirsa geri okununca __PHP_Incomplete_Class doner ve ikinci istekten
+     * itibaren her sayfa 500 verir. Bu test o yolu ozellikle zorlar.
+     */
+    public function test_pages_still_render_with_a_persistent_cache_store(): void
+    {
+        config(['cache.default' => 'database']);
+        Cache::store('database')->flush();
+
+        $this->get(localized_route('home'))->assertOk();
+        $this->get(localized_route('home'))->assertOk();
+        $this->get(localized_route('shop'))->assertOk();
+
+        // Ayarlar da kalici onbellek kullaniyor.
+        $this->assertSame('Sevkur Mobilya', setting('site_name'));
     }
 
     public function test_visitor_can_switch_currency(): void

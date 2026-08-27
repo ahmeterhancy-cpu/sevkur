@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\Currency;
 use App\Support\Locales;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -19,26 +18,31 @@ class CurrencyService
 {
     public const SESSION_KEY = 'display_currency';
 
-    private const CACHE_KEY = 'sevkur.currencies';
-
     /** Bulgar Levasi'nin euroya sabit kuru (para kurulu, 1 EUR = 1.95583 BGN). */
     private const EUR_BGN_PEG = 1.95583;
 
     /** @var array<string, Currency>|null */
     private ?array $currencies = null;
 
-    /** @return array<string, Currency> */
+    /**
+     * @return array<string, Currency>
+     *
+     * Yalnizca istek suresince bellekte tutulur. Kalici onbellege (database
+     * store) ALINMAZ: Eloquent nesnelerini serilestirip geri okumak
+     * __PHP_Incomplete_Class uretiyor ve tablo zaten uc satir.
+     */
     public function all(): array
     {
         if ($this->currencies !== null) {
             return $this->currencies;
         }
 
-        $this->currencies = Cache::remember(self::CACHE_KEY, now()->addMinutes(10), function () {
-            return Currency::query()->where('is_active', true)->orderBy('position')->get()->keyBy('code')->all();
-        });
-
-        return $this->currencies;
+        return $this->currencies = Currency::query()
+            ->where('is_active', true)
+            ->orderBy('position')
+            ->get()
+            ->keyBy('code')
+            ->all();
     }
 
     public function base(): Currency
@@ -175,7 +179,6 @@ class CurrencyService
                 $updated++;
             }
 
-            Cache::forget(self::CACHE_KEY);
             $this->currencies = null;
 
             return ['updated' => $updated, 'skipped' => $skipped, 'error' => null];
@@ -188,7 +191,6 @@ class CurrencyService
 
     public function forgetCache(): void
     {
-        Cache::forget(self::CACHE_KEY);
         $this->currencies = null;
     }
 }
