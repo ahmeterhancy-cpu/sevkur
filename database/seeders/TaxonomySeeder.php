@@ -7,6 +7,7 @@ use App\Models\AttributeValue;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Support\DemoImages;
+use App\Support\DemoPhotos;
 use Illuminate\Database\Seeder;
 
 class TaxonomySeeder extends Seeder
@@ -69,7 +70,7 @@ class TaxonomySeeder extends Seeder
                     'bg' => 'Прости, здрави и вечни мебели за вашия дом.',
                     'el' => 'Απλά, ανθεκτικά και διαχρονικά κομμάτια για τον χώρο σας.',
                 ],
-                'image' => DemoImages::category($shape, $slug),
+                'image' => DemoPhotos::one($shape) ?? DemoImages::category($shape, $slug),
                 'is_active' => true,
                 'is_featured' => true,
                 'show_in_menu' => true,
@@ -82,7 +83,7 @@ class TaxonomySeeder extends Seeder
                 Category::updateOrCreate(['slug' => $childSlug], [
                     'parent_id' => $root->id,
                     'name' => ['tr' => $ctr, 'en' => $cen, 'bg' => $cbg, 'el' => $cel],
-                    'image' => DemoImages::category($childShape, $childSlug),
+                    'image' => DemoPhotos::one($childShape, 1) ?? DemoImages::category($childShape, $childSlug),
                     'is_active' => true,
                     'show_in_menu' => true,
                     'position' => $childPosition++,

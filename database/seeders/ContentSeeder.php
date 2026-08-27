@@ -11,6 +11,7 @@ use App\Models\Post;
 use App\Models\PostCategory;
 use App\Models\Slider;
 use App\Support\DemoImages;
+use App\Support\DemoPhotos;
 use Illuminate\Database\Seeder;
 
 class ContentSeeder extends Seeder
@@ -23,6 +24,7 @@ class ContentSeeder extends Seeder
         $this->menu();
         $this->blog();
         $this->pages();
+        $this->photoCredits();
         $this->faqs();
     }
 
@@ -413,6 +415,64 @@ class ContentSeeder extends Seeder
                 'position' => $index,
             ]);
         }
+    }
+
+    /**
+     * Demo fotograflarinin kaynak/lisans sayfasi.
+     *
+     * Gorseller Wikimedia Commons'tan geliyor; CC BY ve CC BY-SA lisanslari
+     * kullanildiklari yerde kaynak gosterilmesini SART kosuyor. Bu sayfa alt
+     * bilgiden erisilebilir. Gercek urun fotograflari yuklendiginde sayfa
+     * yonetim panelinden silinebilir.
+     */
+    private function photoCredits(): void
+    {
+        $credits = DemoPhotos::credits();
+
+        if ($credits === []) {
+            Page::where('slug', 'gorsel-kaynaklari')->delete();
+
+            return;
+        }
+
+        $lines = [];
+
+        foreach ($credits as $file => $info) {
+            $lines[] = sprintf(
+                '• %s — %s (%s) — %s',
+                $info['baslik'] ?: basename($file),
+                $info['yazar'] ?: 'Bilinmiyor',
+                $info['lisans'] ?: '—',
+                $info['kaynak'] ?: ''
+            );
+        }
+
+        $list = implode("\n", $lines);
+
+        $intro = [
+            'tr' => "Bu sitedeki demo ürün fotoğrafları Wikimedia Commons'tan alınmıştır ve yalnızca tanıtım amaçlıdır — gösterilen mobilyalar satılan ürünler değildir.\n\nAşağıda her görselin yaratıcısı, lisansı ve kaynağı listelenmiştir.",
+            'en' => "The demo product photographs on this site come from Wikimedia Commons and are for illustration only — the furniture shown is not the product being sold.\n\nEach image's creator, licence and source is listed below.",
+            'bg' => "Демонстрационните снимки на продукти идват от Wikimedia Commons и са само с илюстративна цел.\n\nПо-долу са авторът, лицензът и източникът на всяко изображение.",
+            'el' => "Οι φωτογραφίες προϊόντων προέρχονται από το Wikimedia Commons και είναι μόνο ενδεικτικές.\n\nΠαρακάτω αναφέρονται ο δημιουργός, η άδεια και η πηγή κάθε εικόνας.",
+        ];
+
+        $body = [];
+        foreach ($intro as $locale => $text) {
+            $body[$locale] = $text."\n\n".$list;
+        }
+
+        Page::updateOrCreate(['slug' => 'gorsel-kaynaklari'], [
+            'title' => [
+                'tr' => 'Görsel Kaynakları',
+                'en' => 'Image Credits',
+                'bg' => 'Източници на изображенията',
+                'el' => 'Πηγές Εικόνων',
+            ],
+            'body' => $body,
+            'is_active' => true,
+            'show_in_footer' => true,
+            'position' => 90,
+        ]);
     }
 
     private function faqs(): void

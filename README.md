@@ -70,6 +70,31 @@ Hepsi bir testle kapatıldı; yine de bilerek dolaşmakta fayda var.
 | `Vite::fonts()` çağrısını unutmak | `@font-face` üretilir ama sayfaya bağlanmaz, metin sistem fontuna düşer | Düzende çağrılıyor |
 | `.reveal { opacity: 0 }` | JS çalışmazsa sayfanın büyük bölümü görünmez | Gizleme `.js` sınıfına bağlandı |
 
+## Demo görselleri
+
+Ürün ve kategori görselleri `public/demo/urunler` altındaki fotoğraflardan
+gelir. Bunlar **Wikimedia Commons**'tan indirilir:
+
+```bash
+php tools/fetch-demo-photos.php          # tüm türler
+php tools/fetch-demo-photos.php sofa     # tek tür
+```
+
+Betik yalnızca ticari kullanıma açık lisansları (kamu malı, CC0, CC BY,
+CC BY-SA) kabul eder; NC/ND lisanslıları eler. Commons'taki mobilya
+fotoğraflarının çoğu amatör oda çekimi olduğundan her aday indirilip **kenar
+şeridi** ölçülür — zemin açık ve tekdüze değilse eleniyor, böylece yalnızca
+stüdyo/kesim çekimleri kalıyor.
+
+Kaynak ve lisans bilgileri `KAYNAKLAR.json` içinde tutulur ve alt bilgideki
+**Görsel Kaynakları** sayfasında yayımlanır (CC BY'ın kaynak gösterme şartı).
+
+Klasör boşsa katalog otomatik olarak `DemoImages` SVG çizimlerine döner —
+uygulama görsel olmadan da çalışır.
+
+> Bu fotoğraflar **tanıtım içindir**; gösterilen mobilyalar satılan ürünler
+> değildir. Canlıya çıkmadan önce gerçek ürün fotoğraflarıyla değiştirin.
+
 ## Doğrulama
 
 ```bash

@@ -159,7 +159,12 @@ tutmayan istekler `400` ile reddedilir.
 - [ ] Yönetici şifresini değiştirin, demo müşteri hesabını silin
 - [ ] Mağaza Ayarları → adres, telefon, e-posta, çalışma saatleri, sosyal medya
 - [ ] Logo ve favicon yükleyin
-- [ ] Demo ürünleri gerçek ürünlerle değiştirin, demo görselleri kaldırın
+- [ ] **Demo ürünleri ve fotoğrafları gerçekleriyle değiştirin.** Demo
+      fotoğraflar Wikimedia Commons'tan gelir (`public/demo/urunler`), CC BY /
+      CC BY-SA lisanslıdır ve **gösterilen mobilyalar sattığınız ürünler
+      değildir** — bu haliyle satışa açmak müşteriyi yanıltır. Gerçek
+      fotoğrafları yükledikten sonra alt bilgideki **Görsel Kaynakları**
+      sayfasını da silin.
 - [ ] **Mesafeli satış sözleşmesi ve gizlilik politikası metinleri yer
       tutucudur** — hukuk danışmanınızla güncelleyin
 - [ ] Kargo yöntemlerinin ücretlerini ve ücretsiz kargo sınırını ayarlayın

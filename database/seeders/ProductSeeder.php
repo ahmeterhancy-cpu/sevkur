@@ -7,6 +7,7 @@ use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
 use App\Support\DemoImages;
+use App\Support\DemoPhotos;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
@@ -114,6 +115,17 @@ class ProductSeeder extends Seeder
                 $colorSlugs = ['ceviz', 'dogal-mese', 'antrasit', 'krem', 'petrol-yesili', 'tarcin', 'gri', 'siyah'];
                 $colorSlug = $colorSlugs[$index % count($colorSlugs)];
 
+                // Fotograf varsa onu kullan; klasor bossa SVG cizime don.
+                // Ayni turdeki iki urun farkli fotograf dilimini alir.
+                $gallery = DemoPhotos::slice($shape, $n, 4);
+
+                if ($gallery === []) {
+                    $gallery = array_map(
+                        fn (int $variant) => DemoImages::product($shape, $slug, $variant),
+                        [0, 1, 2, 3]
+                    );
+                }
+
                 $names = [
                     'tr' => $model.' '.$typeNames[0],
                     'en' => $model.' '.$typeNames[1],
@@ -139,8 +151,8 @@ class ProductSeeder extends Seeder
                     'sale_target' => $onSale ? 80 + (($index * 5) % 60) : null,
                     'delivery_days' => $deliveryDays,
                     'dimensions' => $dimensions,
-                    'cover' => DemoImages::product($shape, $slug, 0),
-                    'hover_image' => DemoImages::product($shape, $slug, 1),
+                    'cover' => $gallery[0],
+                    'hover_image' => $gallery[1] ?? $gallery[0],
                     'is_active' => true,
                     'is_featured' => $index % 4 === 0,
                     'is_new' => $index % 5 === 0,
@@ -152,12 +164,12 @@ class ProductSeeder extends Seeder
                     'published_at' => now()->subDays(120 - $index),
                 ]);
 
-                // Ek galeri gorselleri
+                // Ek galeri gorselleri (kapak ve hover disindakiler)
                 $product->images()->delete();
-                foreach ([2, 3] as $variantIndex) {
+                foreach (array_slice($gallery, 2) as $position => $path) {
                     $product->images()->create([
-                        'path' => DemoImages::product($shape, $slug, $variantIndex),
-                        'position' => $variantIndex,
+                        'path' => $path,
+                        'position' => $position + 2,
                     ]);
                 }
 
