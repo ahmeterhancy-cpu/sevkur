@@ -3,7 +3,6 @@
 namespace App\Providers;
 
 use App\Models\Announcement;
-use App\Models\Category;
 use App\Models\MenuItem;
 use App\Models\Page;
 use App\Services\CartService;
@@ -41,7 +40,6 @@ class AppServiceProvider extends ServiceProvider
             if (! Schema::hasTable('categories')) {
                 $view->with([
                     'layoutMenu' => collect(),
-                    'layoutCategories' => collect(),
                     'layoutAnnouncements' => collect(),
                     'layoutFooterPages' => collect(),
                     'layoutCurrencies' => [],
@@ -52,7 +50,6 @@ class AppServiceProvider extends ServiceProvider
 
             $view->with([
                 'layoutMenu' => MenuItem::active()->where('location', 'header')->whereNull('parent_id')->with('children.children')->get(),
-                'layoutCategories' => Category::active()->roots()->where('show_in_menu', true)->with('activeChildren')->get(),
                 'layoutAnnouncements' => Announcement::active()->get(),
                 'layoutFooterPages' => Page::active()->where('show_in_footer', true)->orderBy('position')->get(),
                 'layoutCurrencies' => app(CurrencyService::class)->all(),

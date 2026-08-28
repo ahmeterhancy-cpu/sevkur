@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Announcement;
 use App\Models\Banner;
+use App\Models\Category;
 use App\Models\Faq;
 use App\Models\MenuItem;
 use App\Models\Page;
@@ -165,23 +166,25 @@ class ContentSeeder extends Seeder
     {
         MenuItem::query()->delete();
 
-        MenuItem::create([
-            'location' => 'header',
-            'label' => ['tr' => 'Hakkımızda', 'en' => 'About us', 'bg' => 'За нас', 'el' => 'Σχετικά'],
-            'type' => 'page',
-            'target_slug' => 'hakkimizda',
-            'position' => 0,
-            'is_active' => true,
-        ]);
+        // Ana kategoriler menude; alt kategoriler acilir menude gorunur.
+        // Alt menu MenuItem::submenu() ile kategoriden CANLI okunur, bu yuzden
+        // burada yalnizca ana kategoriler kaydedilir.
+        $position = 0;
 
-        MenuItem::create([
-            'location' => 'header',
-            'label' => ['tr' => 'Markalar', 'en' => 'Brands', 'bg' => 'Марки', 'el' => 'Μάρκες'],
-            'type' => 'custom',
-            'url' => localized_route('brands', [], 'tr', false),
-            'position' => 1,
-            'is_active' => true,
-        ]);
+        foreach (Category::whereNull('parent_id')->where('show_in_menu', true)->orderBy('position')->get() as $category) {
+            MenuItem::create([
+                'location' => 'header',
+                'label' => $category->translations('name'),
+                'type' => 'category',
+                'target_slug' => $category->slug,
+                'position' => $position++,
+                'is_active' => true,
+            ]);
+        }
+
+        // Markalar ve Hakkimizda menuye KONULMAZ: menu seridi kategorilere
+        // ayrildi, ikisi de alt bilgiden erisilebiliyor. Yonetici isterse
+        // Menu Ogeleri ekranindan geri ekleyebilir.
     }
 
     private function blog(): void

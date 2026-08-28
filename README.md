@@ -94,6 +94,16 @@ Tamamı panelden; Blade'de sabit metin yok.
 Bir bölümün verisi yoksa o bölüm sayfada hiç görünmez. Bölümlerin **sırası**
 Blade'de sabittir — panelden değiştirilemez.
 
+### Menü
+
+Başlık menüsü **Menü Öğeleri** ekranından yönetilir. Bir öğe kategoriye
+bağlandığında (`type: category`) alt menüsü o kategorinin alt kategorilerinden
+**canlı** okunur — yeni bir alt kategori açtığınızda menüyü ayrıca düzenlemek
+gerekmez. Aynı liste hem masaüstü şeridini hem mobil paneli besler.
+
+Markalar ve Hakkımızda menüde değil, alt bilgide; menü şeridi kategorilere
+ayrıldı. İstenirse Menü Öğeleri ekranından geri eklenebilir.
+
 ## Bu projede tökezlenen tuzaklar
 
 Hepsi bir testle kapatıldı; yine de bilerek dolaşmakta fayda var.

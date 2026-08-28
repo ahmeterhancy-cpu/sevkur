@@ -128,49 +128,24 @@
     {{-- ------------------------------------------------------------- gezinme --}}
     <nav class="hidden lg:block border-t border-line" aria-label="{{ __('shop.menu') }}">
         <div class="container-x">
-            <ul class="flex items-center gap-8 h-14 text-[0.9375rem]">
-                {{-- Tum kategoriler mega menusu --}}
-                <li class="relative has-mega">
-                    <button type="button" class="flex items-center gap-2 font-medium h-14">
-                        <x-ui.icon name="menu" :size="18" />
-                        {{ __('shop.all_categories') }}
-                        <x-ui.icon name="chevron-down" :size="14" />
-                    </button>
-                    <div class="mega">
-                        <div class="container-x py-8 grid grid-cols-4 gap-8">
-                            @foreach ($layoutCategories as $category)
-                                <div>
-                                    <a href="{{ localized_route('category', ['category' => $category->slug]) }}"
-                                       class="block font-medium mb-3 hover:text-brand">{{ $category->t('name') }}</a>
-                                    <ul class="space-y-2 text-[0.875rem] text-muted">
-                                        @foreach ($category->activeChildren as $child)
-                                            <li>
-                                                <a href="{{ localized_route('category', ['category' => $child->slug]) }}"
-                                                   class="hover:text-ink">{{ $child->t('name') }}</a>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-                </li>
-
+            <ul class="flex flex-wrap items-center gap-x-5 xl:gap-x-7 gap-y-1 min-h-14 py-1 text-[0.9375rem]">
                 <li><a href="{{ localized_route('home') }}" class="link-underline">{{ __('shop.home') }}</a></li>
                 <li><a href="{{ localized_route('shop') }}" class="link-underline">{{ __('shop.shop') }}</a></li>
 
                 @foreach ($layoutMenu as $item)
-                    <li class="relative {{ $item->children->isNotEmpty() ? 'has-drop' : '' }}">
-                        <a href="{{ $item->href() }}" class="link-underline flex items-center gap-1">
+                    @php $submenu = $item->submenu(); @endphp
+                    <li class="relative {{ $submenu !== [] ? 'has-drop' : '' }}">
+                        <a href="{{ $item->href() }}" class="link-underline flex items-center gap-1 whitespace-nowrap">
                             {{ $item->t('label') }}
-                            @if ($item->children->isNotEmpty())
+                            @if ($submenu !== [])
                                 <x-ui.icon name="chevron-down" :size="14" />
                             @endif
                         </a>
-                        @if ($item->children->isNotEmpty())
+                        @if ($submenu !== [])
                             <div class="drop">
-                                @foreach ($item->children as $child)
-                                    <a href="{{ $child->href() }}" class="block px-4 py-2 text-[0.875rem] hover:bg-cream">{{ $child->t('label') }}</a>
+                                @foreach ($submenu as $child)
+                                    <a href="{{ $child['href'] }}"
+                                       class="block px-4 py-2 text-[0.875rem] whitespace-nowrap hover:bg-cream">{{ $child['label'] }}</a>
                                 @endforeach
                             </div>
                         @endif
@@ -180,7 +155,7 @@
                 <li><a href="{{ localized_route('blog') }}" class="link-underline">{{ __('shop.blog') }}</a></li>
                 <li><a href="{{ localized_route('contact') }}" class="link-underline">{{ __('shop.contact') }}</a></li>
 
-                <li class="ml-auto flex items-center gap-2 text-[0.8125rem] text-muted">
+                <li class="ml-auto hidden 2xl:flex items-center gap-2 text-[0.8125rem] text-muted whitespace-nowrap">
                     <x-ui.icon name="headset" :size="18" class="text-brand" />
                     <span>{{ __('shop.need_help') }}</span>
                     <a href="{{ localized_route('faq') }}" class="font-medium text-ink link-underline">{{ __('shop.faq') }}</a>

@@ -57,29 +57,28 @@
             <a href="{{ localized_route('home') }}" class="block px-5 py-3 border-b border-line-soft">{{ __('shop.home') }}</a>
             <a href="{{ localized_route('shop') }}" class="block px-5 py-3 border-b border-line-soft">{{ __('shop.shop') }}</a>
 
-            @foreach ($layoutCategories as $category)
+
+
+            @foreach ($layoutMenu as $item)
+                @php $submenu = $item->submenu(); @endphp
                 <div data-submenu-item class="border-b border-line-soft">
                     <div class="flex items-center">
-                        <a href="{{ localized_route('category', ['category' => $category->slug]) }}" class="flex-1 px-5 py-3">{{ $category->t('name') }}</a>
-                        @if ($category->activeChildren->isNotEmpty())
-                            <button type="button" data-submenu-toggle class="px-4 py-3" aria-label="{{ $category->t('name') }}">
+                        <a href="{{ $item->href() }}" class="flex-1 px-5 py-3">{{ $item->t('label') }}</a>
+                        @if ($submenu !== [])
+                            <button type="button" data-submenu-toggle class="px-4 py-3" aria-label="{{ $item->t('label') }}">
                                 <x-ui.icon name="chevron-down" :size="18" />
                             </button>
                         @endif
                     </div>
-                    @if ($category->activeChildren->isNotEmpty())
+                    @if ($submenu !== [])
                         <div class="submenu bg-cream">
-                            @foreach ($category->activeChildren as $child)
-                                <a href="{{ localized_route('category', ['category' => $child->slug]) }}"
-                                   class="block pl-9 pr-5 py-2.5 text-[0.875rem] text-muted">{{ $child->t('name') }}</a>
+                            @foreach ($submenu as $child)
+                                <a href="{{ $child['href'] }}"
+                                   class="block pl-9 pr-5 py-2.5 text-[0.875rem] text-muted">{{ $child['label'] }}</a>
                             @endforeach
                         </div>
                     @endif
                 </div>
-            @endforeach
-
-            @foreach ($layoutMenu as $item)
-                <a href="{{ $item->href() }}" class="block px-5 py-3 border-b border-line-soft">{{ $item->t('label') }}</a>
             @endforeach
 
             <a href="{{ localized_route('blog') }}" class="block px-5 py-3 border-b border-line-soft">{{ __('shop.blog') }}</a>
