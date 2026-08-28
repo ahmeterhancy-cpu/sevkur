@@ -75,6 +75,27 @@ npm run build                 # yayına hazırlık
   dilli sitede her dilde Türkçe görünür. Ham `setting()` yalnızca dilden
   bağımsız değerler içindir (logo, telefon, kargo sınırı).
 
+## Görsel sistem
+
+Premium his ağırlıktan değil **boşluktan** gelir; sistem üç kurala dayanır.
+
+- **Görsel en büyük alandır.** Ürün kartı ve ürün sayfası galerisi 4:5 dikey
+  oranda; mobilyayı kareden daha iyi taşıyor ve aynı ızgarada görsel yüzeyi
+  belirgin büyüyor. Ürün sayfasında galeri sütunu bilgi sütunundan geniştir
+  (6fr/5fr).
+- **Tipografi sadedir.** Başlıklar büyür ama **incelir** (ağırlık 400,
+  letter-spacing -0.02em). Bölüm üstü küçük etiket nötr gridir — her bölümde
+  tekrarlayan marka turuncusu sayfayı şablon gibi gösteriyordu.
+- **Boşluk tek yerden ayarlanır.** `.section-y` ve `.section-head` sınıfları
+  bölüm nefesini clamp() ile ekrana göre ölçekler; sayfalarda tek tek py-*
+  yazılmaz.
+
+Hareket **ölçülüdür**: kart üzerine gelince görsel yumuşakça yaklaşır ve kart
+4px yükselir; kategori adının altından ince bir çizgi büyür. Izgaralar
+**kademeli** girer (--reveal-delay, öğe başına 70ms, en fazla 350ms) — hepsi
+aynı anda belirince hareket sıçrama gibi duruyordu. Tümü
+prefers-reduced-motion ile kapanır.
+
 ## Ana sayfa nasıl yönetilir
 
 Tamamı panelden; Blade'de sabit metin yok.

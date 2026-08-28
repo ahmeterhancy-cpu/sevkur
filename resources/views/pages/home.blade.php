@@ -65,8 +65,8 @@
 
     {{-- ------------------------------------------------------------ kategoriler --}}
     @if ($featuredCategories->isNotEmpty())
-        <section class="container-x py-14 lg:py-20">
-            <div class="flex flex-wrap items-end justify-between gap-4 mb-8">
+        <section class="container-x section-y">
+            <div class="flex flex-wrap items-end justify-between gap-4 section-head">
                 <div>
                     <span class="eyebrow">{{ __('shop.categories') }}</span>
                     <h2 class="section-title mt-2">{{ setting_t('home_categories_title', 'Odalarına göre keşfet') }}</h2>
@@ -77,20 +77,18 @@
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-x-4 gap-y-7 lg:gap-x-6">
                 @foreach ($featuredCategories as $category)
                     <a href="{{ localized_route('category', ['category' => $category->slug]) }}"
-                       class="group block reveal">
-                        <div class="aspect-square bg-cream overflow-hidden rounded-md border border-line
-                                    transition-colors duration-300 group-hover:border-ink">
-                            <img src="{{ media_url($category->image) }}" alt="{{ $category->t('name') }}"
-                                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-                                 loading="lazy">
+                       class="category-card group block reveal"
+                       style="--reveal-delay: {{ min($loop->index, 5) * 70 }}ms">
+                        <div class="category-card__media">
+                            <img src="{{ media_url($category->image) }}" alt="{{ $category->t('name') }}" loading="lazy">
                         </div>
 
-                        <h3 class="mt-3 text-[0.9375rem] font-medium leading-snug transition-colors group-hover:text-brand">
-                            {{ $category->t('name') }}
+                        <h3 class="mt-4 text-[0.9375rem] font-medium leading-snug">
+                            <span class="category-card__name">{{ $category->t('name') }}</span>
                         </h3>
 
                         @if ($category->product_total)
-                            <p class="mt-0.5 text-[0.8125rem] text-muted">
+                            <p class="mt-1 text-[0.8125rem] text-muted">
                                 {{ trans_choice('shop.product_count', $category->product_total, ['count' => $category->product_total]) }}
                             </p>
                         @endif
@@ -102,7 +100,7 @@
 
     {{-- ------------------------------------------------------------ orta afis --}}
     @if ($midBanners->isNotEmpty())
-        <section class="container-x pb-14 lg:pb-20">
+        <section class="container-x pb-[clamp(3.5rem,7vw,7rem)]">
             @php($midCols = ['md:grid-cols-1', 'md:grid-cols-2', 'md:grid-cols-3'][min(3, max(1, $midBanners->count())) - 1])
             <div class="grid gap-4 lg:gap-6 {{ $midCols }}">
                 @foreach ($midBanners as $banner)
@@ -129,8 +127,8 @@
 
     {{-- ---------------------------------------------------------- cok satanlar --}}
     @if ($bestSellers->isNotEmpty())
-        <section class="container-x pb-14 lg:pb-20">
-            <div class="text-center mb-10">
+        <section class="container-x pb-[clamp(3.5rem,7vw,7rem)]">
+            <div class="text-center section-head">
                 <h2 class="section-title">{{ setting_t('home_bestsellers_title', 'Çok Satanlar') }}</h2>
                 <p class="section-sub mt-2">{{ setting_t('home_bestsellers_sub', 'Müşterilerimizin en çok tercih ettiği parçalar.') }}</p>
             </div>
@@ -138,7 +136,7 @@
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-10 lg:gap-x-6">
                 @foreach ($bestSellers as $product)
                     <div class="reveal" style="transition-delay: {{ $loop->index * 40 }}ms">
-                        <x-product-card :product="$product" />
+                        <x-product-card :product="$product" style="--reveal-delay: {{ min($loop->index, 5) * 70 }}ms" />
                     </div>
                 @endforeach
             </div>
@@ -166,8 +164,8 @@
 
     {{-- -------------------------------------------------------------- firsatlar --}}
     @if ($deals->isNotEmpty())
-        <section class="container-x py-14 lg:py-20">
-            <div class="flex flex-wrap items-end justify-between gap-4 mb-8">
+        <section class="container-x section-y">
+            <div class="flex flex-wrap items-end justify-between gap-4 section-head">
                 <div>
                     <span class="eyebrow">{{ __('shop.badge_sale') }}</span>
                     <h2 class="section-title mt-2">{{ setting_t('home_deals_title', 'Haftanın Fırsatları') }}</h2>
@@ -191,7 +189,7 @@
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-10 lg:gap-x-6">
                 @foreach ($deals as $product)
                     <div class="reveal" style="transition-delay: {{ $loop->index * 40 }}ms">
-                        <x-product-card :product="$product" />
+                        <x-product-card :product="$product" style="--reveal-delay: {{ min($loop->index, 5) * 70 }}ms" />
                     </div>
                 @endforeach
             </div>
@@ -203,7 +201,7 @@
         <section class="bg-cream py-14 lg:py-20">
             {{-- Oklar ile ray ayni [data-rail] kabugunda olmali --}}
             <div class="container-x" data-rail>
-                <div class="flex flex-wrap items-end justify-between gap-4 mb-8">
+                <div class="flex flex-wrap items-end justify-between gap-4 section-head">
                     <div>
                         <span class="eyebrow">{{ __('shop.badge_new') }}</span>
                         <h2 class="section-title mt-2">{{ setting_t('home_new_title', 'Yeni Gelenler') }}</h2>
@@ -217,7 +215,7 @@
                 <div class="rail gap-4 lg:gap-6 -mx-4 px-4" data-rail-track>
                     @foreach ($newArrivals as $product)
                         <div class="w-[16rem] lg:w-[19rem]">
-                            <x-product-card :product="$product" />
+                            <x-product-card :product="$product" style="--reveal-delay: {{ min($loop->index, 5) * 70 }}ms" />
                         </div>
                     @endforeach
                 </div>
@@ -227,8 +225,8 @@
 
     {{-- ------------------------------------------------------------------ blog --}}
     @if ($posts->isNotEmpty())
-        <section class="container-x py-14 lg:py-20">
-            <div class="text-center mb-10">
+        <section class="container-x section-y">
+            <div class="text-center section-head">
                 <span class="eyebrow">{{ __('shop.blog') }}</span>
                 <h2 class="section-title mt-2">{{ setting_t('home_blog_title', 'Yaşam Alanı Notları') }}</h2>
             </div>

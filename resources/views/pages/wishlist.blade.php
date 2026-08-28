@@ -16,7 +16,7 @@
     @else
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-10 lg:gap-x-6">
             @foreach ($products as $product)
-                <x-product-card :product="$product" />
+                <x-product-card :product="$product" style="--reveal-delay: {{ min($loop->index, 5) * 70 }}ms" />
             @endforeach
         </div>
     @endif

@@ -256,22 +256,93 @@
         text-decoration: none;
     }
     /* --------------------------------------------------------------- basliklar */
+    /*
+     * Baslik hiyerarsisi.
+     *
+     * Premium his agirliktan degil BOSLUKTAN ve harf araligindan gelir:
+     * baslik buyur ama incelir (400), harfler hafifce sikisir. Kucuk ust
+     * etiket marka turuncusu yerine notr griye alindi — her bolumde
+     * tekrarlayan turuncu, sayfayi sablon gibi gosteriyordu.
+     */
     .eyebrow {
-        font-size: 0.75rem;
-        letter-spacing: 0.18em;
+        font-size: 0.6875rem;
+        letter-spacing: 0.22em;
         text-transform: uppercase;
-        color: var(--color-brand);
+        color: var(--color-muted);
         font-weight: 500;
     }
 
     .section-title {
-        font-size: clamp(1.6rem, 3vw, 2.25rem);
-        font-weight: 500;
+        font-size: clamp(1.75rem, 3.4vw, 2.75rem);
+        font-weight: 400;
+        letter-spacing: -0.02em;
+        line-height: 1.15;
     }
 
     .section-sub {
         color: var(--color-muted);
-        font-size: 0.9375rem;
+        font-size: 1rem;
+        line-height: 1.6;
+        max-width: 44ch;
+    }
+
+    /* Bolumler arasi nefes payi; tek yerden ayarlanir */
+    .section-y {
+        padding-top: clamp(3.5rem, 7vw, 7rem);
+        padding-bottom: clamp(3.5rem, 7vw, 7rem);
+    }
+
+    .section-head {
+        margin-bottom: clamp(2rem, 4vw, 3.25rem);
+    }
+
+    /* -------------------------------------------------------- kategori karti */
+    .category-card__media {
+        position: relative;
+        overflow: hidden;
+        aspect-ratio: 1 / 1;
+        background: var(--color-cream);
+        border: 1px solid var(--color-line);
+        border-radius: 6px;
+        transition: border-color 0.35s ease;
+    }
+
+    .category-card:hover .category-card__media {
+        border-color: var(--color-ink);
+    }
+
+    .category-card__media img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .category-card:hover .category-card__media img {
+        transform: scale(1.05);
+    }
+
+    /* Adin altindan buyuyen ince cizgi: gecisi sessizce isaret eder */
+    .category-card__name {
+        position: relative;
+        display: inline-block;
+    }
+
+    .category-card__name::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: -2px;
+        width: 100%;
+        height: 1px;
+        background: currentColor;
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .category-card:hover .category-card__name::after {
+        transform: scaleX(1);
     }
 
     /* ------------------------------------------------------------ urun karti */
@@ -280,22 +351,36 @@
         background: #ffffff;
     }
 
+    /*
+     * Gorsel karttaki en buyuk alan olsun: 1:1 yerine 4:5 dikey oran
+     * mobilyayi daha iyi tasiyor ve ayni izgarada gorsel yuzeyi ~%25 artiyor.
+     */
     .product-card__media {
         position: relative;
         overflow: hidden;
         background: var(--color-cream);
-        aspect-ratio: 1 / 1;
+        aspect-ratio: 4 / 5;
+        border-radius: 4px;
     }
 
     .product-card__media img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: opacity 0.4s ease, transform 0.6s ease;
+        transition: opacity 0.5s ease, transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
     .product-card:hover .product-card__media img.is-primary {
-        transform: scale(1.04);
+        transform: scale(1.06);
+    }
+
+    /* Kart butun olarak cok hafif yukselir — gozle secilir, dikkat dagitmaz */
+    .product-card {
+        transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .product-card:hover {
+        transform: translateY(-4px);
     }
 
     .product-card__hover {
@@ -692,10 +777,22 @@
     | sinifi app.js'in en basinda eklenir. JS kapaliysa (ya da bir hata olusursa)
     | icerik oldugu gibi gorunur kalir.
     */
+    /*
+     * Goruse girerken beliren ogeler.
+     *
+     * --reveal-delay ile izgaradaki kartlar sirayla girer (kademeli giris);
+     * hepsi ayni anda belirdiginde hareket "sicrama" gibi duruluyor, sirayla
+     * girince goz satiri dogal takip ediyor. Gecikme Blade tarafinda oge
+     * sirasindan hesaplanir ve UST SINIRLIDIR — uzun listelerde son kart
+     * dakikalarca beklemesin.
+     */
     .js .reveal {
         opacity: 0;
-        transform: translateY(18px);
-        transition: opacity 0.7s ease, transform 0.7s ease;
+        transform: translateY(22px);
+        transition:
+            opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+            transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        transition-delay: var(--reveal-delay, 0ms);
     }
 
     .js .reveal.is-visible {
@@ -708,6 +805,16 @@
             opacity: 1;
             transform: none;
             transition: none;
+        }
+
+        .product-card,
+        .product-card__media img,
+        .category-card__media img {
+            transition: none;
+        }
+
+        .product-card:hover {
+            transform: none;
         }
     }
 }

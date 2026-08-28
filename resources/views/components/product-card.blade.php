@@ -7,7 +7,7 @@
     $url = localized_route('product', ['product' => $product->slug]);
 @endphp
 
-<article class="product-card group">
+<article {{ $attributes->class(['product-card group reveal']) }}>
     <div class="product-card__media">
         <a href="{{ $url }}" class="block w-full h-full" aria-label="{{ $product->t('name') }}">
             <img src="{{ media_url($product->cover) }}" alt="{{ $product->t('name') }}"
@@ -73,7 +73,7 @@
         </div>
     </div>
 
-    <div class="pt-4 text-center">
+    <div class="pt-5 text-center">
         @if ($product->category)
             <a href="{{ localized_route('category', ['category' => $product->category->slug]) }}"
                class="text-[0.75rem] uppercase tracking-widest text-muted hover:text-brand">
@@ -81,7 +81,7 @@
             </a>
         @endif
 
-        <h3 class="mt-1 text-[1rem] font-normal leading-snug">
+        <h3 class="mt-1.5 text-[1.0625rem] font-normal leading-snug tracking-[-0.01em]">
             <a href="{{ $url }}" class="link-underline">{{ $product->t('name') }}</a>
         </h3>
 

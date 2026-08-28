@@ -53,11 +53,11 @@
 <x-breadcrumb :items="$crumbs" />
 
 <div class="container-x py-10 lg:py-14">
-    <div class="grid lg:grid-cols-2 gap-8 lg:gap-14">
+    <div class="grid lg:grid-cols-[6fr_5fr] gap-8 lg:gap-16">
 
         {{-- ---------------------------------------------------------- galeri --}}
         <div data-gallery>
-            <div class="bg-cream aspect-square overflow-hidden">
+            <div class="bg-cream aspect-[4/5] overflow-hidden rounded-md">
                 <img src="{{ media_url($gallery[0] ?? null) }}" alt="{{ $product->t('name') }}"
                      class="w-full h-full object-cover" data-gallery-main fetchpriority="high">
             </div>
@@ -66,7 +66,7 @@
                 <div class="grid grid-cols-5 gap-3 mt-3">
                     @foreach ($gallery as $path)
                         <button type="button" data-gallery-thumb="{{ media_url($path) }}"
-                                class="aspect-square bg-cream border-2 {{ $loop->first ? 'is-active' : 'border-transparent' }} overflow-hidden">
+                                class="aspect-square bg-cream border-2 {{ $loop->first ? 'is-active' : 'border-transparent' }} overflow-hidden rounded">
                             <img src="{{ media_url($path) }}" alt="" class="w-full h-full object-cover" loading="lazy">
                         </button>
                     @endforeach
@@ -392,7 +392,7 @@
             <h2 class="section-title text-center mb-10">{{ __('shop.related_products') }}</h2>
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-10 lg:gap-x-6">
                 @foreach ($related->take(4) as $item)
-                    <x-product-card :product="$item" />
+                    <x-product-card :product="$item" style="--reveal-delay: {{ min($loop->index, 5) * 70 }}ms" />
                 @endforeach
             </div>
         </section>
