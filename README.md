@@ -96,7 +96,9 @@ Blade'de sabittir — panelden değiştirilemez.
 
 ### Menü
 
-Başlık menüsü **Menü Öğeleri** ekranından yönetilir. Bir öğe kategoriye
+Başlık menüsü **Menü** ekranından yönetilir: sıra sürükle-bırak, etiket dört
+dilde, öğeler yayından kaldırılabilir. Kategori seçtiğinizde etiket kendiliğinden
+dolar. Bir öğe kategoriye
 bağlandığında (`type: category`) alt menüsü o kategorinin alt kategorilerinden
 **canlı** okunur — yeni bir alt kategori açtığınızda menüyü ayrıca düzenlemek
 gerekmez. Aynı liste hem masaüstü şeridini hem mobil paneli besler.

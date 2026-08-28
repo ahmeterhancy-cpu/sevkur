@@ -2,9 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Filament\Resources\MenuItems\Pages\CreateMenuItem;
+use App\Filament\Resources\MenuItems\Pages\EditMenuItem;
 use App\Models\Category;
 use App\Models\MenuItem;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Livewire\Livewire;
 use Tests\ShopTestCase;
 
 /**
@@ -125,6 +129,52 @@ class NavigationTest extends ShopTestCase
         DB::disableQueryLog();
 
         $this->assertLessThanOrEqual(2, $queries, 'Her menu ogesi icin ayri kategori sorgusu aciliyor.');
+    }
+
+    public function test_the_menu_can_be_edited_from_the_admin_panel(): void
+    {
+        $this->actingAs(User::where('email', 'admin@sevkurmobilya.com')->firstOrFail());
+
+        $item = MenuItem::where('type', 'category')->orderBy('position')->firstOrFail();
+
+        Livewire::test(EditMenuItem::class, [
+            'record' => $item->getKey(),
+        ])->fillForm([
+            'label' => ['tr' => 'Salon', 'en' => 'Living'],
+        ])->call('save')->assertHasNoFormErrors();
+
+        MenuItem::forgetCategoryIndex();
+
+        $this->get(localized_route('home'))->assertSuccessful()->assertSee('Salon', false);
+    }
+
+    public function test_choosing_a_category_fills_the_label_in_every_language(): void
+    {
+        $this->actingAs(User::where('email', 'admin@sevkurmobilya.com')->firstOrFail());
+
+        $category = Category::whereNull('parent_id')->orderBy('position')->firstOrFail();
+
+        $state = Livewire::test(CreateMenuItem::class)
+            ->set('data.type', 'category')
+            ->set('data.target_slug', $category->slug)
+            ->get('data');
+
+        // Yonetici etiketi dort dile elle yazmak zorunda kalmasin
+        $this->assertSame($category->t('name', 'tr'), $state['label']['tr'] ?? null);
+        $this->assertSame($category->t('name', 'en'), $state['label']['en'] ?? null);
+    }
+
+    public function test_hiding_a_menu_item_removes_it_from_the_storefront(): void
+    {
+        $item = MenuItem::where('type', 'category')->orderBy('position')->firstOrFail();
+        $label = $item->t('label');
+
+        $item->update(['is_active' => false]);
+        MenuItem::forgetCategoryIndex();
+
+        $html = $this->get(localized_route('contact'))->assertSuccessful()->getContent();
+
+        $this->assertStringNotContainsString('>'.$label.'<', $html);
     }
 
     public function test_a_broken_category_link_does_not_break_the_page(): void

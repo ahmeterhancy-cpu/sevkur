@@ -38,18 +38,22 @@ class MenuItemResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Menü';
 
+    /** @var array<string, string> */
+    private const TYPES = [
+        'custom' => 'Serbest adres',
+        'category' => 'Kategori',
+        'page' => 'Sayfa',
+        'shop' => 'Mağaza',
+        'blog' => 'Blog',
+        'contact' => 'İletişim',
+    ];
+
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Translatable::text('label', 'Etiket'),
-            Select::make('type')->label('Bağlantı türü')->options([
-                'custom' => 'Serbest adres',
-                'category' => 'Kategori',
-                'page' => 'Sayfa',
-                'shop' => 'Mağaza',
-                'blog' => 'Blog',
-                'contact' => 'İletişim',
-            ])->default('custom')->required()->live(),
+
+            Select::make('type')->label('Bağlantı türü')->options(self::TYPES)
+                ->default('custom')->required()->live(),
 
             Select::make('target_slug')
                 ->label('Hedef')
@@ -61,19 +65,46 @@ class MenuItemResource extends Resource
                     default => [],
                 })
                 ->searchable()
-                ->visible(fn ($get) => in_array($get('type'), ['category', 'page'], true)),
+                ->required(fn ($get) => in_array($get('type'), ['category', 'page'], true))
+                ->visible(fn ($get) => in_array($get('type'), ['category', 'page'], true))
+                ->live()
+                // Kategori secilince etiket dort dilde kendiliginden dolsun;
+                // yonetici yine de uzerine yazabilir.
+                ->afterStateUpdated(function ($state, $get, $set) {
+                    if ($get('type') !== 'category' || ! $state) {
+                        return;
+                    }
+
+                    $category = Category::where('slug', $state)->first();
+
+                    if (! $category) {
+                        return;
+                    }
+
+                    foreach (Locales::all() as $locale) {
+                        if (blank($get('label.'.$locale))) {
+                            $set('label.'.$locale, $category->t('name', $locale));
+                        }
+                    }
+                })
+                ->helperText(fn ($get) => $get('type') === 'category'
+                    ? 'Kategorinin alt kategorileri açılır menüde kendiliğinden görünür.'
+                    : null),
 
             TextInput::make('url')->label('Adres')->maxLength(255)
+                ->required(fn ($get) => $get('type') === 'custom')
                 ->visible(fn ($get) => $get('type') === 'custom'),
 
             Select::make('parent_id')
                 ->label('Üst menü')
                 ->relationship('parent', 'id')
                 ->getOptionLabelFromRecordUsing(fn (MenuItem $record) => $record->t('label', Locales::default()))
-                ->searchable()->preload()->placeholder('Üst seviye'),
+                ->searchable()->preload()->placeholder('Üst seviye')
+                ->helperText('Boş bırakırsanız menü şeridinde görünür.'),
 
-            TextInput::make('position')->label('Sıra')->numeric()->default(0),
             Toggle::make('is_active')->label('Yayında')->default(true),
+
+            Translatable::text('label', 'Etiket')->columnSpanFull(),
         ])->columns(2);
     }
 
@@ -81,13 +112,20 @@ class MenuItemResource extends Resource
     {
         return $table
             ->defaultSort('position')
+            // Menu sirasi surukle birak ile degisir; sayi girmek zorunda degil
+            ->reorderable('position')
             ->columns([
                 TextColumn::make('label')->label('Etiket')
                     ->state(fn ($record) => $record->t('label', Locales::default()))
-                    ->description(fn (MenuItem $record) => $record->parent?->t('label', Locales::default())),
-                TextColumn::make('type')->label('Tür')->badge(),
+                    ->description(fn (MenuItem $record) => $record->parent
+                        ? '↳ '.$record->parent->t('label', Locales::default())
+                        : null),
+                TextColumn::make('type')->label('Tür')->badge()
+                    ->formatStateUsing(fn (string $state) => self::TYPES[$state] ?? $state),
                 TextColumn::make('target_slug')->label('Hedef')->placeholder('—'),
-                TextColumn::make('position')->label('Sıra')->sortable(),
+                TextColumn::make('submenu')->label('Alt menü')
+                    ->state(fn (MenuItem $record) => count($record->submenu()) ?: '—')
+                    ->tooltip(fn (MenuItem $record) => implode(', ', array_column($record->submenu(), 'label')) ?: null),
                 ToggleColumn::make('is_active')->label('Yayında'),
             ])
             ->recordActions([EditAction::make()])
