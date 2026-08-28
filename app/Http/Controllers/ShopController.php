@@ -129,7 +129,7 @@ class ShopController extends Controller
         abort_unless($product->is_active, 404);
 
         $product->load([
-            'images', 'variants', 'category.parent', 'brand',
+            'images', 'variants', 'optionPrices', 'category.parent', 'brand',
             'attributeValues.attribute', 'approvedReviews',
         ]);
 

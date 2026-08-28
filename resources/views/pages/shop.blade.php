@@ -217,7 +217,7 @@
                 <a href="{{ localized_route('shop') }}" class="btn btn-primary mt-6">{{ __('shop.clear_filters') }}</a>
             </div>
         @else
-            <div class="grid grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-10 lg:gap-x-6 pt-8">
+            <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 lg:gap-4 pt-6 filter-target" data-results>
                 @foreach ($products as $product)
                     <div class="reveal" style="transition-delay: {{ ($loop->index % 6) * 40 }}ms">
                         <x-product-card :product="$product" style="--reveal-delay: {{ min($loop->index, 5) * 70 }}ms" />

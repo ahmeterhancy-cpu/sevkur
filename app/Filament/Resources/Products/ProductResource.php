@@ -23,6 +23,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
@@ -131,6 +132,51 @@ class ProductResource extends Resource
                             ->helperText('Mağaza filtrelerinde kullanılır.')
                             ->columnSpanFull(),
 
+                        Section::make('Seçenek fiyat farkları')
+                            ->description('Her kombinasyona ayrı fiyat girmek yerine seçenek başına fark yazın: '
+                                .'“Köşe +2.000 ₺” kuralı, o ölçüdeki bütün renkleri birden fiyatlar. '
+                                .'Varyant satırında fiyat alanı boş kaldığı sürece bu kurallar geçerlidir.')
+                            ->collapsible()
+                            ->schema([
+                                Repeater::make('optionPrices')
+                                    ->label('')
+                                    ->relationship()
+                                    ->schema([
+                                        Select::make('attribute_slug')
+                                            ->label('Seçenek')
+                                            ->options(fn (): array => Attribute::where('is_variant', true)
+                                                ->orderBy('position')
+                                                ->get()
+                                                ->mapWithKeys(fn (Attribute $a) => [$a->slug => $a->t('name', Locales::default())])
+                                                ->all())
+                                            ->required()
+                                            ->live(),
+
+                                        Select::make('value_slug')
+                                            ->label('Değer')
+                                            ->options(fn ($get): array => AttributeValue::whereHas(
+                                                'attribute',
+                                                fn ($q) => $q->where('slug', $get('attribute_slug'))
+                                            )
+                                                ->orderBy('position')
+                                                ->get()
+                                                ->mapWithKeys(fn (AttributeValue $v) => [$v->slug => $v->t('name', Locales::default())])
+                                                ->all())
+                                            ->required(),
+
+                                        TextInput::make('price_delta')
+                                            ->label('Fark (₺)')
+                                            ->numeric()
+                                            ->default(0)
+                                            ->helperText('Eksi yazılabilir.'),
+                                    ])
+                                    ->columns(3)
+                                    ->defaultItems(0)
+                                    ->addActionLabel('Kural ekle')
+                                    ->columnSpanFull(),
+                            ])
+                            ->columnSpanFull(),
+
                         Repeater::make('variants')
                             ->label('Varyantlar')
                             ->relationship()
@@ -141,7 +187,10 @@ class ProductResource extends Resource
 
                                 TextInput::make('sku')->label('Kod'),
                                 TextInput::make('price')->label('Fiyat (₺)')->numeric()
-                                    ->helperText('Boşsa ürün fiyatı geçerlidir.'),
+                                    ->placeholder(fn ($record) => $record?->exists
+                                        ? number_format($record->effectivePrice(), 2, ',', '.')
+                                        : null)
+                                    ->helperText('Boş bırakın: ürün fiyatı + seçenek farkları uygulanır.'),
                                 TextInput::make('stock')->label('Stok')->numeric()->default(0),
                                 FileUpload::make('image')->label('Görsel')->image()->directory('urunler'),
                                 Toggle::make('is_active')->label('Aktif')->default(true),

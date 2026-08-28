@@ -52,7 +52,7 @@ class CartService
 
         $this->cachedToken = $token;
 
-        return $this->cart = $cart->load('items.product', 'items.variant');
+        return $this->cart = $cart->load('items.product.optionPrices', 'items.variant');
     }
 
     /** Eski (kullaniciya ait) sepeti guncel sepete tasir. */

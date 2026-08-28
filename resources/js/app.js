@@ -510,11 +510,31 @@ function initSearch() {
 /* --------------------------------------------------------------- suzgecler */
 
 function initFilters() {
+    const results = $('[data-results]');
+
+    // Suzgec sayfayi yeniden yukluyor (JS kapaliyken de calissin diye).
+    // Istek suresince sonuclari soluklastiriyoruz; aksi halde tiklamayla
+    // yeni sayfa arasinda hicbir sey olmuyormus gibi gorunuyor.
+    const markPending = () => results?.classList.add('is-loading');
+
     $$('[data-filter-form]').forEach((form) => {
         $$('input[type="checkbox"], select', form).forEach((input) => {
-            input.addEventListener('change', () => form.submit());
+            input.addEventListener('change', () => {
+                markPending();
+                form.submit();
+            });
         });
+
+        form.addEventListener('submit', markPending);
     });
+
+    // Siralama/sayfalama baglantilari da ayni geri bildirimi versin
+    $$('[data-results-link]').forEach((link) => {
+        link.addEventListener('click', markPending);
+    });
+
+    // Geri tusuyla donuldugunde sayfa onbellekten gelir; solgun kalmasin
+    window.addEventListener('pageshow', () => results?.classList.remove('is-loading'));
 }
 
 /* ------------------------------------------------------------------ bulten */

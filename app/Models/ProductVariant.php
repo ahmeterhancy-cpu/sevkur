@@ -101,10 +101,38 @@ class ProductVariant extends Model
         return implode(' / ', $parts);
     }
 
-    /** Varyantin kendi fiyati yoksa urunun fiyati gecerlidir. */
+    /**
+     * Varyantin satis fiyati.
+     *
+     * Oncelik sirasi:
+     *   1. Varyanta ELLE yazilmis fiyat (kurallari ezer)
+     *   2. Urun fiyati + secilen seceneklerin fark toplami
+     *   3. Yalin urun fiyati
+     *
+     * Ikinci adim, her kombinasyona tek tek fiyat girme zorunlulugunu
+     * kaldirir: "Kose +2000" kurali dokuz varyantin ucunu birden fiyatlar.
+     */
     public function effectivePrice(): float
     {
-        return (float) ($this->price ?? $this->product->price);
+        if ($this->price !== null) {
+            return (float) $this->price;
+        }
+
+        $base = (float) $this->product->price;
+        $deltas = $this->product->optionDeltas();
+
+        foreach ($this->options ?? [] as $attributeSlug => $valueSlug) {
+            $base += $deltas[$attributeSlug][$valueSlug] ?? 0.0;
+        }
+
+        // Kurallar eksiye dusurmus olabilir; magazada negatif fiyat gosterilmez
+        return max(0.0, round($base, 2));
+    }
+
+    /** Elle girilmis fiyat mi, kurallardan mi hesaplandi? */
+    public function hasManualPrice(): bool
+    {
+        return $this->price !== null;
     }
 
     public function isInStock(): bool

@@ -77,25 +77,55 @@ npm run build                 # yayına hazırlık
 
 ## Görsel sistem
 
-Premium his ağırlıktan değil **boşluktan** gelir; sistem üç kurala dayanır.
+Premium his **boşluğun genişliğinden değil kartın kalitesinden** gelir; vitrin
+bilinçli olarak yoğundur — boş alan yerine ürün.
 
-- **Görsel en büyük alandır.** Ürün kartı ve ürün sayfası galerisi 4:5 dikey
-  oranda; mobilyayı kareden daha iyi taşıyor ve aynı ızgarada görsel yüzeyi
-  belirgin büyüyor. Ürün sayfasında galeri sütunu bilgi sütunundan geniştir
-  (6fr/5fr).
+- **Görsel kartın en büyük alanı.** Ürün kartı ve ürün sayfası galerisi 4:5
+  dikey oranda; mobilyayı kareden daha iyi taşıyor. Ürün sayfasında galeri
+  sütunu bilgi sütunundan geniştir (6fr/5fr).
+- **Yoğun ızgara.** Ana sayfada 5, mağazada 4 sütuna kadar; boşluk 16px.
+  Kartları birbirinden ayıran şey aralık değil, kartın kendi yüzeyi: ince
+  çerçeve, 6px köşe ve üzerine gelince yumuşak gölge.
 - **Tipografi sadedir.** Başlıklar büyür ama **incelir** (ağırlık 400,
   letter-spacing -0.02em). Bölüm üstü küçük etiket nötr gridir — her bölümde
   tekrarlayan marka turuncusu sayfayı şablon gibi gösteriyordu.
 - **Boşluk tek yerden ayarlanır.** `.section-y` ve `.section-head` sınıfları
-  bölüm nefesini clamp() ile ekrana göre ölçekler; sayfalarda tek tek py-*
-  yazılmaz.
+  bölüm nefesini clamp() ile ölçekler; sayfalarda tek tek py-* yazılmaz.
 
-Hareket **ölçülüdür**: kart üzerine gelince görsel yumuşakça yaklaşır ve kart
-4px yükselir; kategori adının altından ince bir çizgi büyür. Izgaralar
-**kademeli** girer (--reveal-delay, öğe başına 70ms, en fazla 350ms) — hepsi
-aynı anda belirince hareket sıçrama gibi duruyordu. Tümü
-prefers-reduced-motion ile kapanır.
+Hareket **ölçülüdür**: kart üzerine gelince görsel yumuşakça yaklaşır, kart 3px
+yükselir ve gölge belirir; kategori adının altından ince bir çizgi büyür.
+Izgaralar **kademeli** girer (`--reveal-delay`, öğe başına 70ms, en fazla
+350ms). Süzgeç uygulanırken sonuç ızgarası kısaca solar — süzgeç sayfayı
+yeniden yüklediği için, tıklamanın karşılık bulduğu başka türlü belli olmuyor.
+Tümü `prefers-reduced-motion` ile kapanır.
 
+## Varyant fiyatlama
+
+Bir üründe 3 renk × 3 ölçü dokuz varyant demek. Dokuz fiyatı elle girmek yerine
+**seçenek başına fark** yazılır:
+
+| Seçenek | Fark |
+|---|---|
+| Ölçü → Köşe | +2.000 ₺ |
+| Renk → Antrasit | +250 ₺ |
+
+Varyant fiyatı şu sırayla belirlenir:
+
+1. Varyanta **elle** yazılmış fiyat (kuralları ezer)
+2. Ürün fiyatı **+ seçilen seçeneklerin farkları**
+3. Yalın ürün fiyatı
+
+Kurallar `product_option_prices` tablosunda, ürün + nitelik slug + değer slug
+olarak tutulur; varyantın `options` alanıyla doğrudan eşleşir. Fark eksi
+olabilir (indirimli seçenek) ama sonuç asla sıfırın altına inmez.
+
+Panelde akış: **Seçenek fiyat farkları** bölümüne birkaç kural gir → **Kombinasyon
+üret** ile eksik kombinasyonları aç → yalnızca istisna olan varyanta elle fiyat
+yaz. Varyant listesi kombinasyonları otomatik adlandırır ("Ceviz / 3'lü").
+
+> `Product::variants()` ilişkisi `chaperone()` kullanır: varyantlara kendi
+> ürünlerini geri bağlar. Olmazsa her varyantın fiyatı hesaplanırken ürün
+> yeniden sorgulanır (N+1); bir test bunu sıfır sorguda tutuyor.
 ## Ana sayfa nasıl yönetilir
 
 Tamamı panelden; Blade'de sabit metin yok.

@@ -3,7 +3,7 @@
         @if ($paginator->onFirstPage())
             <span class="icon-btn opacity-40"><x-ui.icon name="chevron-left" :size="18" /></span>
         @else
-            <a href="{{ $paginator->previousPageUrl() }}" class="icon-btn" rel="prev" aria-label="prev">
+            <a href="{{ $paginator->previousPageUrl() }}" class="icon-btn" data-results-link rel="prev" aria-label="prev">
                 <x-ui.icon name="chevron-left" :size="18" />
             </a>
         @endif
@@ -18,14 +18,14 @@
                     @if ($page == $paginator->currentPage())
                         <span class="icon-btn is-active" aria-current="page">{{ $page }}</span>
                     @else
-                        <a href="{{ $url }}" class="icon-btn">{{ $page }}</a>
+                        <a href="{{ $url }}" class="icon-btn" data-results-link>{{ $page }}</a>
                     @endif
                 @endforeach
             @endif
         @endforeach
 
         @if ($paginator->hasMorePages())
-            <a href="{{ $paginator->nextPageUrl() }}" class="icon-btn" rel="next" aria-label="next">
+            <a href="{{ $paginator->nextPageUrl() }}" class="icon-btn" data-results-link rel="next" aria-label="next">
                 <x-ui.icon name="chevron-right" :size="18" />
             </a>
         @else

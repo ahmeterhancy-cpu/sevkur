@@ -66,7 +66,10 @@ class Product extends Model
 
     public function variants(): HasMany
     {
-        return $this->hasMany(ProductVariant::class)->orderBy('position');
+        // chaperone(): her varyanta kendi urununu geri baglar. Olmazsa
+        // varyant fiyati hesaplanirken $variant->product her seferinde
+        // yeniden sorgulanir (N+1).
+        return $this->hasMany(ProductVariant::class)->orderBy('position')->chaperone();
     }
 
     public function reviews(): HasMany
@@ -89,7 +92,28 @@ class Product extends Model
         return $this->belongsToMany(self::class, 'product_related', 'product_id', 'related_id');
     }
 
+    public function optionPrices(): HasMany
+    {
+        return $this->hasMany(ProductOptionPrice::class);
+    }
+
     // ----------------------------------------------------------------- varyant
+
+    /**
+     * Secenek fiyat farklari: ["olcu" => ["kose" => 2000.0], ...]
+     *
+     * @return array<string, array<string, float>>
+     */
+    public function optionDeltas(): array
+    {
+        $map = [];
+
+        foreach ($this->optionPrices as $rule) {
+            $map[$rule->attribute_slug][$rule->value_slug] = (float) $rule->price_delta;
+        }
+
+        return $map;
+    }
 
     /**
      * Varyantlarin dayandigi secenek eksenleri: Renk, Olcu gibi.

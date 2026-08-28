@@ -74,7 +74,7 @@
                 <a href="{{ localized_route('shop') }}" class="btn btn-ghost btn-sm">{{ __('shop.view_all') }}</a>
             </div>
 
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-x-4 gap-y-7 lg:gap-x-6">
+            <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 lg:gap-4">
                 @foreach ($featuredCategories as $category)
                     <a href="{{ localized_route('category', ['category' => $category->slug]) }}"
                        class="category-card group block reveal"
@@ -133,7 +133,7 @@
                 <p class="section-sub mt-2">{{ setting_t('home_bestsellers_sub', 'Müşterilerimizin en çok tercih ettiği parçalar.') }}</p>
             </div>
 
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-10 lg:gap-x-6">
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-4">
                 @foreach ($bestSellers as $product)
                     <div class="reveal" style="transition-delay: {{ $loop->index * 40 }}ms">
                         <x-product-card :product="$product" style="--reveal-delay: {{ min($loop->index, 5) * 70 }}ms" />
@@ -186,7 +186,7 @@
                 @endif
             </div>
 
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-10 lg:gap-x-6">
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-4">
                 @foreach ($deals as $product)
                     <div class="reveal" style="transition-delay: {{ $loop->index * 40 }}ms">
                         <x-product-card :product="$product" style="--reveal-delay: {{ min($loop->index, 5) * 70 }}ms" />
