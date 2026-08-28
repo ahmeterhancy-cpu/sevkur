@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'product_count' => ':count product|:count products',
     'brand' => 'Sevkur Furniture',
     'home' => 'Home',
     'shop' => 'Shop',

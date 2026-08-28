@@ -11,9 +11,18 @@ export default defineConfig({
             // Yazi tipleri derleme aninda indirilip projeye gomulur; canlida
             // disariya font istegi gitmez (Turhost icin onemli).
             fonts: [
-                bunny('Jost', { weights: [300, 400, 500, 600, 700] }),
+                // latin-ext SART: Turkce s/g/I harfleri (U+015F, U+011F, U+0130)
+                // sade latin alt kumesinde YOK; eksik olursa yalniz o harfler
+                // sistem fontuna duser ve basliklar karisik gorunur.
+                bunny('Jost', {
+                    weights: [300, 400, 500, 600, 700],
+                    subsets: ['latin', 'latin-ext'],
+                }),
                 // Jost'ta Kiril ve Yunan alfabesi yok; BG/EL icin Manrope.
-                bunny('Manrope', { weights: [400, 500, 600, 700] }),
+                bunny('Manrope', {
+                    weights: [400, 500, 600, 700],
+                    subsets: ['latin', 'latin-ext', 'cyrillic', 'cyrillic-ext', 'greek'],
+                }),
             ],
         }),
         tailwindcss(),

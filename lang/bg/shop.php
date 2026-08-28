@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'product_count' => ':count продукт|:count продукта',
     'brand' => 'Севкур Мебели',
     'home' => 'Начало',
     'shop' => 'Магазин',

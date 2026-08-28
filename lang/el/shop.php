@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'product_count' => ':count προϊόν|:count προϊόντα',
     'brand' => 'Sevkur Έπιπλα',
     'home' => 'Αρχική',
     'shop' => 'Κατάστημα',

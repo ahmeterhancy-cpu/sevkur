@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'product_count' => ':count ürün|:count ürün',
     // ------------------------------------------------------------------ genel
     'brand' => 'Sevkur Mobilya',
     'home' => 'Ana Sayfa',

@@ -74,15 +74,26 @@
                 <a href="{{ localized_route('shop') }}" class="btn btn-ghost btn-sm">{{ __('shop.view_all') }}</a>
             </div>
 
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 lg:gap-6">
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-x-4 gap-y-7 lg:gap-x-6">
                 @foreach ($featuredCategories as $category)
                     <a href="{{ localized_route('category', ['category' => $category->slug]) }}"
-                       class="group text-center reveal">
-                        <div class="aspect-square bg-cream overflow-hidden rounded-full">
+                       class="group block reveal">
+                        <div class="aspect-square bg-cream overflow-hidden rounded-md border border-line
+                                    transition-colors duration-300 group-hover:border-ink">
                             <img src="{{ media_url($category->image) }}" alt="{{ $category->t('name') }}"
-                                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy">
+                                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                                 loading="lazy">
                         </div>
-                        <h3 class="mt-3 text-[0.9375rem] font-normal group-hover:text-brand">{{ $category->t('name') }}</h3>
+
+                        <h3 class="mt-3 text-[0.9375rem] font-medium leading-snug transition-colors group-hover:text-brand">
+                            {{ $category->t('name') }}
+                        </h3>
+
+                        @if ($category->product_total)
+                            <p class="mt-0.5 text-[0.8125rem] text-muted">
+                                {{ trans_choice('shop.product_count', $category->product_total, ['count' => $category->product_total]) }}
+                            </p>
+                        @endif
                     </a>
                 @endforeach
             </div>

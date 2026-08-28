@@ -35,7 +35,7 @@ class HomeController extends Controller
 
         return view('pages.home', [
             'sliders' => Slider::active()->get(),
-            'featuredCategories' => Category::active()->where('is_featured', true)->orderBy('position')->take(6)->get(),
+            'featuredCategories' => $this->featuredCategories(),
             'bestSellers' => $bestSellers,
             'newArrivals' => $newArrivals,
             'featured' => Product::active()->with(['category', 'variants'])->where('is_featured', true)->orderBy('position')->take(8)->get(),
@@ -45,5 +45,34 @@ class HomeController extends Controller
             'wideBanner' => Banner::active()->placement('home_wide')->first(),
             'posts' => Post::published()->with('category')->latest('published_at')->take(3)->get(),
         ]);
+    }
+
+    /**
+     * Ana sayfadaki kategori vitrini.
+     *
+     * Urun sayisi ALT KATEGORILERI de kapsar: urunler "Koltuk Takimlari" gibi
+     * alt kategorilere bagli, ana kategoriye dogrudan bagli degil. Sayim tek
+     * sorguda yapilip bellekte eslestirilir; kategori basina sorgu acilmaz.
+     */
+    private function featuredCategories()
+    {
+        $categories = Category::active()
+            ->where('is_featured', true)
+            ->orderBy('position')
+            ->with('children')
+            ->take(6)
+            ->get();
+
+        $counts = Product::active()
+            ->selectRaw('category_id, count(*) as toplam')
+            ->groupBy('category_id')
+            ->pluck('toplam', 'category_id');
+
+        foreach ($categories as $category) {
+            $category->product_total = collect($category->descendantIds())
+                ->sum(fn (int $id) => (int) ($counts[$id] ?? 0));
+        }
+
+        return $categories;
     }
 }

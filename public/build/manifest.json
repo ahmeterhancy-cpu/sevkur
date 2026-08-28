@@ -1,11 +1,19 @@
 {
-  "_fonts-CGAvmaPb.css": {
-    "file": "assets/fonts-CGAvmaPb.css",
-    "src": "_fonts-CGAvmaPb.css"
+  "_fonts-Cr7SyWTf.css": {
+    "file": "assets/fonts-Cr7SyWTf.css",
+    "src": "_fonts-Cr7SyWTf.css"
+  },
+  "_jost-300-normal--ixxmfGr.woff2": {
+    "file": "assets/jost-300-normal--ixxmfGr.woff2",
+    "src": "_jost-300-normal--ixxmfGr.woff2"
   },
   "_jost-300-normal-Ckm9JHl_.woff": {
     "file": "assets/jost-300-normal-Ckm9JHl_.woff",
     "src": "_jost-300-normal-Ckm9JHl_.woff"
+  },
+  "_jost-300-normal-DIStW2bt.woff": {
+    "file": "assets/jost-300-normal-DIStW2bt.woff",
+    "src": "_jost-300-normal-DIStW2bt.woff"
   },
   "_jost-300-normal-DkBQXsFU.woff2": {
     "file": "assets/jost-300-normal-DkBQXsFU.woff2",
@@ -14,6 +22,14 @@
   "_jost-400-normal-C7S-3Ky6.woff": {
     "file": "assets/jost-400-normal-C7S-3Ky6.woff",
     "src": "_jost-400-normal-C7S-3Ky6.woff"
+  },
+  "_jost-400-normal-CpdMQIMr.woff2": {
+    "file": "assets/jost-400-normal-CpdMQIMr.woff2",
+    "src": "_jost-400-normal-CpdMQIMr.woff2"
+  },
+  "_jost-400-normal-Dsyb2mtt.woff": {
+    "file": "assets/jost-400-normal-Dsyb2mtt.woff",
+    "src": "_jost-400-normal-Dsyb2mtt.woff"
   },
   "_jost-400-normal-q-RKOgPK.woff2": {
     "file": "assets/jost-400-normal-q-RKOgPK.woff2",
@@ -27,6 +43,14 @@
     "file": "assets/jost-500-normal-B-AtzreL.woff",
     "src": "_jost-500-normal-B-AtzreL.woff"
   },
+  "_jost-500-normal-BkvHgcKf.woff2": {
+    "file": "assets/jost-500-normal-BkvHgcKf.woff2",
+    "src": "_jost-500-normal-BkvHgcKf.woff2"
+  },
+  "_jost-500-normal-Cpxiadwk.woff": {
+    "file": "assets/jost-500-normal-Cpxiadwk.woff",
+    "src": "_jost-500-normal-Cpxiadwk.woff"
+  },
   "_jost-600-normal-Bv_M0d15.woff": {
     "file": "assets/jost-600-normal-Bv_M0d15.woff",
     "src": "_jost-600-normal-Bv_M0d15.woff"
@@ -34,6 +58,22 @@
   "_jost-600-normal-C497H-z9.woff2": {
     "file": "assets/jost-600-normal-C497H-z9.woff2",
     "src": "_jost-600-normal-C497H-z9.woff2"
+  },
+  "_jost-600-normal-D8I9kjga.woff2": {
+    "file": "assets/jost-600-normal-D8I9kjga.woff2",
+    "src": "_jost-600-normal-D8I9kjga.woff2"
+  },
+  "_jost-600-normal-Pm6OqGZB.woff": {
+    "file": "assets/jost-600-normal-Pm6OqGZB.woff",
+    "src": "_jost-600-normal-Pm6OqGZB.woff"
+  },
+  "_jost-700-normal-AnR_ULdm.woff2": {
+    "file": "assets/jost-700-normal-AnR_ULdm.woff2",
+    "src": "_jost-700-normal-AnR_ULdm.woff2"
+  },
+  "_jost-700-normal-DTcCupJy.woff": {
+    "file": "assets/jost-700-normal-DTcCupJy.woff",
+    "src": "_jost-700-normal-DTcCupJy.woff"
   },
   "_jost-700-normal-k-iBXzmq.woff": {
     "file": "assets/jost-700-normal-k-iBXzmq.woff",
@@ -47,36 +87,164 @@
     "file": "assets/manrope-400-normal-8tf8FM3T.woff",
     "src": "_manrope-400-normal-8tf8FM3T.woff"
   },
+  "_manrope-400-normal-BMzJvInZ.woff2": {
+    "file": "assets/manrope-400-normal-BMzJvInZ.woff2",
+    "src": "_manrope-400-normal-BMzJvInZ.woff2"
+  },
+  "_manrope-400-normal-C-X6QNXX.woff": {
+    "file": "assets/manrope-400-normal-C-X6QNXX.woff",
+    "src": "_manrope-400-normal-C-X6QNXX.woff"
+  },
+  "_manrope-400-normal-CM4qok81.woff2": {
+    "file": "assets/manrope-400-normal-CM4qok81.woff2",
+    "src": "_manrope-400-normal-CM4qok81.woff2"
+  },
+  "_manrope-400-normal-CMDvPJRp.woff2": {
+    "file": "assets/manrope-400-normal-CMDvPJRp.woff2",
+    "src": "_manrope-400-normal-CMDvPJRp.woff2"
+  },
+  "_manrope-400-normal-CRdE35mU.woff2": {
+    "file": "assets/manrope-400-normal-CRdE35mU.woff2",
+    "src": "_manrope-400-normal-CRdE35mU.woff2"
+  },
+  "_manrope-400-normal-Djnz4Wsr.woff": {
+    "file": "assets/manrope-400-normal-Djnz4Wsr.woff",
+    "src": "_manrope-400-normal-Djnz4Wsr.woff"
+  },
+  "_manrope-400-normal-DuX9RsAR.woff": {
+    "file": "assets/manrope-400-normal-DuX9RsAR.woff",
+    "src": "_manrope-400-normal-DuX9RsAR.woff"
+  },
+  "_manrope-400-normal-Dvx59UGC.woff": {
+    "file": "assets/manrope-400-normal-Dvx59UGC.woff",
+    "src": "_manrope-400-normal-Dvx59UGC.woff"
+  },
   "_manrope-400-normal-PaqtzbVb.woff2": {
     "file": "assets/manrope-400-normal-PaqtzbVb.woff2",
     "src": "_manrope-400-normal-PaqtzbVb.woff2"
+  },
+  "_manrope-500-normal-B1OEZity.woff2": {
+    "file": "assets/manrope-500-normal-B1OEZity.woff2",
+    "src": "_manrope-500-normal-B1OEZity.woff2"
   },
   "_manrope-500-normal-BYYD-dBL.woff2": {
     "file": "assets/manrope-500-normal-BYYD-dBL.woff2",
     "src": "_manrope-500-normal-BYYD-dBL.woff2"
   },
+  "_manrope-500-normal-CNwnNrRC.woff": {
+    "file": "assets/manrope-500-normal-CNwnNrRC.woff",
+    "src": "_manrope-500-normal-CNwnNrRC.woff"
+  },
   "_manrope-500-normal-DMZssgOp.woff": {
     "file": "assets/manrope-500-normal-DMZssgOp.woff",
     "src": "_manrope-500-normal-DMZssgOp.woff"
+  },
+  "_manrope-500-normal-DyxYGEtJ.woff": {
+    "file": "assets/manrope-500-normal-DyxYGEtJ.woff",
+    "src": "_manrope-500-normal-DyxYGEtJ.woff"
+  },
+  "_manrope-500-normal-Dz8SjJZ9.woff2": {
+    "file": "assets/manrope-500-normal-Dz8SjJZ9.woff2",
+    "src": "_manrope-500-normal-Dz8SjJZ9.woff2"
+  },
+  "_manrope-500-normal-EtoS1VaI.woff": {
+    "file": "assets/manrope-500-normal-EtoS1VaI.woff",
+    "src": "_manrope-500-normal-EtoS1VaI.woff"
+  },
+  "_manrope-500-normal-GeMIHyWm.woff2": {
+    "file": "assets/manrope-500-normal-GeMIHyWm.woff2",
+    "src": "_manrope-500-normal-GeMIHyWm.woff2"
+  },
+  "_manrope-500-normal-PaLk8PaH.woff": {
+    "file": "assets/manrope-500-normal-PaLk8PaH.woff",
+    "src": "_manrope-500-normal-PaLk8PaH.woff"
+  },
+  "_manrope-500-normal-dm74KBQw.woff2": {
+    "file": "assets/manrope-500-normal-dm74KBQw.woff2",
+    "src": "_manrope-500-normal-dm74KBQw.woff2"
   },
   "_manrope-600-normal-4f0koTD-.woff2": {
     "file": "assets/manrope-600-normal-4f0koTD-.woff2",
     "src": "_manrope-600-normal-4f0koTD-.woff2"
   },
+  "_manrope-600-normal-BoRV6lzK.woff2": {
+    "file": "assets/manrope-600-normal-BoRV6lzK.woff2",
+    "src": "_manrope-600-normal-BoRV6lzK.woff2"
+  },
   "_manrope-600-normal-BqgrALkZ.woff": {
     "file": "assets/manrope-600-normal-BqgrALkZ.woff",
     "src": "_manrope-600-normal-BqgrALkZ.woff"
+  },
+  "_manrope-600-normal-CF2i9ZRY.woff": {
+    "file": "assets/manrope-600-normal-CF2i9ZRY.woff",
+    "src": "_manrope-600-normal-CF2i9ZRY.woff"
+  },
+  "_manrope-600-normal-DjQx9_jq.woff": {
+    "file": "assets/manrope-600-normal-DjQx9_jq.woff",
+    "src": "_manrope-600-normal-DjQx9_jq.woff"
+  },
+  "_manrope-600-normal-Dk-u7o-5.woff2": {
+    "file": "assets/manrope-600-normal-Dk-u7o-5.woff2",
+    "src": "_manrope-600-normal-Dk-u7o-5.woff2"
+  },
+  "_manrope-600-normal-DvRl3Mj-.woff2": {
+    "file": "assets/manrope-600-normal-DvRl3Mj-.woff2",
+    "src": "_manrope-600-normal-DvRl3Mj-.woff2"
+  },
+  "_manrope-600-normal-It4mZcQk.woff": {
+    "file": "assets/manrope-600-normal-It4mZcQk.woff",
+    "src": "_manrope-600-normal-It4mZcQk.woff"
+  },
+  "_manrope-600-normal-_gBojHdJ.woff2": {
+    "file": "assets/manrope-600-normal-_gBojHdJ.woff2",
+    "src": "_manrope-600-normal-_gBojHdJ.woff2"
+  },
+  "_manrope-600-normal-u5Pl7hTU.woff": {
+    "file": "assets/manrope-600-normal-u5Pl7hTU.woff",
+    "src": "_manrope-600-normal-u5Pl7hTU.woff"
+  },
+  "_manrope-700-normal-7JNVKxyl.woff": {
+    "file": "assets/manrope-700-normal-7JNVKxyl.woff",
+    "src": "_manrope-700-normal-7JNVKxyl.woff"
   },
   "_manrope-700-normal-BZp_XxE4.woff2": {
     "file": "assets/manrope-700-normal-BZp_XxE4.woff2",
     "src": "_manrope-700-normal-BZp_XxE4.woff2"
   },
+  "_manrope-700-normal-CHUG9PD8.woff2": {
+    "file": "assets/manrope-700-normal-CHUG9PD8.woff2",
+    "src": "_manrope-700-normal-CHUG9PD8.woff2"
+  },
   "_manrope-700-normal-DGRFkw-m.woff": {
     "file": "assets/manrope-700-normal-DGRFkw-m.woff",
     "src": "_manrope-700-normal-DGRFkw-m.woff"
   },
+  "_manrope-700-normal-DYOwVNan.woff2": {
+    "file": "assets/manrope-700-normal-DYOwVNan.woff2",
+    "src": "_manrope-700-normal-DYOwVNan.woff2"
+  },
+  "_manrope-700-normal-Dw_fZAg2.woff2": {
+    "file": "assets/manrope-700-normal-Dw_fZAg2.woff2",
+    "src": "_manrope-700-normal-Dw_fZAg2.woff2"
+  },
+  "_manrope-700-normal-DyfsrCpP.woff": {
+    "file": "assets/manrope-700-normal-DyfsrCpP.woff",
+    "src": "_manrope-700-normal-DyfsrCpP.woff"
+  },
+  "_manrope-700-normal-cq7F7ESW.woff2": {
+    "file": "assets/manrope-700-normal-cq7F7ESW.woff2",
+    "src": "_manrope-700-normal-cq7F7ESW.woff2"
+  },
+  "_manrope-700-normal-eVCcYqtJ.woff": {
+    "file": "assets/manrope-700-normal-eVCcYqtJ.woff",
+    "src": "_manrope-700-normal-eVCcYqtJ.woff"
+  },
+  "_manrope-700-normal-ezu7N0xg.woff": {
+    "file": "assets/manrope-700-normal-ezu7N0xg.woff",
+    "src": "_manrope-700-normal-ezu7N0xg.woff"
+  },
   "resources/css/app.css": {
-    "file": "assets/app-nW0CxOTu.css",
+    "file": "assets/app-VYCI1Ib6.css",
     "name": "app",
     "names": [
       "app.css"
