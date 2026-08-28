@@ -1,4 +1,4 @@
-@props(['product', 'showProgress' => false])
+@props(['product'])
 
 @php
     $favorites = app(\App\Services\FavoritesService::class);
@@ -95,17 +95,6 @@
         @if ($product->rating_count > 0)
             <div class="mt-1.5 flex justify-center">
                 <x-stars :rating="$product->rating_avg" :show-count="true" :count="$product->rating_count" />
-            </div>
-        @endif
-
-        @if ($showProgress && $product->sale_target)
-            <div class="mt-3 px-2">
-                <div class="h-1.5 bg-line rounded-full overflow-hidden">
-                    <div class="h-full bg-brand rounded-full" style="width: {{ $product->soldPercent() }}%"></div>
-                </div>
-                <p class="mt-1.5 text-[0.8125rem] text-muted">
-                    {{ __('shop.sold_of', ['sold' => $product->sold_count, 'total' => $product->sale_target]) }}
-                </p>
             </div>
         @endif
 

@@ -56,7 +56,6 @@ return [
     'write_review' => 'Γράψτε κριτική',
     'related_products' => 'Σχετικά προϊόντα',
     'delivery_in_days' => 'Παράδοση σε :count ημέρες',
-    'sold_of' => 'Πωλήθηκαν: :sold / :total',
     'share' => 'Κοινοποίηση',
     'add_to_wishlist' => 'Προσθήκη στα αγαπημένα',
     'add_to_compare' => 'Προσθήκη στη σύγκριση',

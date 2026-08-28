@@ -180,7 +180,7 @@
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-10 lg:gap-x-6">
                 @foreach ($deals as $product)
                     <div class="reveal" style="transition-delay: {{ $loop->index * 40 }}ms">
-                        <x-product-card :product="$product" :show-progress="true" />
+                        <x-product-card :product="$product" />
                     </div>
                 @endforeach
             </div>

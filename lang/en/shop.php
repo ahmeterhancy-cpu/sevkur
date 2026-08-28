@@ -56,7 +56,6 @@ return [
     'write_review' => 'Write a review',
     'related_products' => 'Related products',
     'delivery_in_days' => ':count day delivery',
-    'sold_of' => 'Sold: :sold / :total',
     'share' => 'Share',
     'add_to_wishlist' => 'Add to wishlist',
     'add_to_compare' => 'Add to compare',

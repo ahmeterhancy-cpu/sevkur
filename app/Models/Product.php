@@ -228,15 +228,6 @@ class Product extends Model
         return $this->isOnSale() && $this->sale_ends_at !== null && $this->sale_ends_at->isFuture();
     }
 
-    public function soldPercent(): int
-    {
-        if (! $this->sale_target) {
-            return 0;
-        }
-
-        return (int) min(100, round(($this->sold_count / $this->sale_target) * 100));
-    }
-
     /** @return array<int, string> Galeri: kapak + ek gorseller. */
     public function gallery(): array
     {

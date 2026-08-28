@@ -100,8 +100,6 @@ class ProductResource extends Resource
                             ->visible(fn ($get) => (bool) $get('manage_stock')),
                         TextInput::make('sold_count')->label('Satılan adet')->numeric()->default(0)
                             ->helperText('Vitrindeki "satılan" göstergesi için.'),
-                        TextInput::make('sale_target')->label('Kampanya hedefi')->numeric()
-                            ->helperText('Doluluk çubuğu için hedef adet. Boşsa çubuk gösterilmez.'),
                         DateTimePicker::make('sale_ends_at')->label('Kampanya bitişi')
                             ->helperText('Ürün sayfasında geri sayım gösterilir.'),
                         TextInput::make('delivery_days')->label('Teslim süresi (gün)')->numeric(),

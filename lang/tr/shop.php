@@ -59,7 +59,6 @@ return [
     'write_review' => 'Değerlendirme Yaz',
     'related_products' => 'Benzer Ürünler',
     'delivery_in_days' => ':count günde teslim',
-    'sold_of' => 'Satılan: :sold / :total',
     'share' => 'Paylaş',
     'add_to_wishlist' => 'Favorilere ekle',
     'add_to_compare' => 'Karşılaştırmaya ekle',

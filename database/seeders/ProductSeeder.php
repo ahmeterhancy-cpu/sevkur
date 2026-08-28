@@ -148,7 +148,6 @@ class ProductSeeder extends Seeder
                     'stock' => 6 + (($index * 3) % 22),
                     'stock_alert' => 3,
                     'sold_count' => 8 + (($index * 7) % 60),
-                    'sale_target' => $onSale ? 80 + (($index * 5) % 60) : null,
                     'delivery_days' => $deliveryDays,
                     'dimensions' => $dimensions,
                     'cover' => $gallery[0],

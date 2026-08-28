@@ -56,7 +56,6 @@ return [
     'write_review' => 'Напишете отзив',
     'related_products' => 'Подобни продукти',
     'delivery_in_days' => 'Доставка за :count дни',
-    'sold_of' => 'Продадени: :sold / :total',
     'share' => 'Сподели',
     'add_to_wishlist' => 'Добави в любими',
     'add_to_compare' => 'Добави за сравнение',

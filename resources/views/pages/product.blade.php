@@ -130,18 +130,6 @@
                 </div>
             @endif
 
-            {{-- Satis ilerlemesi --}}
-            @if ($product->sale_target)
-                <div class="mt-6">
-                    <div class="h-2 bg-line rounded-full overflow-hidden">
-                        <div class="h-full bg-brand rounded-full" style="width: {{ $product->soldPercent() }}%"></div>
-                    </div>
-                    <p class="mt-2 text-[0.875rem] text-muted">
-                        {{ __('shop.sold_of', ['sold' => $product->sold_count, 'total' => $product->sale_target]) }}
-                    </p>
-                </div>
-            @endif
-
             {{-- Sepete ekleme --}}
             <form method="POST" action="{{ localized_route('cart.add') }}" data-add-to-cart class="mt-7">
                 @csrf
