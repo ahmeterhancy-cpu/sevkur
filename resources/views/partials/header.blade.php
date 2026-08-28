@@ -129,9 +129,6 @@
     <nav class="hidden lg:block border-t border-line" aria-label="{{ __('shop.menu') }}">
         <div class="container-x">
             <ul class="flex flex-wrap items-center gap-x-5 xl:gap-x-7 gap-y-1 min-h-14 py-1 text-[0.9375rem]">
-                <li><a href="{{ localized_route('home') }}" class="link-underline">{{ __('shop.home') }}</a></li>
-                <li><a href="{{ localized_route('shop') }}" class="link-underline">{{ __('shop.shop') }}</a></li>
-
                 @foreach ($layoutMenu as $item)
                     @php $submenu = $item->submenu(); @endphp
                     <li class="relative {{ $submenu !== [] ? 'has-drop' : '' }}">
@@ -152,10 +149,8 @@
                     </li>
                 @endforeach
 
-                <li><a href="{{ localized_route('blog') }}" class="link-underline">{{ __('shop.blog') }}</a></li>
-                <li><a href="{{ localized_route('contact') }}" class="link-underline">{{ __('shop.contact') }}</a></li>
 
-                <li class="ml-auto hidden 2xl:flex items-center gap-2 text-[0.8125rem] text-muted whitespace-nowrap">
+                <li class="ml-auto hidden xl:flex items-center gap-2 text-[0.8125rem] text-muted whitespace-nowrap">
                     <x-ui.icon name="headset" :size="18" class="text-brand" />
                     <span>{{ __('shop.need_help') }}</span>
                     <a href="{{ localized_route('faq') }}" class="font-medium text-ink link-underline">{{ __('shop.faq') }}</a>

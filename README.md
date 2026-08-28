@@ -101,8 +101,14 @@ bağlandığında (`type: category`) alt menüsü o kategorinin alt kategorileri
 **canlı** okunur — yeni bir alt kategori açtığınızda menüyü ayrıca düzenlemek
 gerekmez. Aynı liste hem masaüstü şeridini hem mobil paneli besler.
 
-Markalar ve Hakkımızda menüde değil, alt bilgide; menü şeridi kategorilere
-ayrıldı. İstenirse Menü Öğeleri ekranından geri eklenebilir.
+Masaüstü menü şeridi **yalnızca kategorilerden** oluşur. Ana Sayfa (logo),
+Mağaza, Blog, İletişim, Markalar ve Hakkımızda oradan çıkarıldı — hepsi alt
+bilgide, Ana Sayfa da logoda. İstenirse Menü Öğeleri ekranından geri
+eklenebilir.
+
+Mobil panelde tam liste durur (Ana Sayfa, Mağaza, kategoriler, Blog,
+İletişim, sipariş takibi, hesap): dikey listede yer sorunu yok ve mobilde
+başka gezinme yolu bulunmuyor.
 
 ## Bu projede tökezlenen tuzaklar
 
