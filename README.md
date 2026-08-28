@@ -88,7 +88,6 @@ Tamamı panelden; Blade'de sabit metin yok.
 | Haftanın fırsatları | Ürünün üstü çizili fiyatı + indirim bitiş tarihi |
 | Yeni gelenler | Ürün → "yeni" bayrağı |
 | Blog | **Yazılar** (son 3 yayınlanmış) |
-| Markalar | **Markalar** (aktif, sıraya göre) |
 | Bölüm başlıkları | **Ayarlar → Ana sayfa**, dört dilde ayrı |
 
 Bir bölümün verisi yoksa o bölüm sayfada hiç görünmez. Bölümlerin **sırası**

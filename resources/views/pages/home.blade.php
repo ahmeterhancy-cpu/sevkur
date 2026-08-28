@@ -246,22 +246,4 @@
         </section>
     @endif
 
-    {{-- ---------------------------------------------------------------- markalar --}}
-    @if ($brands->isNotEmpty())
-        <section class="border-t border-line">
-            <div class="container-x py-10 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-6 items-center">
-                @foreach ($brands as $brand)
-                    <a href="{{ localized_route('shop', ['marka' => [$brand->slug]]) }}"
-                       class="flex items-center justify-center opacity-50 hover:opacity-100 transition-opacity">
-                        @if ($brand->logo)
-                            <img src="{{ media_url($brand->logo) }}" alt="{{ $brand->t('name') }}" class="max-h-10 w-auto" loading="lazy">
-                        @else
-                            <span class="text-[0.9375rem] uppercase tracking-widest">{{ $brand->t('name') }}</span>
-                        @endif
-                    </a>
-                @endforeach
-            </div>
-        </section>
-    @endif
-
 @endsection

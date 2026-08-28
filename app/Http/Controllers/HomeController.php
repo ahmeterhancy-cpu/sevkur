@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Banner;
-use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Product;
@@ -45,7 +44,6 @@ class HomeController extends Controller
             'gridBanners' => Banner::active()->placement('home_grid')->get(),
             'wideBanner' => Banner::active()->placement('home_wide')->first(),
             'posts' => Post::published()->with('category')->latest('published_at')->take(3)->get(),
-            'brands' => Brand::active()->orderBy('position')->take(8)->get(),
         ]);
     }
 }
