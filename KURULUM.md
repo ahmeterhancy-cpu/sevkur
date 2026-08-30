@@ -161,7 +161,8 @@ tutmayan istekler `400` ile reddedilir.
 ## 4. Canlıya çıkmadan önce yapılacaklar listesi
 
 - [ ] Yönetici şifresini değiştirin, demo müşteri hesabını silin
-- [ ] Mağaza Ayarları → adres, telefon, e-posta, çalışma saatleri, sosyal medya
+- [x] ~~Mağaza Ayarları → adres, telefon, e-posta, çalışma saatleri~~ (girildi)
+- [ ] Sosyal medya bağlantılarını gerçek hesaplarla değiştirin (şu an örnek)
 - [ ] Logo ve favicon yükleyin
 - [ ] **Demo ürünleri ve fotoğrafları gerçekleriyle değiştirin.** Demo
       fotoğraflar Wikimedia Commons'tan gelir (`public/demo/urunler`), CC BY /

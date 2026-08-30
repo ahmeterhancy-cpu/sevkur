@@ -39,40 +39,59 @@
         <button type="submit" class="btn btn-primary">{{ __('shop.contact_send') }}</button>
     </form>
 
-    <aside class="space-y-6">
+    {{--
+        Iletisim kartlari. Ikon krem bir kutunun icinde duruyor: dort blok
+        alt alta sirlandiginda cizgisel ikonlar birbirine karisiyordu, kutu
+        her satira gorsel bir capa veriyor.
+    --}}
+    <aside class="space-y-5">
         @if (setting('address'))
-            <div class="flex gap-3">
-                <x-ui.icon name="pin" :size="20" class="text-brand shrink-0 mt-0.5" />
+            <div class="flex gap-4">
+                <span class="contact-icon"><x-ui.icon name="pin" :size="20" /></span>
                 <div>
                     <h3 class="font-medium">{{ __('shop.address_label') }}</h3>
-                    <p class="text-muted text-[0.9375rem]">{{ setting('address') }}</p>
+                    <p class="text-muted text-[0.9375rem] leading-relaxed">{{ setting('address') }}</p>
                 </div>
             </div>
         @endif
+
         @if (setting('phone'))
-            <div class="flex gap-3">
-                <x-ui.icon name="phone" :size="20" class="text-brand shrink-0 mt-0.5" />
+            <div class="flex gap-4">
+                <span class="contact-icon"><x-ui.icon name="phone" :size="20" /></span>
                 <div>
                     <h3 class="font-medium">{{ __('shop.phone') }}</h3>
-                    <a href="tel:{{ preg_replace('/\s+/', '', setting('phone')) }}" class="text-muted text-[0.9375rem] hover:text-ink">{{ setting('phone') }}</a>
+                    <a href="tel:{{ preg_replace('/\D+/', '', setting('phone')) }}"
+                       class="text-muted text-[0.9375rem] hover:text-ink">{{ setting('phone') }}</a>
+                    @if (setting_t('working_hours'))
+                        <p class="text-muted text-[0.875rem] mt-0.5">{{ setting_t('working_hours') }}</p>
+                    @endif
                 </div>
             </div>
         @endif
+
         @if (setting('email'))
-            <div class="flex gap-3">
-                <x-ui.icon name="mail" :size="20" class="text-brand shrink-0 mt-0.5" />
+            <div class="flex gap-4">
+                <span class="contact-icon"><x-ui.icon name="mail" :size="20" /></span>
                 <div>
                     <h3 class="font-medium">{{ __('shop.email') }}</h3>
-                    <a href="mailto:{{ setting('email') }}" class="text-muted text-[0.9375rem] hover:text-ink">{{ setting('email') }}</a>
+                    <a href="mailto:{{ setting('email') }}"
+                       class="block text-muted text-[0.9375rem] hover:text-ink">{{ setting('email') }}</a>
+                    @if (setting('email_support'))
+                        <a href="mailto:{{ setting('email_support') }}"
+                           class="block text-muted text-[0.9375rem] hover:text-ink">{{ setting('email_support') }}</a>
+                    @endif
                 </div>
             </div>
         @endif
-        @if (setting_t('working_hours'))
-            <div class="flex gap-3">
-                <x-ui.icon name="clock" :size="20" class="text-brand shrink-0 mt-0.5" />
+
+        @if (whatsapp_url())
+            <div class="flex gap-4">
+                <span class="contact-icon"><x-ui.icon name="whatsapp" :size="20" /></span>
                 <div>
-                    <h3 class="font-medium">{{ __('shop.working_hours') }}</h3>
-                    <p class="text-muted text-[0.9375rem]">{{ setting_t('working_hours') }}</p>
+                    <h3 class="font-medium">WhatsApp</h3>
+                    <a href="{{ whatsapp_url() }}" target="_blank" rel="noopener"
+                       class="text-muted text-[0.9375rem] hover:text-ink">{{ setting('whatsapp_number') }}</a>
+                    <p class="text-muted text-[0.875rem] mt-0.5">{{ __('shop.whatsapp_hint') }}</p>
                 </div>
             </div>
         @endif

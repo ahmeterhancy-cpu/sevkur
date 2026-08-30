@@ -62,7 +62,7 @@ class ManageSettings extends Page implements HasSchemas
     /** Sayfada yonetilen ayar anahtarlari. */
     private const KEYS = [
         'site_name', 'site_title', 'site_description', 'logo', 'logo_light', 'favicon',
-        'phone', 'email', 'address', 'working_hours', 'map_embed',
+        'phone', 'whatsapp_number', 'email', 'email_support', 'address', 'working_hours', 'map_embed',
         'social_facebook', 'social_instagram', 'social_youtube', 'social_whatsapp',
         'free_shipping_over', 'top_bar_text',
         'promise_shipping', 'promise_return_title', 'promise_return',
@@ -141,7 +141,14 @@ class ManageSettings extends Page implements HasSchemas
 
                         Tab::make('İletişim')->schema([
                             TextInput::make('phone')->label('Telefon'),
+                            TextInput::make('whatsapp_number')
+                                ->label('WhatsApp numarası')
+                                ->helperText('Boş bırakırsanız WhatsApp bağlantısı gösterilmez.'),
                             TextInput::make('email')->label('E-posta')->email(),
+                            TextInput::make('email_support')
+                                ->label('Destek e-postası')
+                                ->email()
+                                ->helperText('İsteğe bağlı; iletişim sayfasında ikinci adres olarak görünür.'),
                             Textarea::make('address')->label('Adres')->rows(2),
                             Textarea::make('map_embed')->label('Harita gömme kodu')->rows(3)->columnSpanFull()
                                 ->helperText('OpenStreetMap veya Google Haritalar iframe kodu.'),

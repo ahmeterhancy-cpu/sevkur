@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'whatsapp_hint' => 'Hızlı destek için',
     'product_count' => ':count ürün|:count ürün',
     // ------------------------------------------------------------------ genel
     'brand' => 'Sevkur Mobilya',

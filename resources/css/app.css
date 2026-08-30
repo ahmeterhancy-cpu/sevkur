@@ -187,6 +187,19 @@
         margin-top: 0.3rem;
     }
 
+    /* ------------------------------------------------------- iletisim kartlari */
+    .contact-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        width: 2.75rem;
+        height: 2.75rem;
+        border-radius: 8px;
+        background: var(--color-cream);
+        color: var(--color-brand);
+    }
+
     /* ----------------------------------------------------- varyant secenekleri */
     /*
      * Radyo dugmesi gorsel olarak gizlenir (sr-only), secili durum kardes

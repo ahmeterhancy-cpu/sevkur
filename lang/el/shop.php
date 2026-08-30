@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'whatsapp_hint' => 'Για γρήγορη υποστήριξη',
     'product_count' => ':count προϊόν|:count προϊόντα',
     'brand' => 'Sevkur Έπιπλα',
     'home' => 'Αρχική',

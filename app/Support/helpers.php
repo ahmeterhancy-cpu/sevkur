@@ -75,6 +75,30 @@ if (! function_exists('setting')) {
     }
 }
 
+if (! function_exists('whatsapp_url')) {
+    /**
+     * Ayarlardaki numaradan wa.me bagi uretir.
+     *
+     * Numara "0536 567 85 48" gibi yerel bicimde giriliyor; wa.me ulke kodlu
+     * ve yalin rakam istiyor. Basindaki 0 atilip 90 ekleniyor.
+     */
+    function whatsapp_url(): ?string
+    {
+        $raw = (string) setting('whatsapp_number');
+        $digits = preg_replace('/\D+/', '', $raw);
+
+        if ($digits === '' || $digits === null) {
+            return null;
+        }
+
+        if (str_starts_with($digits, '0')) {
+            $digits = '90'.substr($digits, 1);
+        }
+
+        return 'https://wa.me/'.$digits;
+    }
+}
+
 if (! function_exists('contrast_scrim')) {
     /**
      * Slider/afis gorseli uzerine binen yazinin okunabilir kalmasi icin

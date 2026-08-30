@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'whatsapp_hint' => 'For quick support',
     'product_count' => ':count product|:count products',
     'brand' => 'Sevkur Furniture',
     'home' => 'Home',

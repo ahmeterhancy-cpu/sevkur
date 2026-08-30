@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'whatsapp_hint' => 'За бърза поддръжка',
     'product_count' => ':count продукт|:count продукта',
     'brand' => 'Севкур Мебели',
     'home' => 'Начало',
