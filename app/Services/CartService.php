@@ -90,6 +90,12 @@ class CartService
             return ['ok' => false, 'reason' => 'unavailable', 'quantity' => 0];
         }
 
+        // Fiyati girilmemis urun yayinda olabilir (vitrinde gorunsun diye)
+        // ama satilamaz; yoksa sifir liraya siparis gecerdi.
+        if (! $product->hasPrice()) {
+            return ['ok' => false, 'reason' => 'price_missing', 'quantity' => 0];
+        }
+
         $item = $cart->items()
             ->where('product_id', $product->id)
             ->where('product_variant_id', $variant?->id)

@@ -87,6 +87,7 @@ class CartController extends Controller
             'unavailable' => __('shop.product_unavailable'),
             'variant_unavailable' => __('shop.variant_unavailable'),
             'variant_required' => __('shop.select_variant'),
+            'price_missing' => __('shop.price_on_request'),
             'stock_capped' => __('shop.stock_capped', ['count' => $result['quantity']]),
             default => __('shop.added_to_cart'),
         };

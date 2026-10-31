@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'ask_price' => 'Ask for price',
+    'price_on_request' => 'Contact us for pricing',
     'whatsapp_hint' => 'For quick support',
     'product_count' => ':count product|:count products',
     'brand' => 'Sevkur Furniture',

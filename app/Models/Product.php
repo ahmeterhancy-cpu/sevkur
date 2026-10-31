@@ -236,6 +236,23 @@ class Product extends Model
         return (int) round((($old - (float) $this->price) / $old) * 100);
     }
 
+    /**
+     * Fiyati girilmis mi?
+     *
+     * Katalogdan aktarilan urunler fiyatsiz gelir. Yayindalar ki musteri
+     * urunu gorsun, ama fiyat girilene kadar SEPETE EKLENEMEZLER — aksi
+     * halde sifir liraya siparis verilebilirdi.
+     */
+    public function hasPrice(): bool
+    {
+        if ((float) $this->price > 0) {
+            return true;
+        }
+
+        // Urun fiyati bos olsa da varyantlardan biri fiyatliysa satilabilir
+        return $this->variants->contains(fn (ProductVariant $v) => $v->effectivePrice() > 0);
+    }
+
     public function isInStock(): bool
     {
         return ! $this->manage_stock || $this->stock > 0;

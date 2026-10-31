@@ -10,7 +10,6 @@
  *
  * Kullanim: php pdf-sayfa-gorsel.php <pdf> <hedef-dizin>
  */
-
 $pdfPath = $argv[1] ?? null;
 $outDir = $argv[2] ?? null;
 

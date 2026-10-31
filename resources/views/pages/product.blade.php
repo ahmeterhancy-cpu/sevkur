@@ -101,7 +101,11 @@
             @endif
 
             <div class="mt-5 flex items-end gap-3">
-                <span class="text-[1.75rem] font-medium leading-none" data-product-price>{{ money($product->price) }}</span>
+                @if ($product->hasPrice())
+                    <span class="text-[1.75rem] font-medium leading-none" data-product-price>{{ money($product->price) }}</span>
+                @else
+                    <span class="text-[1.35rem] font-medium leading-none text-muted">{{ __('shop.price_on_request') }}</span>
+                @endif
                 @if ($product->isOnSale())
                     <span class="price-old text-[1.125rem]">{{ money($product->compare_at_price) }}</span>
                 @endif

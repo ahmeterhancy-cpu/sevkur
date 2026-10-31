@@ -56,7 +56,7 @@
 
         {{-- Sepete ekle --}}
         <div class="absolute inset-x-3 bottom-3 translate-y-3 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-            @if ($product->isInStock())
+            @if ($product->isInStock() && $product->hasPrice())
                 @if ($product->variants->isNotEmpty())
                     <a href="{{ $url }}" class="btn btn-primary w-full">{{ __('shop.select_variant') }}</a>
                 @else
@@ -67,6 +67,8 @@
                         <button type="submit" class="btn btn-primary w-full">{{ __('shop.add_to_cart') }}</button>
                     </form>
                 @endif
+            @elseif (! $product->hasPrice())
+                <a href="{{ localized_route('contact') }}" class="btn btn-ghost w-full">{{ __('shop.ask_price') }}</a>
             @else
                 <span class="btn btn-ghost w-full is-disabled">{{ __('shop.out_of_stock') }}</span>
             @endif
@@ -86,9 +88,14 @@
         </h3>
 
         <div class="mt-1.5 flex items-center justify-center gap-2">
-            <span class="price-now">{{ money($product->price) }}</span>
-            @if ($product->isOnSale())
-                <span class="price-old">{{ money($product->compare_at_price) }}</span>
+            @if ($product->hasPrice())
+                <span class="price-now">{{ money($product->price) }}</span>
+                @if ($product->isOnSale())
+                    <span class="price-old">{{ money($product->compare_at_price) }}</span>
+                @endif
+            @else
+                {{-- Fiyati henuz girilmemis urun: sifir lira gostermek yerine --}}
+                <span class="text-[0.875rem] text-muted">{{ __('shop.price_on_request') }}</span>
             @endif
         </div>
 

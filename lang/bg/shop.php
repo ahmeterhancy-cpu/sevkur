@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'ask_price' => 'Попитайте за цена',
+    'price_on_request' => 'Свържете се с нас за цена',
     'whatsapp_hint' => 'За бърза поддръжка',
     'product_count' => ':count продукт|:count продукта',
     'brand' => 'Севкур Мебели',

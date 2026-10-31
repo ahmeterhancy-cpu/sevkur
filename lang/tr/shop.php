@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'ask_price' => 'Fiyat sorun',
+    'price_on_request' => 'Fiyat için bizimle iletişime geçin',
     'whatsapp_hint' => 'Hızlı destek için',
     'product_count' => ':count ürün|:count ürün',
     // ------------------------------------------------------------------ genel
