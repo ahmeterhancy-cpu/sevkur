@@ -93,4 +93,31 @@ class PriceMissingTest extends ShopTestCase
             $this->assertTrue($product->is_active, $product->slug.' yayinda degil.');
         }
     }
+    public function test_the_product_page_offers_contact_instead_of_add_to_cart(): void
+    {
+        $product = $this->freeProduct();
+
+        $html = $this->get(localized_route('product', ['product' => $product->slug]))
+            ->assertOk()
+            ->getContent();
+
+        // Calisir gorunen bir sepet dugmesi musteriyi hataya goturuyordu.
+        // Benzer urun kartlarinda da sepet formu var, bu yuzden kontrol BU
+        // urunun kimligine baglaniyor.
+        $this->assertStringNotContainsString(
+            'name="product_id" value="'.$product->id.'"',
+            $html
+        );
+        $this->assertStringContainsString(__('shop.ask_price'), $html);
+    }
+
+    public function test_a_priced_product_still_has_the_cart_form(): void
+    {
+        $product = $this->product(1);
+        $product->update(['price' => 4200]);
+
+        $this->get(localized_route('product', ['product' => $product->slug]))
+            ->assertOk()
+            ->assertSee('name="product_id" value="'.$product->id.'"', false);
+    }
 }

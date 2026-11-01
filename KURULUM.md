@@ -173,11 +173,23 @@ tutmayan istekler `400` ile reddedilir.
       atın — Wikimedia Commons fotoğrafları sunucuda durmasın.
 - [ ] **Katalogdan aktarılan ürünlerin fotoğraf hakkını netleştirin.**
       Oben ve Omairat ürünleri sizin verdiğiniz katalog PDF'lerinden geldi.
-      Vespero ürünleri ise vespero.com adresinden alındı — o fotoğraflar
-      Vespero'nun telifli ürün çekimleridir ve yazılı izin olmadan kendi
-      mağazanızda yayınlamak risklidir. Bayilik/izin yoksa
-      `php artisan vespero:pasif` ile yayından alın (veya yöneticiden
-      Vespero markasını pasife çekin).
+      Vespero, Sude Collection, Ravizza Yatak, Asse Koltuk ve Arno ürünleri
+      ise kendi web sitelerinden/kataloglarından alındı — o fotoğraflar ilgili
+      markaların telifli ürün çekimleridir ve yazılı izin olmadan kendi
+      mağazanızda yayınlamak risklidir. Bayilik/izin olmayan markaları
+      `php artisan marka:pasif <slug>` ile yayından alın (birden fazla slug
+      verilebilir, `--geri` ile iade edilir). Slug'lar: `vespero`, `sude`,
+      `ravizza`, `asse`, `arno`.
+
+- [ ] **Kozan Grup ürünleri EKLENMEDİ.** kozangrup.com.tr sitesinde ürün
+      sayfası yok; ürünler yalnızca e-katalog PDF'lerinde duruyor. Beş
+      katalogun üçü (2026, 2025, Valeron-Lizbon) **metin katmanı olmayan düz
+      görsel** — ürün adı fotoğrafın içine gömülü, OCR olmadan çıkmıyor.
+      Metni olan ikisinde (Bohem, Tekiller) ad ve ölçüler harf harf aralıklı
+      yazıldığı için ayrıştırma kısmi ve hatalı kaldı (adlar bitişiyor,
+      ölçüler kayıyor). Yanlış veriyle katalog doldurmak yerine bekletildi.
+      Çözüm: Kozan'dan ürün listesi (Excel/CSV) isteyin — katalog sayfa
+      fotoğrafları çıkarılmış durumda, liste gelince eşleştirilebilir.
 
 - [ ] **Mesafeli satış sözleşmesi ve gizlilik politikası metinleri yer
       tutucudur** — hukuk danışmanınızla güncelleyin

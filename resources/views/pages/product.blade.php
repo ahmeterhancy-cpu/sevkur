@@ -135,6 +135,16 @@
             @endif
 
             {{-- Sepete ekleme --}}
+            @if (! $product->hasPrice())
+                {{-- Fiyati girilmemis urun sepete EKLENEMEZ: CartService onu
+                     reddeder. Calisir gorunen bir "Sepete ekle" dugmesi
+                     musteriyi hataya goturuyordu; urun kartindaki gibi
+                     iletisime yonlendiriliyor. --}}
+                <a href="{{ localized_route('contact') }}"
+                   class="btn btn-primary btn-lg mt-7 w-full sm:w-auto sm:min-w-[16rem]">
+                    {{ __('shop.ask_price') }}
+                </a>
+            @else
             <form method="POST" action="{{ localized_route('cart.add') }}" data-add-to-cart class="mt-7">
                 @csrf
                 <input type="hidden" name="product_id" value="{{ $product->id }}">
@@ -224,6 +234,7 @@
                     </button>
                 </div>
             </form>
+            @endif
 
             <div class="mt-4 flex flex-wrap items-center gap-5 text-[0.875rem]">
                 <button type="button" class="flex items-center gap-2 hover:text-brand {{ $inWishlist ? 'text-brand' : '' }}"
