@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Filament\Pages\ManageSettings;
 use App\Models\Banner;
+use App\Models\Product;
 use App\Models\Setting;
 use App\Models\Slider;
 use App\Models\User;
@@ -29,6 +30,16 @@ class HomeContentTest extends ShopTestCase
         'home_categories_title', 'home_bestsellers_title', 'home_bestsellers_sub',
         'home_deals_title', 'home_new_title', 'home_blog_title',
     ];
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // Bolum basliklari "Cok Satanlar" uzerinden sinaniyor; o bolum artik
+        // yalnizca gercekten satilmis urun varsa cikiyor (bkz.
+        // HomeBestSellersTest). Bir urune satis yazip bolumu acalim.
+        Product::active()->firstOrFail()->update(['sold_count' => 7]);
+    }
 
     public function test_section_headings_come_from_settings(): void
     {

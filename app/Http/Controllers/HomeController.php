@@ -12,7 +12,12 @@ class HomeController extends Controller
 {
     public function index()
     {
+        // Satis verisi olmayan urunu "cok satan" diye gostermek musteriye
+        // yanlis bilgi verir; ayrica hepsinin sold_count'u 0 oldugunda siralama
+        // "en son eklenenler"e dusup Yeni Gelenler bolumunun AYNISI olur.
+        // Hic satis yoksa bolum gorunmez (gorunum isNotEmpty ile korunuyor).
         $bestSellers = Product::active()->with(['category', 'variants'])
+            ->where('sold_count', '>', 0)
             ->orderByDesc('sold_count')->orderByDesc('rating_avg')
             ->take(10)->get();
 
@@ -38,7 +43,6 @@ class HomeController extends Controller
             'featuredCategories' => $this->featuredCategories(),
             'bestSellers' => $bestSellers,
             'newArrivals' => $newArrivals,
-            'featured' => Product::active()->with(['category', 'variants'])->where('is_featured', true)->orderBy('position')->take(10)->get(),
             'deals' => $deals,
             'midBanners' => Banner::active()->placement('home_mid')->get(),
             'gridBanners' => Banner::active()->placement('home_grid')->get(),
