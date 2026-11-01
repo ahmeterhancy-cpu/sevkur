@@ -78,6 +78,16 @@ class RemoteFetcher
     }
 
     /**
+     * Site haritasi gibi XML belgeler.
+     *
+     * @return array{ok: bool, body: string|null, url: string, error: string|null}
+     */
+    public function xml(string $url): array
+    {
+        return $this->get($url, self::MAX_HTML_BYTES, ['xml', 'text/plain']);
+    }
+
+    /**
      * @return array{ok: bool, body: string|null, url: string, error: string|null}
      */
     public function image(string $url): array
