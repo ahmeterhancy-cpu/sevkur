@@ -168,8 +168,19 @@ foreach ($pages as $index => $page) {
     // Sayfadaki font adlarini nesne numarasiyla esle: /F1 12 0 R
     $fonts = [];
 
+    $fontDict = null;
+
     if (preg_match('/\/Font\s*<<(.*?)>>/s', $b, $fb)) {
-        preg_match_all('/\/(\w+)\s+(\d+)\s+\d+\s+R/', $fb[1], $fm, PREG_SET_ORDER);
+        $fontDict = $fb[1];
+    } elseif (preg_match('/\/Font\s+(\d+)\s+\d+\s+R/', $b, $fr)) {
+        // Kozan katalogunda font sozlugu DOLAYLI basvuru (/Font 26 0 R);
+        // satir ici sozluk bekleyen arama bos donup metni glif numarasina
+        // cevirmisti.
+        $fontDict = body($pdf, $objects, (int) $fr[1]) ?? '';
+    }
+
+    if ($fontDict !== null) {
+        preg_match_all('/\/(\w+)\s+(\d+)\s+\d+\s+R/', $fontDict, $fm, PREG_SET_ORDER);
 
         foreach ($fm as $f) {
             $fonts[$f[1]] = toUnicode($pdf, $objects, (int) $f[2]);
@@ -219,6 +230,20 @@ foreach ($pages as $index => $page) {
 
         if (isset($t[3])) {
             $raw = stripcslashes($t[3]);
+
+            // Type0 fontlarda kod IKI BAYT. Tek bayt okumak Kozan
+            // katalogunda metni glif numarasina ceviriyordu ("/ 3 ( =").
+            // Genis kod kullanan fontu cmap anahtarlarindan taniyoruz.
+            $wide = $current !== [] && max(array_keys($current)) > 255;
+
+            if ($wide) {
+                for ($i = 0; $i + 2 <= strlen($raw); $i += 2) {
+                    $code = (ord($raw[$i]) << 8) | ord($raw[$i + 1]);
+                    $out .= $current[$code] ?? '';
+                }
+
+                continue;
+            }
 
             foreach (str_split($raw) as $ch) {
                 $out .= $current[ord($ch)] ?? $ch;
