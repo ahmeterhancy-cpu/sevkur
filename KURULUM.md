@@ -164,12 +164,21 @@ tutmayan istekler `400` ile reddedilir.
 - [x] ~~Mağaza Ayarları → adres, telefon, e-posta, çalışma saatleri~~ (girildi)
 - [ ] Sosyal medya bağlantılarını gerçek hesaplarla değiştirin (şu an örnek)
 - [ ] Logo ve favicon yükleyin
-- [ ] **Demo ürünleri ve fotoğrafları gerçekleriyle değiştirin.** Demo
-      fotoğraflar Wikimedia Commons'tan gelir (`public/demo/urunler`), CC BY /
-      CC BY-SA lisanslıdır ve **gösterilen mobilyalar sattığınız ürünler
-      değildir** — bu haliyle satışa açmak müşteriyi yanıltır. Gerçek
-      fotoğrafları yükledikten sonra alt bilgideki **Görsel Kaynakları**
-      sayfasını da silin.
+- [x] ~~Demo ürünleri kaldırın~~ (2026-11-01: `php artisan demo:temizle`
+      ile 47 demo ürün ve 6 uydurma marka silindi; katalogda yalnızca Oben,
+      Omairat ve Vespero ürünleri var). Fotoğraf dosyaları
+      `public/demo/urunler` altında **bilerek bırakıldı**: `ProductSeeder` ve
+      panel disk testleri onları düzenek olarak kullanıyor. Canlıya
+      yüklemeden önce `php artisan demo:temizle --gorseller` ile dosyaları da
+      atın — Wikimedia Commons fotoğrafları sunucuda durmasın.
+- [ ] **Katalogdan aktarılan ürünlerin fotoğraf hakkını netleştirin.**
+      Oben ve Omairat ürünleri sizin verdiğiniz katalog PDF'lerinden geldi.
+      Vespero ürünleri ise vespero.com adresinden alındı — o fotoğraflar
+      Vespero'nun telifli ürün çekimleridir ve yazılı izin olmadan kendi
+      mağazanızda yayınlamak risklidir. Bayilik/izin yoksa
+      `php artisan vespero:pasif` ile yayından alın (veya yöneticiden
+      Vespero markasını pasife çekin).
+
 - [ ] **Mesafeli satış sözleşmesi ve gizlilik politikası metinleri yer
       tutucudur** — hukuk danışmanınızla güncelleyin
 - [ ] Kargo yöntemlerinin ücretlerini ve ücretsiz kargo sınırını ayarlayın
