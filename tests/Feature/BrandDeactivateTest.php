@@ -7,13 +7,13 @@ use App\Models\Product;
 use Tests\ShopTestCase;
 
 /**
- * vespero:pasif komutu.
+ * marka:pasif vespero komutu.
  *
  * vespero.com'dan aktarilan urunlerin fotograflari o markanin telifli urun
  * cekimleri. Izin netlesene kadar yayindan alinabilmeli, izin gelince de
  * silinmeden geri donebilmeli.
  */
-class VesperoDeactivateTest extends ShopTestCase
+class BrandDeactivateTest extends ShopTestCase
 {
     private function vesperoProduct(): Product
     {
@@ -33,7 +33,7 @@ class VesperoDeactivateTest extends ShopTestCase
     {
         $product = $this->vesperoProduct();
 
-        $this->artisan('vespero:pasif')->assertSuccessful();
+        $this->artisan('marka:pasif vespero')->assertSuccessful();
 
         $this->assertFalse($product->fresh()->is_active);
         $this->assertFalse(Brand::where('slug', 'vespero')->first()->is_active);
@@ -43,7 +43,7 @@ class VesperoDeactivateTest extends ShopTestCase
     {
         $product = $this->vesperoProduct();
 
-        $this->artisan('vespero:pasif')->assertSuccessful();
+        $this->artisan('marka:pasif vespero')->assertSuccessful();
 
         $this->assertDatabaseHas('products', ['id' => $product->id]);
     }
@@ -55,7 +55,7 @@ class VesperoDeactivateTest extends ShopTestCase
         $other = $this->product(2);
         $other->update(['is_active' => true]);
 
-        $this->artisan('vespero:pasif')->assertSuccessful();
+        $this->artisan('marka:pasif vespero')->assertSuccessful();
 
         $this->assertTrue($other->fresh()->is_active);
     }
@@ -64,8 +64,8 @@ class VesperoDeactivateTest extends ShopTestCase
     {
         $product = $this->vesperoProduct();
 
-        $this->artisan('vespero:pasif')->assertSuccessful();
-        $this->artisan('vespero:pasif --geri')->assertSuccessful();
+        $this->artisan('marka:pasif vespero')->assertSuccessful();
+        $this->artisan('marka:pasif vespero --geri')->assertSuccessful();
 
         $this->assertTrue($product->fresh()->is_active);
         $this->assertTrue(Brand::where('slug', 'vespero')->first()->is_active);
@@ -73,6 +73,25 @@ class VesperoDeactivateTest extends ShopTestCase
 
     public function test_it_survives_a_missing_brand(): void
     {
-        $this->artisan('vespero:pasif')->assertSuccessful();
+        $this->artisan('marka:pasif yokboyle')->assertSuccessful();
+    }
+
+    public function test_it_takes_several_brands_at_once(): void
+    {
+        $product = $this->vesperoProduct();
+
+        $other = Brand::create([
+            'slug' => 'sude',
+            'name' => ['tr' => 'Sude Collection'],
+            'is_active' => true,
+        ]);
+
+        $second = $this->product(2);
+        $second->update(['brand_id' => $other->id, 'is_active' => true]);
+
+        $this->artisan('marka:pasif vespero sude')->assertSuccessful();
+
+        $this->assertFalse($product->fresh()->is_active);
+        $this->assertFalse($second->fresh()->is_active);
     }
 }

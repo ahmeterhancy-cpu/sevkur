@@ -5,9 +5,10 @@ namespace App\Console\Commands;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
+use App\Services\Import\ProductIdentity;
+use App\Services\Import\ProductName;
 use App\Services\Import\RemoteFetcher;
 use Illuminate\Console\Command;
-use Illuminate\Support\Str;
 
 /**
  * vespero.com urun sayfalarini magazaya aktarir.
@@ -53,7 +54,7 @@ class ImportVesperoCatalogue extends Command
         'yatak' => 'karyolalar',
     ];
 
-    public function handle(RemoteFetcher $fetcher): int
+    public function handle(RemoteFetcher $fetcher, ProductIdentity $identity, ProductName $names): int
     {
         // Yuz urunun fotografi tek surecte isleniyor; varsayilan 128 MB
         // yetmedi (ilk calistirmada 73. uruncude tukendi).
@@ -98,7 +99,8 @@ class ImportVesperoCatalogue extends Command
                 continue;
             }
 
-            $name = $this->name($page['body']);
+            // h1 uc sayfada baska urunu gosteriyor; adresle uyusan ad secilir.
+            [$name, $wrongName] = $names->resolve($page['body'], $url, ['- Vespero']);
             $images = $this->galleryImages($page['body']);
 
             if ($name === null || $images === []) {
@@ -117,7 +119,11 @@ class ImportVesperoCatalogue extends Command
                 continue;
             }
 
-            $slug = Str::slug($name);
+            // Kimlik slug degil KAYNAK ADRESI: "Armani Koltuk Takimi" adi
+            // Sude aktariminda bu markanin urununu devralmisti.
+            $existing = $identity->existing($url);
+            $slug = $existing?->slug ?? $identity->slug($name, 'vespero');
+
             $stored = [];
 
             foreach (array_slice($images, 0, 4) as $index => $imageUrl) {
@@ -224,26 +230,6 @@ class ImportVesperoCatalogue extends Command
         return array_values(array_unique($urls));
     }
 
-    private function name(string $html): ?string
-    {
-        if (preg_match('#<h1[^>]*>(.*?)</h1>#is', $html, $m)) {
-            $name = trim(html_entity_decode(strip_tags($m[1]), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
-
-            if ($name !== '') {
-                return $name;
-            }
-        }
-
-        if (preg_match('#<title>(.*?)</title>#is', $html, $m)) {
-            // "Zeyn Koltuk Takımı – Vespero" → marka ekini at
-            $title = trim(html_entity_decode($m[1], ENT_QUOTES | ENT_HTML5, 'UTF-8'));
-            $title = preg_split('/\s+[–|-]\s+/u', $title)[0] ?? $title;
-
-            return trim($title) !== '' ? trim($title) : null;
-        }
-
-        return null;
-    }
 
     /**
      * Galerideki TAM BOYUT fotograflar.
