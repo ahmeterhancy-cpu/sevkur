@@ -1,0 +1,32 @@
+---
+#  cPanel Git deploy tarifi — Turhost hesabi sevk8300
+#
+#  cPanel, bir deponun DOGRUDAN belge koku (public_html) olmasina izin
+#  vermiyor: "You cannot use the ... directory because it already contains
+#  files" diyerek bos dizinde bile reddediyor. Bu yuzden depo
+#  ~/repositories/sevkur altinda duruyor ve dosyalar public_html'e buradan
+#  kopyalaniyor.
+#
+#  Akis: "Update from Remote" (pull) -> "Deploy HEAD Commit".
+#
+#  Kopyalama EKLEMELI, silmeli degil (rsync --delete YOK): public_html
+#  icinde depoda bulunmayan ve KORUNMASI GEREKEN seyler var —
+#    .env                 ortam ayarlari
+#    public/urunler/...   panelden yuklenen urun fotograflari
+#    storage/...          gunlukler, onbellek, oturumlar
+#  Bunlar silinirse site ayaga kalkmaz ve musteri gorselleri kaybolur.
+
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home2/sevk8300/public_html
+    #  "*" nokta ile baslayan dosyalari atlar; .git bilerek disarida kalsin
+    #  diye bu tercih edildi, .htaccess ise ayrica kopyalaniyor.
+    - /bin/cp -R ./* $DEPLOYPATH/
+    #  Istekleri public/ altina yonlendiren ve kaynak dosyalari kapatan kural.
+    #  Bu satir atlanirsa site 403/dizin listesi verir.
+    - /bin/cp ./.htaccess $DEPLOYPATH/.htaccess
+    #  Laravel bu iki agaca yazar; sahip zaten hesap kullanicisi, 755 yeter.
+    - /bin/chmod -R 755 $DEPLOYPATH/storage $DEPLOYPATH/bootstrap/cache
+    #  Panelden gorsel yuklenebilmesi icin hedef klasorler var olmali.
+    - /bin/mkdir -p $DEPLOYPATH/public/urunler $DEPLOYPATH/public/afisler $DEPLOYPATH/public/blog $DEPLOYPATH/public/marka $DEPLOYPATH/public/markalar $DEPLOYPATH/public/slider $DEPLOYPATH/public/kategoriler
+    - /bin/chmod 755 $DEPLOYPATH/public/urunler $DEPLOYPATH/public/afisler $DEPLOYPATH/public/blog $DEPLOYPATH/public/marka $DEPLOYPATH/public/markalar $DEPLOYPATH/public/slider $DEPLOYPATH/public/kategoriler
