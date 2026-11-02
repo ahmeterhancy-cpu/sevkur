@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
+use App\Services\Import\CategoryFromPath;
 use App\Services\Import\ImageStore;
 use App\Services\Import\ProductIdentity;
 use App\Services\Import\ProductName;
@@ -330,23 +331,10 @@ class ImportSiteCatalogue extends Command
 
     private function category(string $url, array $site, array $map): string
     {
-        if (isset($site['yoldan_kategori'])) {
-            $parts = array_values(array_filter(explode('/', parse_url($url, PHP_URL_PATH) ?? '')));
-
-            // Adresin sonuna dogru olan parca daha ozel:
-            // /urunler/arno-home/yatak-odalari/komodinler/hisar-komodin/
-            foreach (array_reverse($parts) as $part) {
-                if (isset($site['yoldan_kategori'][$part])) {
-                    return $site['yoldan_kategori'][$part];
-                }
-            }
-
-            return $site['varsayilan'];
-        }
-
-        return $map[rtrim($url, '/')] ?? $site['varsayilan'];
+        return (new CategoryFromPath)($url, $site)
+            ?? $map[rtrim($url, '/')]
+            ?? $site['varsayilan'];
     }
-
 
     /**
      * URUN GALERISINDEKI tam boyut fotograflar.

@@ -72,11 +72,8 @@ return [
         // Eslesme adresin SONUNA dogru aranir, yani en ozel parca kazanir:
         // "genc-komodinler" varsa "arno-go" degil o kullanilir.
         //
-        // NOT: arno-go hattinin 106 urunu GENC ODASI mobilyasi; Sevkur'da
-        // genc odasi kategorisi olmadigi icin yetiskin karsiliklarina
-        // dusuyorlar (genc dolap -> Gardiroplar). Islevsel olarak dogru,
-        // ama magaza genc odasini ayri gostermek isterse kategori agacina
-        // "Genc Odasi" eklenmeli.
+        // arno-go hatti GENC ODASI mobilyasi ve kendi kategori agacina
+        // dusuyor; yetiskin kategorileriyle karismasin diye ayri tutuldu.
         'yoldan_kategori' => [
             // arno-yatak hatti
             'yataklar' => 'yataklar',
@@ -85,17 +82,18 @@ return [
             'basliklar' => 'yatak-basliklari',
 
             // arno-go (genc odasi) hatti — en ozel parcalar once
-            'genc-dolaplar' => 'gardiroplar',
-            'genc-karyolalar' => 'karyolalar',
-            'genc-karyola-basliklari' => 'yatak-basliklari',
-            'genc-karyola-altlari' => 'karyolalar',
-            'genc-calisma-masalari' => 'calisma-masalari',
-            'genc-komodinler' => 'komodinler',
-            'genc-sifonyerler' => 'sifonyerler',
-            'genc-sifonyer-aynalari' => 'aynalar',
-            'genc-kitapliklar' => 'kitapliklar',
-            'genc-odalari' => 'yatak-odasi-takimlari',
-            'ranzalar' => 'karyolalar',
+            'genc-dolaplar' => 'genc-gardiroplar',
+            'genc-karyolalar' => 'genc-karyolalar',
+            // Baslik ve karyola alti tek basina satilmiyor, karyolayla birlikte.
+            'genc-karyola-basliklari' => 'genc-karyolalar',
+            'genc-karyola-altlari' => 'genc-karyolalar',
+            'genc-calisma-masalari' => 'genc-calisma-masalari',
+            'genc-komodinler' => 'genc-komodinler',
+            'genc-sifonyerler' => 'genc-sifonyerler',
+            'genc-sifonyer-aynalari' => 'genc-sifonyerler',
+            'genc-kitapliklar' => 'genc-kitapliklar',
+            'genc-odalari' => 'genc-odasi-takimlari',
+            'ranzalar' => 'ranzalar',
 
             // arno-home hatti
             'dolap-govdeleri-giyinme-odalari' => 'gardiroplar',
