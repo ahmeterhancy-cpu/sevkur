@@ -19,7 +19,6 @@
 /public/storage
 /storage/*.key
 /storage/pail
-/vendor
 _ide_helper.php
 Homestead.json
 Homestead.yaml
@@ -36,3 +35,10 @@ Thumbs.db
 /public/markalar/
 /public/slider/
 /public/kategoriler/
+
+# --- "canli" dali ---
+# Bu dal cPanel Git deploy icin var. Turhost'ta Terminal yok, yani sunucuda
+# composer calistirilamiyor; bu yuzden "composer install --no-dev
+# --optimize-autoloader" ile uretilmis vendor/ klasoru bu dala DAHILDIR.
+# master'da vendor yok sayilmaya devam eder (orada gelistirme kurulumu var ve
+# dev autoload'lu vendor sunucuda artisan'i sessizce oldurur).
