@@ -64,7 +64,6 @@ class HomeController extends Controller
             ->where('is_featured', true)
             ->orderBy('position')
             ->with('children')
-            ->take(6)
             ->get();
 
         $counts = Product::active()
@@ -77,6 +76,14 @@ class HomeController extends Controller
                 ->sum(fn (int $id) => (int) ($counts[$id] ?? 0));
         }
 
-        return $categories;
+        // Urunu olmayan kategori vitrine girmez: karti tiklayan musteri bos
+        // sayfaya dusuyordu, ustelik gosterecek urun fotografi olmadigi icin
+        // kartta kurulumdan kalma demo gorsel kaliyordu (Aydinlatma'da
+        // antika terazi, Ev Tekstili'nde muzelik kilim). Urun girilince
+        // kendiliginden geri gelirler.
+        return $categories
+            ->filter(fn (Category $category) => $category->product_total > 0)
+            ->take(6)
+            ->values();
     }
 }
