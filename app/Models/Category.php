@@ -25,6 +25,7 @@ class Category extends Model
             'meta' => 'array',
             'is_active' => 'boolean',
             'is_featured' => 'boolean',
+            'show_home_rail' => 'boolean',
             'show_in_menu' => 'boolean',
         ];
     }

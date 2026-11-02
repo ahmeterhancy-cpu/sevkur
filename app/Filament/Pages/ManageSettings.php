@@ -8,6 +8,7 @@ use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -59,6 +60,7 @@ class ManageSettings extends Page implements HasSchemas
         'home_categories_title', 'home_bestsellers_title', 'home_bestsellers_sub',
         'home_deals_title', 'home_new_title', 'home_blog_title', 'footer_about',
         'whatsapp_product_message', 'whatsapp_general_message',
+        'legal_company_name', 'legal_mersis', 'legal_tax', 'legal_trade_registry', 'legal_site',
     ];
 
     /** Sayfada yonetilen ayar anahtarlari. */
@@ -72,8 +74,9 @@ class ManageSettings extends Page implements HasSchemas
         'home_categories_title', 'home_bestsellers_title', 'home_bestsellers_sub',
         'home_deals_title', 'home_new_title', 'home_blog_title', 'footer_about',
         'home_rails_enabled', 'home_rails_count', 'home_rails_size', 'home_rails_min',
-        'home_categories_count', 'home_slider_interval', 'ask_price_whatsapp',
+        'home_rail_split', 'home_categories_count', 'home_slider_interval', 'ask_price_whatsapp',
         'whatsapp_product_message', 'whatsapp_general_message',
+        'legal_company_name', 'legal_mersis', 'legal_tax', 'legal_trade_registry', 'legal_site',
     ];
 
     public function mount(): void
@@ -187,6 +190,41 @@ class ManageSettings extends Page implements HasSchemas
                                             Locales::all()
                                         )),
                                 ])->columnSpanFull(),
+
+                            Section::make('Yasal bilgiler')
+                                ->description('Mesafeli Satış Sözleşmesi, KVKK Aydınlatma Metni ve '
+                                    .'Gizlilik Politikası bu bilgileri kendiliğinden kullanır. '
+                                    .'Doldurmadığınız alan yasal metinlerde “[… girilmedi]” olarak görünür.')
+                                ->schema([
+                                    TextInput::make('legal_company_name')
+                                        ->label('Ticaret unvanı')
+                                        ->placeholder('Örn. Sevkur Mobilya San. ve Tic. Ltd. Şti.')
+                                        ->helperText('Ticaret sicilindeki tam unvan. Boş bırakırsanız '
+                                            .'site adı kullanılır, ki bu sözleşme için yeterli değildir.'),
+                                    TextInput::make('legal_mersis')
+                                        ->label('MERSİS numarası')
+                                        ->placeholder('0000000000000000'),
+                                    TextInput::make('legal_tax')
+                                        ->label('Vergi dairesi ve numarası')
+                                        ->placeholder('Edirne V.D. — 1234567890'),
+                                    TextInput::make('legal_trade_registry')
+                                        ->label('Ticaret sicil numarası')
+                                        ->placeholder('İsteğe bağlı'),
+                                    TextInput::make('legal_site')
+                                        ->label('Sözleşmede yazacak site adresi')
+                                        ->placeholder('sevkurmobilya.com')
+                                        ->helperText('Boş bırakırsanız sunucudaki alan adı kullanılır.')
+                                        ->columnSpanFull(),
+
+                                    Placeholder::make('yasal_notu')
+                                        ->label('Metinler taslaktır')
+                                        ->content('Mesafeli Satış Sözleşmesi, KVKK Aydınlatma Metni, '
+                                            .'Çerez Politikası, Gizlilik Politikası ve İade sayfaları '
+                                            .'6502 sayılı Kanun ve KVKK esas alınarak hazırlanmış '
+                                            .'TASLAKLARDIR. Yayına almadan önce hukuk danışmanınıza '
+                                            .'okutun. Metinleri Sayfalar bölümünden düzenleyebilirsiniz.')
+                                        ->columnSpanFull(),
+                                ])->columns(2)->columnSpanFull(),
                         ])->columns(2),
 
                         Tab::make('Mağaza')->schema([
@@ -269,7 +307,9 @@ class ManageSettings extends Page implements HasSchemas
                                         ->label('Kaç oda rayı')
                                         ->numeric()->minValue(0)->maxValue(6)
                                         ->placeholder('3')
-                                        ->helperText('En çok ürünü olan odalar seçilir.'),
+                                        ->helperText('Kategorilerde “Ana sayfada ürün rayı” işaretlemediyseniz '
+                                            .'en çok ürünü olan odalar bu sayıda seçilir. İşaretlerseniz '
+                                            .'ray sayısını işaretlediğiniz kategoriler belirler.'),
 
                                     TextInput::make('home_rails_size')
                                         ->label('Rayda kaç ürün')
@@ -280,7 +320,25 @@ class ManageSettings extends Page implements HasSchemas
                                         ->label('Ray açmak için en az kaç ürün')
                                         ->numeric()->minValue(1)
                                         ->placeholder('8')
-                                        ->helperText('Az ürünlü oda yarı boş ray açmasın.'),
+                                        ->helperText('Az ürünlü oda yarı boş ray açmasın. Elle işaretlenen '
+                                            .'kategorilere uygulanmaz.'),
+
+                                    Select::make('home_rail_split')
+                                        ->label('Bölünmüş düzende gösterilecek ray')
+                                        ->options([
+                                            0 => 'Hiçbiri — hepsi aynı düzende',
+                                            1 => '1. ray',
+                                            2 => '2. ray',
+                                            3 => '3. ray',
+                                            4 => '4. ray',
+                                            5 => '5. ray',
+                                            6 => '6. ray',
+                                        ])
+                                        ->placeholder('2. ray')
+                                        ->helperText('Bölünmüş rayda solda odanın fotoğrafı, sağda ürünler '
+                                            .'durur. Aynı düzendeki raylar art arda gelince sayfa tekdüze '
+                                            .'görünüyor.')
+                                        ->columnSpanFull(),
                                 ])->columns(2)->columnSpanFull(),
 
                             Placeholder::make('bolum_notu')

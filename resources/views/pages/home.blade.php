@@ -187,10 +187,10 @@
          oda kategorileri birer rayda gosteriliyor. --}}
     @foreach ($categoryRails as $rail)
         @php($category = $rail['kategori'])
-        {{-- Ortadaki ray BOLUNMUS duzende: uc ayni yapidaki ray art arda
-             gelince sayfa tekduze oluyordu. Solda odanin kendi fotografi,
-             sagda urunler. --}}
-        @php($split = $loop->index === 1)
+        {{-- Bir ray BOLUNMUS duzende: ayni yapidaki raylar art arda gelince
+             sayfa tekduze oluyordu. Solda odanin kendi fotografi, sagda
+             urunler. Kacinci ray oldugu yonetimden secilir. --}}
+        @php($split = $loop->iteration === $railSplit)
 
         <section class="{{ $loop->odd ? 'bg-cream' : '' }} py-[clamp(3rem,6vw,5.5rem)]">
             <div class="container-x" data-rail>

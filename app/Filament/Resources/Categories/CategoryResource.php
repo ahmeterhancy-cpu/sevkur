@@ -7,6 +7,7 @@ use App\Filament\Resources\Categories\Pages\EditCategory;
 use App\Filament\Resources\Categories\Pages\ListCategories;
 use App\Filament\Support\Translatable;
 use App\Models\Category;
+use App\Models\Product;
 use App\Support\Locales;
 use BackedEnum;
 use Filament\Actions\BulkActionGroup;
@@ -70,6 +71,23 @@ class CategoryResource extends Resource
                         ->image()
                         ->directory('kategoriler')
                         ->imageEditor(),
+                    Select::make('katalog_gorseli')
+                        ->label('Katalogdan seç')
+                        ->placeholder('Bu kategorinin bir ürününü arayın')
+                        ->options(fn (?Category $record) => $record ? self::catalogueImages($record) : [])
+                        ->searchable()
+                        // Veritabaninda boyle bir sutun yok: secim yalnizca
+                        // yukaridaki "Kategori görseli" alanini doldurur.
+                        ->dehydrated(false)
+                        ->live()
+                        ->afterStateUpdated(function (?string $state, callable $set) {
+                            if ($state) {
+                                $set('image', $state);
+                            }
+                        })
+                        ->visible(fn (?Category $record) => $record !== null)
+                        ->helperText('Kategorinin fotoğrafını ayrıca yüklemek yerine katalogdaki bir '
+                            .'ürünün fotoğrafını kullanır. Kategori kaydedildikten sonra görünür.'),
                     FileUpload::make('banner')
                         ->label('Üst afiş')
                         ->image()
@@ -77,10 +95,37 @@ class CategoryResource extends Resource
                     TextInput::make('position')->label('Sıra')->numeric()->default(0),
                     Toggle::make('is_active')->label('Yayında')->default(true),
                     Toggle::make('is_featured')->label('Ana sayfada göster')->default(false),
+                    Toggle::make('show_home_rail')
+                        ->label('Ana sayfada ürün rayı')
+                        ->default(false)
+                        ->helperText('Ana kategorilerde çalışır. Hiçbirini işaretlemezseniz en çok '
+                            .'ürünü olan odalar kendiliğinden seçilir.'),
                     Toggle::make('show_in_menu')->label('Menüde göster')->default(true),
                 ])
                 ->columns(2),
         ]);
+    }
+
+    /**
+     * Kategori gorseli olarak kullanilabilecek urun fotograflari.
+     *
+     * Kategorinin kendisi ve tum alt kategorileri taranir: urunler
+     * "Koltuk Takimlari" gibi alt kategorilere bagli oldugu icin yalnizca
+     * dogrudan bagli olanlara bakmak ana kategorilerde bos liste verirdi.
+     *
+     * @return array<string, string>
+     */
+    private static function catalogueImages(Category $category): array
+    {
+        return Product::query()
+            ->whereIn('category_id', $category->descendantIds())
+            ->whereNotNull('cover')
+            ->get(['id', 'name', 'cover'])
+            ->mapWithKeys(fn (Product $product) => [
+                $product->cover => $product->t('name', Locales::default()),
+            ])
+            ->sort()
+            ->all();
     }
 
     public static function table(Table $table): Table
@@ -98,6 +143,7 @@ class CategoryResource extends Resource
                 TextColumn::make('products_count')->label('Ürün')->counts('products')->sortable(),
                 TextColumn::make('position')->label('Sıra')->sortable(),
                 ToggleColumn::make('is_featured')->label('Vitrin'),
+                ToggleColumn::make('show_home_rail')->label('Ray'),
                 ToggleColumn::make('is_active')->label('Yayında'),
             ])
             ->filters([

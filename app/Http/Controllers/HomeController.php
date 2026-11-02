@@ -28,6 +28,9 @@ class HomeController extends Controller
     /** Kategori vitrinindeki kutu sayisi. */
     private const CATEGORY_TILES = 5;
 
+    /** Kacinci ray bolunmus duzende cizilir; 0 = hicbiri. */
+    private const RAIL_SPLIT = 2;
+
     private function railCount(): int
     {
         return max(0, min(6, (int) setting('home_rails_count', self::RAIL_COUNT)));
@@ -41,6 +44,17 @@ class HomeController extends Controller
     private function railMinProducts(): int
     {
         return max(1, (int) setting('home_rails_min', self::RAIL_MIN_PRODUCTS));
+    }
+
+    /**
+     * Kacinci ray bolunmus duzende cizilir (1 = ilk ray, 0 = hicbiri).
+     *
+     * Ayni yapidaki raylar art arda gelince sayfa tekduze duruyor; bir ray
+     * solda odanin fotografi, sagda urunler olacak sekilde boluyor.
+     */
+    private function railSplit(): int
+    {
+        return max(0, min($this->railCount(), (int) setting('home_rail_split', self::RAIL_SPLIT)));
     }
 
     public function index()
@@ -77,6 +91,7 @@ class HomeController extends Controller
             'categoryRails' => setting('home_rails_enabled', true)
                 ? $this->categoryRails()
                 : collect(),
+            'railSplit' => $this->railSplit(),
             'bestSellers' => $bestSellers,
             'newArrivals' => $newArrivals,
             'deals' => $deals,
@@ -113,7 +128,13 @@ class HomeController extends Controller
             ->orderBy('position')
             ->get();
 
-        return $roots
+        // Yonetici kategorilerden birini isaretlediyse ray onlarindir: sira
+        // kategori sirasi, sayi da secilen kadar. Isaretli kategori yoksa
+        // eski davranis surer — en dolu odalar kendiliginden secilir.
+        $secilmis = $roots->where('show_home_rail', true);
+        $elle = $secilmis->isNotEmpty();
+
+        return ($elle ? $secilmis : $roots)
             ->map(function (Category $root) use ($counts) {
                 $ids = collect($root->descendantIds());
 
@@ -123,9 +144,10 @@ class HomeController extends Controller
                     'ids' => $ids,
                 ];
             })
-            ->filter(fn (array $row) => $row['toplam'] >= $this->railMinProducts())
-            ->sortByDesc('toplam')
-            ->take($this->railCount())
+            // Urunu olmayan kategori bos ray cizer. Yonetici acikca sectiyse
+            // az urunlu olmasi engel degil, ama sifir urun yine de gecmez.
+            ->filter(fn (array $row) => $row['toplam'] >= ($elle ? 1 : $this->railMinProducts()))
+            ->when(! $elle, fn ($rows) => $rows->sortByDesc('toplam')->take($this->railCount()))
             ->map(fn (array $row) => [
                 'kategori' => $row['kategori'],
                 'toplam' => $row['toplam'],
