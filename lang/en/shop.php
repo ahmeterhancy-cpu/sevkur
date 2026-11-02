@@ -3,6 +3,9 @@
 return [
     'ask_price' => 'Ask for price',
     'price_on_request' => 'Contact us for pricing',
+    'whatsapp_write' => 'Message us on WhatsApp',
+    'whatsapp_product' => 'Hello, I would like information and a price for :product.',
+    'whatsapp_general' => 'Hello, I would like information about your products.',
     'whatsapp_hint' => 'For quick support',
     'product_count' => ':count product|:count products',
     'brand' => 'Sevkur Furniture',

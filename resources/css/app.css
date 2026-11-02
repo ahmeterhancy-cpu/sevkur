@@ -332,6 +332,72 @@
         pointer-events: none;
     }
 
+    /* --------------------------------------------------------- whatsapp fab
+     *
+     * Katalogdaki 600 urunun hicbirinde fiyat yok; musteri fiyati sormak
+     * icin bir kanal ariyor. Dugme her sayfada sag altta duruyor ve urun
+     * sayfasindan urun adiyla aciliyor.
+     *
+     * WhatsApp'in kendi yesili (#25D366) kullaniliyor: tanidik olmasi,
+     * markanin turuncusuna uydurulmasindan daha degerli.
+     */
+    .wa-fab {
+        position: fixed;
+        right: 1rem;
+        bottom: 1rem;
+        z-index: 60;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.65rem;
+        padding: 0.85rem;
+        border-radius: 999px;
+        background: #25d366;
+        box-shadow: 0 10px 30px rgba(17, 17, 17, 0.18);
+        transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+                    box-shadow 0.25s ease,
+                    padding 0.25s ease;
+    }
+
+    .wa-fab:hover,
+    .wa-fab:focus-visible {
+        transform: translateY(-2px);
+        box-shadow: 0 14px 38px rgba(17, 17, 17, 0.26);
+    }
+
+    /* Etiket yalnizca imlecle acilir: kucuk ekranda yer kaplamasin, buyuk
+       ekranda da urun kartlarinin onunu kapatmasin. */
+    .wa-fab__label {
+        max-width: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        opacity: 0;
+        color: #ffffff;
+        font-size: 0.9375rem;
+        transition: max-width 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease;
+    }
+
+    @media (min-width: 1024px) {
+        .wa-fab {
+            right: 1.5rem;
+            bottom: 1.5rem;
+        }
+
+        .wa-fab:hover .wa-fab__label,
+        .wa-fab:focus-visible .wa-fab__label {
+            max-width: 14rem;
+            opacity: 1;
+            padding-right: 0.35rem;
+        }
+    }
+
+    /* Hareketi kapatmis kullanicida acilip kapanma olmasin */
+    @media (prefers-reduced-motion: reduce) {
+        .wa-fab,
+        .wa-fab__label {
+            transition: none;
+        }
+    }
+
     /* ------------------------------------------------------------------ hero
      *
      * Asimetrik editoryal duzen: yazi solda krem panoda, fotograf sagda ve

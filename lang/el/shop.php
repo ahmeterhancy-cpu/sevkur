@@ -3,6 +3,9 @@
 return [
     'ask_price' => 'Ρωτήστε για τιμή',
     'price_on_request' => 'Επικοινωνήστε μαζί μας για τιμή',
+    'whatsapp_write' => 'Γράψτε μας στο WhatsApp',
+    'whatsapp_product' => 'Γεια σας, θα ήθελα πληροφορίες και τιμή για :product.',
+    'whatsapp_general' => 'Γεια σας, θα ήθελα πληροφορίες για τα προϊόντα σας.',
     'whatsapp_hint' => 'Για γρήγορη υποστήριξη',
     'product_count' => ':count προϊόν|:count προϊόντα',
     'brand' => 'Sevkur Έπιπλα',

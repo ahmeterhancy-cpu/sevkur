@@ -3,6 +3,9 @@
 return [
     'ask_price' => 'Fiyat sorun',
     'price_on_request' => 'Fiyat için bizimle iletişime geçin',
+    'whatsapp_write' => 'WhatsApp\'tan yazın',
+    'whatsapp_product' => 'Merhaba, :product ürünü hakkında bilgi ve fiyat almak istiyorum.',
+    'whatsapp_general' => 'Merhaba, ürünleriniz hakkında bilgi almak istiyorum.',
     'whatsapp_hint' => 'Hızlı destek için',
     'product_count' => ':count ürün|:count ürün',
     // ------------------------------------------------------------------ genel

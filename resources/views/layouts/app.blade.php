@@ -57,6 +57,7 @@
 
 @include('partials.footer')
 @include('partials.panels')
+@include('partials.whatsapp-button')
 
 {{-- Sunucu mesajlari toast olarak gosterilir --}}
 @if (session('status'))

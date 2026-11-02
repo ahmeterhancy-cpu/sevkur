@@ -6,6 +6,10 @@
 @section('og_image', media_url($product->cover))
 @section('page_key', 'product')
 
+{{-- Kayan WhatsApp dugmesi bu urunun adiyla acilsin: katalogda fiyat yok,
+     musteri hangi urun icin sordugunu elle yazmasin. --}}
+@section('whatsapp_message', __('shop.whatsapp_product', ['product' => $product->t('name')]))
+
 @push('head')
 <script type="application/ld+json">
 {!! json_encode([

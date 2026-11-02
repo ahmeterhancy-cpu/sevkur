@@ -82,7 +82,7 @@ if (! function_exists('whatsapp_url')) {
      * Numara "0536 567 85 48" gibi yerel bicimde giriliyor; wa.me ulke kodlu
      * ve yalin rakam istiyor. Basindaki 0 atilip 90 ekleniyor.
      */
-    function whatsapp_url(): ?string
+    function whatsapp_url(?string $message = null): ?string
     {
         $raw = (string) setting('whatsapp_number');
         $digits = preg_replace('/\D+/', '', $raw);
@@ -95,7 +95,15 @@ if (! function_exists('whatsapp_url')) {
             $digits = '90'.substr($digits, 1);
         }
 
-        return 'https://wa.me/'.$digits;
+        $url = 'https://wa.me/'.$digits;
+
+        // Katalogda fiyat yok; musteri "fiyat sorun" diyerek geliyor. Hangi
+        // urun icin yazdigini elle yazmak zorunda kalmasin.
+        if ($message !== null && trim($message) !== '') {
+            $url .= '?text='.rawurlencode(trim($message));
+        }
+
+        return $url;
     }
 }
 

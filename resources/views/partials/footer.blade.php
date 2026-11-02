@@ -3,7 +3,9 @@
         'facebook' => setting('social_facebook'),
         'instagram' => setting('social_instagram'),
         'youtube' => setting('social_youtube'),
-        'whatsapp' => setting('social_whatsapp'),
+        // Ayri bir WhatsApp baglantisi girilmediyse magaza numarasindan
+        // uretilen bag kullanilir; numara zaten ayarlarda duruyor.
+        'whatsapp' => setting('social_whatsapp') ?: whatsapp_url(),
     ];
 @endphp
 

@@ -3,6 +3,9 @@
 return [
     'ask_price' => 'Попитайте за цена',
     'price_on_request' => 'Свържете се с нас за цена',
+    'whatsapp_write' => 'Пишете ни в WhatsApp',
+    'whatsapp_product' => 'Здравейте, бих искал информация и цена за :product.',
+    'whatsapp_general' => 'Здравейте, бих искал информация за вашите продукти.',
     'whatsapp_hint' => 'За бърза поддръжка',
     'product_count' => ':count продукт|:count продукта',
     'brand' => 'Севкур Мебели',
