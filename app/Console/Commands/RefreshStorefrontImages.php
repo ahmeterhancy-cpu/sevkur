@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Banner;
 use App\Models\Category;
+use App\Models\Post;
 use App\Models\Product;
 use App\Models\Slider;
 use Illuminate\Console\Command;
@@ -40,6 +41,24 @@ class RefreshStorefrontImages extends Command
     /** Afisler yatay dikdortgen. */
     private const BANNER_RATIO = 1.6;
 
+    /** Blog kartlari yatay dikdortgen. */
+    private const POST_RATIO = 1.5;
+
+    /**
+     * Blog yazisi => fotografin alinacagi kategori.
+     *
+     * Yazinin konusu neyse fotograf o raftan gelsin; kadife/keten rehberine
+     * yemek masasi fotografi koymanin anlami yok.
+     */
+    private const POST_CATEGORIES = [
+        'kucuk-oturma-odasini-buyuk-gosteren-7-detay' => 'koltuk-takimlari',
+        'notr-tonlarla-sicak-bir-ev' => 'koltuk-takimlari',
+        'kadife-mi-keten-mi' => 'berjer-ve-koltuk',
+        'masif-ahsap-mobilya-bakimi' => 'yemek-odasi-takimlari',
+        'yemek-masasi-secerken' => 'yemek-masalari',
+        'yatak-odasinda-isik-plani' => 'yatak-odasi-takimlari',
+    ];
+
     /** Kac aday fotograf cozumlenip sahne kontrolunden gecirilir. */
     private const SCENE_CHECK_LIMIT = 25;
 
@@ -71,6 +90,9 @@ class RefreshStorefrontImages extends Command
     /** @var array<string, true> Bu calistirmada kullanilmis kapaklar */
     private array $used = [];
 
+    /** Son secimde sahne bulunamayip kesme cekime dusuldu mu? */
+    private bool $fellBackToCutout = false;
+
     /**
      * Bu gorsel degistirilmeli mi?
      *
@@ -95,6 +117,7 @@ class RefreshStorefrontImages extends Command
         $this->categories($dry);
         $this->sliders($dry);
         $this->banners($dry);
+        $this->posts($dry);
 
         if ($dry) {
             $this->newLine();
@@ -214,6 +237,49 @@ class RefreshStorefrontImages extends Command
         }
     }
 
+    private function posts(bool $dry): void
+    {
+        $this->newLine();
+        $this->line('<comment>Blog</comment>');
+
+        foreach (Post::orderBy('id')->get() as $post) {
+            if (! $this->shouldReplace($post->cover)) {
+                $this->line(sprintf('  %-44s <fg=gray>elle seçilmiş, dokunulmadı</>', mb_substr($post->slug, 0, 44)));
+
+                continue;
+            }
+
+            $slug = self::POST_CATEGORIES[$post->slug] ?? null;
+            $category = $slug === null ? null : Category::where('slug', $slug)->first();
+
+            $cover = $category === null
+                ? null
+                : $this->pick($this->categoryProductIds($category), self::POST_RATIO);
+
+            if ($cover === null) {
+                $this->warn(sprintf(
+                    '  %-44s atlandı (%s)',
+                    mb_substr($post->slug, 0, 44),
+                    $slug === null ? 'eşleşme tanımlı değil' : $slug.' boş'
+                ));
+
+                continue;
+            }
+
+            $this->line(sprintf(
+                '  %-44s %-22s %s%s',
+                mb_substr($post->slug, 0, 44),
+                $slug,
+                $cover,
+                $this->fellBackToCutout ? '  ⚠ sahne yok, kesme çekim' : ''
+            ));
+
+            if (! $dry) {
+                $post->update(['cover' => $cover]);
+            }
+        }
+    }
+
     /** Kategori ve ALT kategorilerindeki yayinda urun id'leri. */
     private function categoryProductIds(Category $category): array
     {
@@ -254,6 +320,7 @@ class RefreshStorefrontImages extends Command
             return null;
         }
 
+        $this->fellBackToCutout = false;
         $ranked = [];
 
         foreach (Product::whereIn('id', $productIds)->pluck('cover') as $cover) {
@@ -298,11 +365,14 @@ class RefreshStorefrontImages extends Command
         }
 
         // Hicbiri sahne degilse orani en uygun olani kullan — gorselsiz
-        // birakmaktan iyidir.
+        // birakmaktan iyidir. Ama SESSIZCE yapma: blog gorsellerinde bu
+        // durum "Kadife mi, keten mi?" yazisina beyaz fonda kesilmis deri
+        // koltuk fotografi koymustu ve fark edilmeden gecti.
         $best = array_key_first($ranked);
 
         if ($best !== null) {
             $this->used[$best] = true;
+            $this->fellBackToCutout = true;
         }
 
         return $best;
