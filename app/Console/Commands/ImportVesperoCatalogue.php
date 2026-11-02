@@ -260,7 +260,6 @@ class ImportVesperoCatalogue extends Command
         return array_values(array_unique($urls));
     }
 
-
     /**
      * Galerideki TAM BOYUT fotograflar.
      *

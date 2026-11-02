@@ -11,7 +11,6 @@
  *
  * Cikti: urunler-sayfa.json
  */
-
 $textFile = $argv[1] ?? 'omairat/metin.txt';
 $imageDir = $argv[2] ?? 'omairat/sayfalar';
 

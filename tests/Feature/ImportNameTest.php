@@ -92,6 +92,7 @@ class ImportNameTest extends ShopTestCase
         $this->assertSame('Milano Koltuk Takımı', $name);
         $this->assertFalse($suspect);
     }
+
     public function test_a_dash_inside_the_real_name_is_kept(): void
     {
         // ravizzayatak.com/luna-yatak-pembe/ — tire marka eki DEGIL, adin parcasi.

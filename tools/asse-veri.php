@@ -18,7 +18,6 @@
  *
  * Kullanim: php asse-veri.php <metin.txt> <sayfalar-dizini> <cikti.json>
  */
-
 $textFile = $argv[1] ?? null;
 $imageDir = $argv[2] ?? null;
 $outFile = $argv[3] ?? null;

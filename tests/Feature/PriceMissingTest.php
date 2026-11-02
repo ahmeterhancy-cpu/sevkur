@@ -93,6 +93,7 @@ class PriceMissingTest extends ShopTestCase
             $this->assertTrue($product->is_active, $product->slug.' yayinda degil.');
         }
     }
+
     public function test_the_product_page_offers_contact_instead_of_add_to_cart(): void
     {
         $product = $this->freeProduct();

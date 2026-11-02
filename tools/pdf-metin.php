@@ -9,7 +9,6 @@
  *
  * Kullanim: php pdf-metin2.php <pdf> [sayfa]
  */
-
 $pdfPath = $argv[1] ?? null;
 $onlyPage = isset($argv[2]) ? (int) $argv[2] : null;
 

@@ -19,7 +19,7 @@ class ProductName
 {
     /**
      * @param  array<int, string>  $suffixes  baslikta tekrarlayan marka ekleri
-     * @return array{0: ?string, 1: bool}  [ad, adresle_uyusmadi]
+     * @return array{0: ?string, 1: bool} [ad, adresle_uyusmadi]
      */
     public function resolve(string $html, string $url, array $suffixes = []): array
     {
