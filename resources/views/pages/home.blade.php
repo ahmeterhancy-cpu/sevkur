@@ -143,6 +143,55 @@
         </section>
     @endif
 
+    {{-- ------------------------------------------------------- oda raylari --}}
+    {{-- Katalogda 600'u askin urun var; fiyat girilmedigi icin "Cok Satanlar"
+         ve "Firsatlar" bolumleri bos kaliyor ve sayfa ince duruyordu. En dolu
+         oda kategorileri birer rayda gosteriliyor. --}}
+    @foreach ($categoryRails as $rail)
+        <section class="{{ $loop->odd ? 'bg-cream' : '' }} py-[clamp(3rem,6vw,5.5rem)]">
+            <div class="container-x" data-rail>
+                <div class="flex flex-wrap items-end justify-between gap-4 section-head">
+                    <div>
+                        <span class="eyebrow">{{ __('shop.categories') }}</span>
+                        <h2 class="section-title mt-2">{{ $rail['kategori']->t('name') }}</h2>
+                        <p class="section-sub mt-2">
+                            {{ trans_choice('shop.product_count', $rail['toplam'], ['count' => $rail['toplam']]) }}
+                        </p>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <a href="{{ localized_route('category', ['category' => $rail['kategori']->slug]) }}"
+                           class="btn btn-ghost btn-sm">{{ __('shop.view_all') }}</a>
+                        <button type="button" data-rail-prev class="icon-btn" aria-label="{{ __('shop.back') }}">
+                            <x-ui.icon name="chevron-left" :size="18" />
+                        </button>
+                        <button type="button" data-rail-next class="icon-btn" aria-label="{{ __('shop.view') }}">
+                            <x-ui.icon name="chevron-right" :size="18" />
+                        </button>
+                    </div>
+                </div>
+
+                {{-- Alt kategoriler: 600 urunluk katalogda gezinmeyi kisaltir --}}
+                @if ($rail['kategori']->children->isNotEmpty())
+                    <div class="flex flex-wrap gap-2 mb-7">
+                        @foreach ($rail['kategori']->children as $child)
+                            <a href="{{ localized_route('category', ['category' => $child->slug]) }}"
+                               class="chip">{{ $child->t('name') }}</a>
+                        @endforeach
+                    </div>
+                @endif
+
+                <div class="rail gap-4 lg:gap-6 -mx-4 px-4" data-rail-track>
+                    @foreach ($rail['urunler'] as $product)
+                        <div class="w-[16rem] lg:w-[19rem]">
+                            <x-product-card :product="$product" style="--reveal-delay: {{ min($loop->index, 5) * 70 }}ms" />
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endforeach
+
     {{-- ------------------------------------------------------------ genis afis --}}
     @if ($wideBanner)
         <section class="relative bg-cream">

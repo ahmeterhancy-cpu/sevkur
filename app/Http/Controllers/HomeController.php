@@ -10,6 +10,15 @@ use App\Models\Slider;
 
 class HomeController extends Controller
 {
+    /** Ana sayfada kac oda rayi gosterilir. */
+    private const RAIL_COUNT = 3;
+
+    /** Bir rayda kac urun. */
+    private const RAIL_SIZE = 10;
+
+    /** Bu kadar urunu olmayan kategori ray acmaz — yari bos ray kotu durur. */
+    private const RAIL_MIN_PRODUCTS = 8;
+
     public function index()
     {
         // Satis verisi olmayan urunu "cok satan" diye gostermek musteriye
@@ -41,6 +50,7 @@ class HomeController extends Controller
         return view('pages.home', [
             'sliders' => Slider::active()->get(),
             'featuredCategories' => $this->featuredCategories(),
+            'categoryRails' => $this->categoryRails(),
             'bestSellers' => $bestSellers,
             'newArrivals' => $newArrivals,
             'deals' => $deals,
@@ -49,6 +59,115 @@ class HomeController extends Controller
             'wideBanner' => Banner::active()->placement('home_wide')->first(),
             'posts' => Post::published()->with('category')->latest('published_at')->take(3)->get(),
         ]);
+    }
+
+    /**
+     * Oda bazli urun raylari.
+     *
+     * Katalogda 600'u askin urun var ama ana sayfa yalnizca "Yeni Gelenler"
+     * rayini gosteriyordu: fiyat girilmedigi icin "Cok Satanlar" ve
+     * "Firsatlar" bolumleri de bos kaliyor, sayfa bu yuzden ince duruyordu.
+     * En dolu uc oda kategorisinin urunleri birer rayda gosteriliyor.
+     *
+     * Urunler dort sorguda toplaniyor: bir sayim, uc ray. Kategori basina
+     * sorgu acilmiyor.
+     *
+     * @return \Illuminate\Support\Collection<int, array{kategori: Category, urunler: \Illuminate\Support\Collection}>
+     */
+    private function categoryRails()
+    {
+        $counts = Product::active()
+            ->selectRaw('category_id, count(*) as toplam')
+            ->groupBy('category_id')
+            ->pluck('toplam', 'category_id');
+
+        $roots = Category::active()
+            ->whereNull('parent_id')
+            ->with('children')
+            ->orderBy('position')
+            ->get();
+
+        return $roots
+            ->map(function (Category $root) use ($counts) {
+                $ids = collect($root->descendantIds());
+
+                return [
+                    'kategori' => $root,
+                    'toplam' => $ids->sum(fn (int $id) => (int) ($counts[$id] ?? 0)),
+                    'ids' => $ids,
+                ];
+            })
+            ->filter(fn (array $row) => $row['toplam'] >= self::RAIL_MIN_PRODUCTS)
+            ->sortByDesc('toplam')
+            ->take(self::RAIL_COUNT)
+            ->map(fn (array $row) => [
+                'kategori' => $row['kategori'],
+                'toplam' => $row['toplam'],
+                'urunler' => $this->spreadAcrossSubcategories($row['ids']),
+            ])
+            ->values();
+    }
+
+    /**
+     * Ray urunlerini ALT KATEGORILER arasinda dagitir.
+     *
+     * Dogrudan son eklenenleri almak odayi temsil etmiyordu: aktarim ayni
+     * seriyi arka arkaya yazdigi icin "Yatak Odasi" rayinda ayni pembe yatak
+     * takiminin on fotografi cikiyordu. Alt kategoriler sirayla gezilerek
+     * karyola, gardirop, komodin, baza… yan yana geliyor.
+     *
+     * @param  \Illuminate\Support\Collection<int, int>  $categoryIds
+     */
+    private function spreadAcrossSubcategories($categoryIds)
+    {
+        // Tek sorgu: her alt kategoriden yetecek kadar aday.
+        $candidates = Product::active()
+            ->with(['category', 'variants'])
+            ->whereIn('category_id', $categoryIds)
+            ->whereNotNull('cover')
+            ->latest('id')
+            ->take(self::RAIL_SIZE * 12)
+            ->get()
+            ->groupBy('category_id');
+
+        $picked = collect();
+        $usedSeries = [];
+
+        // Sirayla her alt kategoriden birer tane al, ray dolana kadar don.
+        while ($picked->count() < self::RAIL_SIZE && $candidates->isNotEmpty()) {
+            foreach ($candidates as $categoryId => $group) {
+                if ($picked->count() >= self::RAIL_SIZE) {
+                    break;
+                }
+
+                // Her alt kategorinin EN YENISI cogu zaman ayni seriden
+                // (aktarim seriyi toplu yaziyor): rayin ilk ekrani "Vera
+                // Baslik, Vera Baza, Vera Yatak…" oluyordu. Gorulmemis bir
+                // seri varsa once o alinir.
+                $index = $group->search(
+                    fn (Product $p) => ! isset($usedSeries[$this->series($p)])
+                );
+
+                $product = $index === false ? $group->shift() : $group->pull($index);
+
+                $usedSeries[$this->series($product)] = true;
+                $picked->push($product);
+
+                if ($group->isEmpty()) {
+                    $candidates->forget($categoryId);
+                }
+            }
+
+            $candidates = $candidates->map(fn ($group) => $group->values());
+        }
+
+        return $picked->values();
+    }
+
+    /** Urun adinin ilk kelimesi seri adidir: "Vera Baza" -> "vera". */
+    private function series(Product $product): string
+    {
+        return mb_strtolower(explode(' ', trim($product->t('name')))[0] ?? '', 'UTF-8');
     }
 
     /**
