@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Product;
+use App\Models\ProductVariant;
 use App\Models\Setting;
 use Tests\ShopTestCase;
 
@@ -81,5 +82,57 @@ class WhatsappButtonTest extends ShopTestCase
         $this->get(localized_route('home'))
             ->assertOk()
             ->assertDontSee('wa-fab', false);
+    }
+
+    public function test_the_ask_price_button_opens_whatsapp_with_the_product(): void
+    {
+        Setting::putMany(['whatsapp_number' => '0536 567 85 48']);
+
+        $product = Product::active()->firstOrFail();
+        $product->update(['price' => 0]);
+        $product->variants()->delete();
+
+        $html = $this->get(localized_route('product', ['product' => $product->slug]))
+            ->assertOk()
+            ->getContent();
+
+        $this->assertStringContainsString(
+            'href="'.e(ask_price_url($product->fresh()->t('name'))).'"',
+            $html
+        );
+    }
+
+    public function test_without_a_number_the_ask_price_button_goes_to_the_contact_page(): void
+    {
+        Setting::putMany(['whatsapp_number' => '']);
+
+        $product = Product::active()->firstOrFail();
+        $product->update(['price' => 0]);
+        $product->variants()->delete();
+
+        $this->assertSame(localized_route('contact'), ask_price_url($product->t('name')));
+        $this->assertFalse(ask_price_is_whatsapp());
+
+        // Olu dugme kalmasin: baglanti yine de calisir olmali.
+        $this->get(localized_route('product', ['product' => $product->slug]))
+            ->assertOk()
+            ->assertSee(e(localized_route('contact')), false);
+    }
+
+    public function test_each_card_carries_its_own_product_name(): void
+    {
+        Setting::putMany(['whatsapp_number' => '0536 567 85 48']);
+
+        Product::query()->update(['price' => 0]);
+        ProductVariant::query()->delete();
+
+        $html = $this->get(localized_route('shop'))->assertOk()->getContent();
+
+        $isimler = Product::active()->take(2)->get()
+            ->map(fn (Product $p) => rawurlencode($p->t('name')));
+
+        foreach ($isimler as $isim) {
+            $this->assertStringContainsString($isim, $html);
+        }
     }
 }

@@ -142,10 +142,16 @@
             @if (! $product->hasPrice())
                 {{-- Fiyati girilmemis urun sepete EKLENEMEZ: CartService onu
                      reddeder. Calisir gorunen bir "Sepete ekle" dugmesi
-                     musteriyi hataya goturuyordu; urun kartindaki gibi
-                     iletisime yonlendiriliyor. --}}
-                <a href="{{ localized_route('contact') }}"
+                     musteriyi hataya goturuyordu.
+
+                     Dugme WhatsApp sohbetini urun adi yazili olarak aciyor;
+                     numara tanimli degilse iletisim sayfasina duser. --}}
+                <a href="{{ ask_price_url($product->t('name')) }}"
+                   @if (ask_price_is_whatsapp()) target="_blank" rel="noopener" @endif
                    class="btn btn-primary btn-lg mt-7 w-full sm:w-auto sm:min-w-[16rem]">
+                    @if (ask_price_is_whatsapp())
+                        <x-ui.icon name="whatsapp-solid" :size="18" />
+                    @endif
                     {{ __('shop.ask_price') }}
                 </a>
             @else

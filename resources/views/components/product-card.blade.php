@@ -68,7 +68,11 @@
                     </form>
                 @endif
             @elseif (! $product->hasPrice())
-                <a href="{{ localized_route('contact') }}" class="btn btn-ghost w-full">{{ __('shop.ask_price') }}</a>
+                {{-- Fiyat yoksa ana eylem budur: WhatsApp sohbeti bu urunun
+                     adiyla acilir, numara tanimli degilse iletisime duser. --}}
+                <a href="{{ ask_price_url($product->t('name')) }}"
+                   @if (ask_price_is_whatsapp()) target="_blank" rel="noopener" @endif
+                   class="btn btn-ghost w-full">{{ __('shop.ask_price') }}</a>
             @else
                 <span class="btn btn-ghost w-full is-disabled">{{ __('shop.out_of_stock') }}</span>
             @endif

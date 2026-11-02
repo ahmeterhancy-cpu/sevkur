@@ -141,6 +141,31 @@ if (! function_exists('contrast_scrim')) {
     }
 }
 
+if (! function_exists('ask_price_url')) {
+    /**
+     * "Fiyat sorun" dugmesinin hedefi.
+     *
+     * Katalogda fiyat yok; bu dugme musterinin ana eylemi. WhatsApp numarasi
+     * tanimliysa dogrudan sohbet acilir ve urun adi mesaja hazir yazilir —
+     * musteri hangi urun icin sordugunu anlatmak zorunda kalmaz. Numara
+     * girilmemisse dugme olu kalmasin diye iletisim sayfasina duser.
+     */
+    function ask_price_url(string $productName): string
+    {
+        $url = whatsapp_url(__('shop.whatsapp_product', ['product' => $productName]));
+
+        return $url ?? localized_route('contact');
+    }
+}
+
+if (! function_exists('ask_price_is_whatsapp')) {
+    /** Dugme WhatsApp aciyor mu? Ikon ve target bu bilgiye gore degisir. */
+    function ask_price_is_whatsapp(): bool
+    {
+        return whatsapp_url() !== null;
+    }
+}
+
 if (! function_exists('panel_ink')) {
     /**
      * Krem pano uzerinde okunacak yazi rengi.
