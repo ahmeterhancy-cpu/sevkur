@@ -7,9 +7,15 @@ use App\Models\Category;
 use App\Models\Post;
 use App\Models\Product;
 use App\Models\Slider;
+use Illuminate\Support\Collection;
 
 class HomeController extends Controller
 {
+    /*
+     * Ana sayfa olculeri yonetimden ayarlanir (Magaza Ayarlari > Ana sayfa).
+     * Buradaki degerler yalnizca ayar girilmemisse kullanilan varsayilanlar.
+     */
+
     /** Ana sayfada kac oda rayi gosterilir. */
     private const RAIL_COUNT = 3;
 
@@ -18,6 +24,24 @@ class HomeController extends Controller
 
     /** Bu kadar urunu olmayan kategori ray acmaz — yari bos ray kotu durur. */
     private const RAIL_MIN_PRODUCTS = 8;
+
+    /** Kategori vitrinindeki kutu sayisi. */
+    private const CATEGORY_TILES = 5;
+
+    private function railCount(): int
+    {
+        return max(0, min(6, (int) setting('home_rails_count', self::RAIL_COUNT)));
+    }
+
+    private function railSize(): int
+    {
+        return max(4, min(24, (int) setting('home_rails_size', self::RAIL_SIZE)));
+    }
+
+    private function railMinProducts(): int
+    {
+        return max(1, (int) setting('home_rails_min', self::RAIL_MIN_PRODUCTS));
+    }
 
     public function index()
     {
@@ -50,7 +74,9 @@ class HomeController extends Controller
         return view('pages.home', [
             'sliders' => Slider::active()->get(),
             'featuredCategories' => $this->featuredCategories(),
-            'categoryRails' => $this->categoryRails(),
+            'categoryRails' => setting('home_rails_enabled', true)
+                ? $this->categoryRails()
+                : collect(),
             'bestSellers' => $bestSellers,
             'newArrivals' => $newArrivals,
             'deals' => $deals,
@@ -72,7 +98,7 @@ class HomeController extends Controller
      * Urunler dort sorguda toplaniyor: bir sayim, uc ray. Kategori basina
      * sorgu acilmiyor.
      *
-     * @return \Illuminate\Support\Collection<int, array{kategori: Category, urunler: \Illuminate\Support\Collection}>
+     * @return Collection<int, array{kategori: Category, urunler: Collection}>
      */
     private function categoryRails()
     {
@@ -97,9 +123,9 @@ class HomeController extends Controller
                     'ids' => $ids,
                 ];
             })
-            ->filter(fn (array $row) => $row['toplam'] >= self::RAIL_MIN_PRODUCTS)
+            ->filter(fn (array $row) => $row['toplam'] >= $this->railMinProducts())
             ->sortByDesc('toplam')
-            ->take(self::RAIL_COUNT)
+            ->take($this->railCount())
             ->map(fn (array $row) => [
                 'kategori' => $row['kategori'],
                 'toplam' => $row['toplam'],
@@ -116,7 +142,7 @@ class HomeController extends Controller
      * takiminin on fotografi cikiyordu. Alt kategoriler sirayla gezilerek
      * karyola, gardirop, komodin, baza… yan yana geliyor.
      *
-     * @param  \Illuminate\Support\Collection<int, int>  $categoryIds
+     * @param  Collection<int, int>  $categoryIds
      */
     private function spreadAcrossSubcategories($categoryIds)
     {
@@ -126,7 +152,7 @@ class HomeController extends Controller
             ->whereIn('category_id', $categoryIds)
             ->whereNotNull('cover')
             ->latest('id')
-            ->take(self::RAIL_SIZE * 12)
+            ->take($this->railSize() * 12)
             ->get()
             ->groupBy('category_id');
 
@@ -134,9 +160,11 @@ class HomeController extends Controller
         $usedSeries = [];
 
         // Sirayla her alt kategoriden birer tane al, ray dolana kadar don.
-        while ($picked->count() < self::RAIL_SIZE && $candidates->isNotEmpty()) {
+        $size = $this->railSize();
+
+        while ($picked->count() < $size && $candidates->isNotEmpty()) {
             foreach ($candidates as $categoryId => $group) {
-                if ($picked->count() >= self::RAIL_SIZE) {
+                if ($picked->count() >= $size) {
                     break;
                 }
 
@@ -204,7 +232,7 @@ class HomeController extends Controller
         // izgarayi tam kapatiyor. Alti kutu alt satirda bosluk birakirdi.
         return $categories
             ->filter(fn (Category $category) => $category->product_total > 0)
-            ->take(5)
+            ->take(max(3, min(5, (int) setting('home_categories_count', self::CATEGORY_TILES))))
             ->values();
     }
 }

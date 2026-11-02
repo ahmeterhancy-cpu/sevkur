@@ -141,6 +141,32 @@ if (! function_exists('contrast_scrim')) {
     }
 }
 
+if (! function_exists('whatsapp_message')) {
+    /**
+     * WhatsApp mesaj sablonu.
+     *
+     * Once yonetimden girilen metin, yoksa dil dosyasindaki varsayilan.
+     * Magaza sahibi ifadeyi kendi diliyle degistirebilsin diye ayardan
+     * okunuyor; :product yer tutucusu her iki kaynakta da gecerli.
+     *
+     * @param  'product'|'general'  $type
+     * @param  array<string, string>  $replace
+     */
+    function whatsapp_message(string $type, array $replace = []): string
+    {
+        $custom = setting_t('whatsapp_'.$type.'_message');
+
+        if (is_string($custom) && trim($custom) !== '') {
+            return strtr($custom, array_combine(
+                array_map(fn (string $k) => ':'.$k, array_keys($replace)),
+                array_values($replace)
+            ));
+        }
+
+        return __('shop.whatsapp_'.$type, $replace);
+    }
+}
+
 if (! function_exists('ask_price_url')) {
     /**
      * "Fiyat sorun" dugmesinin hedefi.
@@ -152,7 +178,11 @@ if (! function_exists('ask_price_url')) {
      */
     function ask_price_url(string $productName): string
     {
-        $url = whatsapp_url(__('shop.whatsapp_product', ['product' => $productName]));
+        if (! setting('ask_price_whatsapp', true)) {
+            return localized_route('contact');
+        }
+
+        $url = whatsapp_url(whatsapp_message('product', ['product' => $productName]));
 
         return $url ?? localized_route('contact');
     }
@@ -162,7 +192,7 @@ if (! function_exists('ask_price_is_whatsapp')) {
     /** Dugme WhatsApp aciyor mu? Ikon ve target bu bilgiye gore degisir. */
     function ask_price_is_whatsapp(): bool
     {
-        return whatsapp_url() !== null;
+        return setting('ask_price_whatsapp', true) && whatsapp_url() !== null;
     }
 }
 

@@ -10,6 +10,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Schemas\Components\Section;
@@ -57,6 +58,7 @@ class ManageSettings extends Page implements HasSchemas
         'promise_support_title', 'promise_support',
         'home_categories_title', 'home_bestsellers_title', 'home_bestsellers_sub',
         'home_deals_title', 'home_new_title', 'home_blog_title', 'footer_about',
+        'whatsapp_product_message', 'whatsapp_general_message',
     ];
 
     /** Sayfada yonetilen ayar anahtarlari. */
@@ -69,6 +71,9 @@ class ManageSettings extends Page implements HasSchemas
         'promise_secure_title', 'promise_secure', 'promise_support_title', 'promise_support',
         'home_categories_title', 'home_bestsellers_title', 'home_bestsellers_sub',
         'home_deals_title', 'home_new_title', 'home_blog_title', 'footer_about',
+        'home_rails_enabled', 'home_rails_count', 'home_rails_size', 'home_rails_min',
+        'home_categories_count', 'home_slider_interval', 'ask_price_whatsapp',
+        'whatsapp_product_message', 'whatsapp_general_message',
     ];
 
     public function mount(): void
@@ -156,6 +161,32 @@ class ManageSettings extends Page implements HasSchemas
                             TextInput::make('social_instagram')->label('Instagram')->url(),
                             TextInput::make('social_youtube')->label('YouTube')->url(),
                             TextInput::make('social_whatsapp')->label('WhatsApp bağlantısı')->url(),
+
+                            Section::make('WhatsApp mesajları')
+                                ->description('Müşteri WhatsApp\'tan yazdığında sohbete hazır gelen metin. '
+                                    .':product yazdığınız yere ürünün adı girer. Boş bırakırsanız hazır metin kullanılır.')
+                                ->schema([
+                                    Toggle::make('ask_price_whatsapp')
+                                        ->label('"Fiyat sorun" düğmesi WhatsApp açsın')
+                                        ->helperText('Kapatırsanız düğme iletişim sayfasına gider.')
+                                        ->columnSpanFull(),
+
+                                    Tabs::make('Mesaj metinleri')
+                                        ->columnSpanFull()
+                                        ->tabs(array_map(
+                                            fn (string $locale) => Tab::make(strtoupper($locale))->schema([
+                                                Textarea::make(self::localisedKey('whatsapp_product_message', $locale))
+                                                    ->label('Ürün sayfasından yazarken')
+                                                    ->rows(2)
+                                                    ->placeholder(__('shop.whatsapp_product', ['product' => ':product'])),
+                                                Textarea::make(self::localisedKey('whatsapp_general_message', $locale))
+                                                    ->label('Diğer sayfalardan yazarken')
+                                                    ->rows(2)
+                                                    ->placeholder(__('shop.whatsapp_general')),
+                                            ]),
+                                            Locales::all()
+                                        )),
+                                ])->columnSpanFull(),
                         ])->columns(2),
 
                         Tab::make('Mağaza')->schema([
@@ -214,6 +245,43 @@ class ManageSettings extends Page implements HasSchemas
                                     ])->columns(2),
                                     Locales::all()
                                 )),
+
+                            Section::make('Bölüm düzeni')
+                                ->description('Ana sayfanın ölçüleri. Boş bırakılan alan varsayılana döner.')
+                                ->schema([
+                                    TextInput::make('home_slider_interval')
+                                        ->label('Slider geçiş süresi (ms)')
+                                        ->numeric()->minValue(2000)->maxValue(20000)
+                                        ->placeholder('6500'),
+
+                                    TextInput::make('home_categories_count')
+                                        ->label('Kategori vitrinindeki kutu sayısı')
+                                        ->numeric()->minValue(3)->maxValue(5)
+                                        ->placeholder('5')
+                                        ->helperText('İlk kutu büyük gösterilir; ızgara her sayıda kapanır.'),
+
+                                    Toggle::make('home_rails_enabled')
+                                        ->label('Oda rayları gösterilsin')
+                                        ->helperText('Kapatırsanız ana sayfadan oda bölümleri kalkar.')
+                                        ->columnSpanFull(),
+
+                                    TextInput::make('home_rails_count')
+                                        ->label('Kaç oda rayı')
+                                        ->numeric()->minValue(0)->maxValue(6)
+                                        ->placeholder('3')
+                                        ->helperText('En çok ürünü olan odalar seçilir.'),
+
+                                    TextInput::make('home_rails_size')
+                                        ->label('Rayda kaç ürün')
+                                        ->numeric()->minValue(4)->maxValue(24)
+                                        ->placeholder('10'),
+
+                                    TextInput::make('home_rails_min')
+                                        ->label('Ray açmak için en az kaç ürün')
+                                        ->numeric()->minValue(1)
+                                        ->placeholder('8')
+                                        ->helperText('Az ürünlü oda yarı boş ray açmasın.'),
+                                ])->columns(2)->columnSpanFull(),
 
                             Placeholder::make('bolum_notu')
                                 ->label('Ana sayfada başka neler yönetilir?')

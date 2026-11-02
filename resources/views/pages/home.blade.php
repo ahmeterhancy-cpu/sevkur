@@ -10,7 +10,8 @@
         {{-- Asimetrik editoryal hero: yazi fotografin UZERINDE degil, yanindaki
              krem panoda. Fotograf saga, ekranin kenarina kadar tasiyor. Yazi
              perdeye muhtac olmadigi icin okunurluk fotografa bagli degil. --}}
-        <section class="hero relative bg-cream overflow-hidden" data-slider="6500">
+        <section class="hero relative bg-cream overflow-hidden"
+                 data-slider="{{ max(2000, (int) setting('home_slider_interval', 6500)) }}">
             <div class="flex transition-transform duration-700 ease-out" data-slider-track>
                 @foreach ($sliders as $slide)
                     <div class="w-full shrink-0" data-slide>
@@ -100,11 +101,20 @@
             {{-- Mozaik: ilk oda buyuk kutuyu alir, digerleri cevresine yerlesir.
                  Esit bes kucuk karede oda fotograflari okunmuyordu. Bes kutu
                  4x2 izgarayi tam kapatir (2x2 + dort tekli). --}}
+            @php
+                // Buyuk kutu 2x2 yer kapliyor; 4x2 izgarada geriye dort hucre
+                // kaliyor. Kutu sayisi yonetimden degistirilebildigi icin SON
+                // kutu artan hucreleri kapatiyor, yoksa izgarada bosluk kalirdi.
+                $tekliSayisi = max(0, $featuredCategories->count() - 1);
+                $sonKutuSpan = max(1, 4 - max(0, $tekliSayisi - 1));
+            @endphp
+
             <div class="grid grid-cols-2 lg:grid-cols-4 auto-rows-[11rem] lg:auto-rows-[13.5rem] gap-3 lg:gap-4">
                 @foreach ($featuredCategories as $category)
                     @php($feature = $loop->first)
+                    @php($sonKutu = $loop->last && ! $loop->first && $sonKutuSpan > 1)
                     <a href="{{ localized_route('category', ['category' => $category->slug]) }}"
-                       class="cat-tile reveal {{ $feature ? 'cat-tile--feature col-span-2 row-span-2' : '' }}"
+                       class="cat-tile reveal {{ $feature ? 'cat-tile--feature col-span-2 row-span-2' : '' }} {{ $sonKutu ? 'lg:col-span-'.$sonKutuSpan : '' }}"
                        style="--reveal-delay: {{ min($loop->index, 5) * 70 }}ms">
                         <img src="{{ media_url($category->image) }}" alt="{{ $category->t('name') }}"
                              @if ($feature) fetchpriority="high" @else loading="lazy" @endif>

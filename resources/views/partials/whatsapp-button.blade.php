@@ -7,7 +7,7 @@
     ile urun adini bildirir, diger sayfalarda genel metin kullanilir.
 --}}
 @php
-    $waMessage = trim($__env->yieldContent('whatsapp_message')) ?: __('shop.whatsapp_general');
+    $waMessage = trim($__env->yieldContent('whatsapp_message')) ?: whatsapp_message('general');
     $waUrl = whatsapp_url($waMessage);
 @endphp
 

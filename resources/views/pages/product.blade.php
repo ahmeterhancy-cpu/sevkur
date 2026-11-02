@@ -8,7 +8,7 @@
 
 {{-- Kayan WhatsApp dugmesi bu urunun adiyla acilsin: katalogda fiyat yok,
      musteri hangi urun icin sordugunu elle yazmasin. --}}
-@section('whatsapp_message', __('shop.whatsapp_product', ['product' => $product->t('name')]))
+@section('whatsapp_message', whatsapp_message('product', ['product' => $product->t('name')]))
 
 @push('head')
 <script type="application/ld+json">
