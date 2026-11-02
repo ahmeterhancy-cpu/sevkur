@@ -282,3 +282,43 @@ if (! function_exists('media_url')) {
         return asset(ltrim($path, '/'));
     }
 }
+
+if (! function_exists('legal_fill')) {
+    /**
+     * Yasal metinlerdeki [[...]] isaretlerini magaza bilgileriyle doldurur.
+     *
+     * Sozlesme ve aydinlatma metinleri unvan, adres, MERSIS gibi bilgileri
+     * defalarca tekrar eder; bunlar metne elle yazilsa sirket bilgisi
+     * degistiginde dort dildeki bes metni tek tek duzeltmek gerekirdi.
+     *
+     * Girilmemis bir alan, metinde SESSIZCE bosluk birakmak yerine
+     * "[... girilmedi]" olarak gorunur: eksik bilgiyle yayina cikilirsa
+     * sayfada goze carpar.
+     */
+    function legal_fill(string $text): string
+    {
+        $alanlar = [
+            'unvan' => [setting('legal_company_name') ?: setting('site_name'), 'Ticaret unvanı'],
+            'adres' => [setting_t('address'), 'Adres'],
+            'telefon' => [setting('phone'), 'Telefon'],
+            'eposta' => [setting('email'), 'E-posta'],
+            'mersis' => [setting('legal_mersis'), 'MERSİS numarası'],
+            'vergi' => [setting('legal_tax'), 'Vergi dairesi ve numarası'],
+            'site' => [setting('legal_site') ?: parse_url(config('app.url'), PHP_URL_HOST), 'Site adresi'],
+        ];
+
+        return preg_replace_callback(
+            '/\[\[(\w+)\]\]/',
+            function (array $m) use ($alanlar) {
+                if (! isset($alanlar[$m[1]])) {
+                    return $m[0];
+                }
+
+                [$deger, $etiket] = $alanlar[$m[1]];
+
+                return trim((string) $deger) !== '' ? (string) $deger : "[$etiket girilmedi]";
+            },
+            $text
+        ) ?? $text;
+    }
+}

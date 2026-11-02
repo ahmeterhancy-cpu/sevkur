@@ -382,40 +382,12 @@ class ContentSeeder extends Seeder
                     'el' => "Οι παραγγελίες ετοιμάζονται εντός του χρόνου που αναγράφεται στη σελίδα του προϊόντος μετά την επιβεβαίωση πληρωμής.\n\nΗ αποστολή είναι δωρεάν για παραγγελίες άνω των 15.000 ₺.\n\nΤα ογκώδη αντικείμενα παραδίδονται με μεταφορική στην πόρτα σας.",
                 ],
             ],
-            [
-                'slug' => 'iade-ve-degisim',
-                'footer' => true,
-                'title' => ['tr' => 'İade ve Değişim', 'en' => 'Returns & Exchanges', 'bg' => 'Връщане и замяна', 'el' => 'Επιστροφές & Αλλαγές'],
-                'body' => [
-                    'tr' => "Teslim tarihinden itibaren 14 gün içinde, kullanılmamış ve orijinal ambalajındaki ürünleri iade edebilirsiniz.\n\nÖlçüye özel üretilen ürünler bu kapsamın dışındadır.\n\nİade talebiniz onaylandıktan sonra ödeme, kullandığınız yöntemle 10 iş günü içinde iade edilir.",
-                    'en' => "You may return unused items in their original packaging within 14 days of delivery.\n\nMade-to-measure items are excluded.\n\nOnce your return is approved, the refund is issued to your original payment method within 10 business days.",
-                    'bg' => "Можете да върнете неизползвани продукти в оригинална опаковка до 14 дни след доставката.\n\nИзделията по поръчка са изключени.\n\nСумата се възстановява до 10 работни дни.",
-                    'el' => "Μπορείτε να επιστρέψετε αχρησιμοποίητα προϊόντα στην αρχική συσκευασία εντός 14 ημερών.\n\nΤα κατά παραγγελία προϊόντα εξαιρούνται.\n\nΗ επιστροφή χρημάτων γίνεται εντός 10 εργάσιμων ημερών.",
-                ],
-            ],
-            [
-                'slug' => 'gizlilik-politikasi',
-                'footer' => true,
-                'title' => ['tr' => 'Gizlilik Politikası', 'en' => 'Privacy Policy', 'bg' => 'Политика за поверителност', 'el' => 'Πολιτική Απορρήτου'],
-                'body' => [
-                    'tr' => "Bu metin örnek içeriktir; yayına almadan önce hukuk danışmanınızla birlikte güncelleyin.\n\nSitemizde yalnızca siparişin tamamlanması ve müşteri desteği için gereken kişisel verileri işleriz. Ödeme bilgileri sitemizde saklanmaz; ödeme PayTR altyapısı üzerinden alınır.\n\nKişisel verilerinizin silinmesini veya düzeltilmesini talep etmek için bizimle iletişime geçebilirsiniz.",
-                    'en' => "This is placeholder content; review it with your legal adviser before going live.\n\nWe process only the personal data required to complete your order and provide support. Payment details are never stored on our servers — payments run through PayTR.\n\nContact us to request deletion or correction of your data.",
-                    'bg' => "Това е примерно съдържание; прегледайте го с юрист преди публикуване.\n\nОбработваме само данните, необходими за изпълнение на поръчката. Данните за плащане не се съхраняват при нас.",
-                    'el' => "Αυτό είναι ενδεικτικό περιεχόμενο· ελέγξτε το με νομικό σύμβουλο πριν τη δημοσίευση.\n\nΕπεξεργαζόμαστε μόνο τα δεδομένα που απαιτούνται για την παραγγελία σας. Τα στοιχεία πληρωμής δεν αποθηκεύονται.",
-                ],
-            ],
-            [
-                'slug' => 'mesafeli-satis-sozlesmesi',
-                'footer' => true,
-                'title' => ['tr' => 'Mesafeli Satış Sözleşmesi', 'en' => 'Distance Sales Agreement', 'bg' => 'Договор за продажба от разстояние', 'el' => 'Σύμβαση Πώλησης εξ Αποστάσεως'],
-                'body' => [
-                    'tr' => "Bu metin örnek içeriktir; yayına almadan önce hukuk danışmanınızla birlikte güncelleyin.\n\nSözleşme, alıcı ile satıcı arasında elektronik ortamda kurulan satışın koşullarını düzenler. Sipariş onayı ile birlikte alıcı, bu koşulları kabul etmiş sayılır.",
-                    'en' => "This is placeholder content; review it with your legal adviser before going live.\n\nThe agreement sets out the conditions of the sale concluded electronically between buyer and seller.",
-                    'bg' => 'Това е примерно съдържание; прегледайте го с юрист преди публикуване.',
-                    'el' => 'Αυτό είναι ενδεικτικό περιεχόμενο· ελέγξτε το με νομικό σύμβουλο πριν τη δημοσίευση.',
-                ],
-            ],
         ];
+
+        // Yasal metinler ayri dosyalarda durur: seeder tekrar calistiginda
+        // sozlesme ve aydinlatma metinlerinin eski yer tutuculara donmemesi
+        // icin tek kaynaktan okunurlar.
+        $pages = array_merge($pages, require database_path('data/legal-pages.php'));
 
         foreach ($pages as $index => $page) {
             Page::updateOrCreate(['slug' => $page['slug']], [
