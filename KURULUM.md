@@ -65,6 +65,36 @@ olur. Kök dizindeki `.htaccess` kaynak dosyaları kapatır ve istekleri
 3. Tüm dosyaları `public_html` içine açın.
 4. Klasör izinleri: `storage/` ve `bootstrap/cache/` **755** (gerekirse 775),
    içindekiler yazılabilir olmalı.
+5. **Ürün fotoğraflarını ayrıca yükleyin.** `public/urunler` depoya dahil
+   değildir (panelden yüklenen medya sunucuda kalsın diye). Yerelde
+   **1715 dosya / 272 MB** var, markalara göre ayrılmış:
+
+   | Klasör | Dosya | Boyut | Kaynak |
+   | --- | --- | --- | --- |
+   | `urunler/oben` | 68 | 15 MB | müşterinin kendi kataloğu |
+   | `urunler/omairat` | 103 | 9,6 MB | müşterinin kendi kataloğu |
+   | `urunler/arno` | 754 | 116 MB | markanın kendi sitesi — telif |
+   | `urunler/vespero` | 382 | 77 MB | markanın kendi sitesi — telif |
+   | `urunler/sude` | 180 | 27 MB | markanın kendi sitesi — telif |
+   | `urunler/ravizza` | 162 | 18 MB | markanın kendi sitesi — telif |
+   | `urunler/asse` | 59 | 12 MB | markanın kendi sitesi — telif |
+
+   Telifli sütunundaki beş marka için 4. bölümdeki karar verilmeden
+   fotoğraflarını sunucuya koymayın.
+
+### 2.2.1 Depo gizli — cPanel Git deploy
+
+Depo (`ahmeterhancy-cpu/sevkur`) **gizlidir**. cPanel'in "Git Version
+Control" özelliği gizli depoyu parolasız çekemez. İki yol var:
+
+- Depoyu genele alın (GitHub → Settings → Danger Zone → Change visibility).
+  Diğer Turhost projelerinde (zeys, necipoglu, ayparcasi) bu yapıldı.
+- Ya da cPanel'de SSH anahtarı üretip (SSH Access → Manage SSH Keys) genel
+  anahtarı GitHub'da depo ayarlarına **Deploy key** olarak ekleyin, klonu
+  `git@github.com:ahmeterhancy-cpu/sevkur.git` adresinden yapın.
+
+Git deploy kullanmayacaksanız depoyu zip olarak indirip File Manager ile
+açmak da yeterlidir; `vendor/` zaten ayrı yükleniyor.
 
 ### 2.3 .env
 
@@ -183,7 +213,13 @@ tutmayan istekler `400` ile reddedilir.
 
 ## 4. Canlıya çıkmadan önce yapılacaklar listesi
 
-- [ ] Yönetici şifresini değiştirin, demo müşteri hesabını silin
+- [ ] **601 ürünün hiçbirinde fiyat yok.** Katalog aktarımlarında fiyat
+      gelmedi; `price` alanı hepsinde 0. Fiyatsız ürün sepete eklenemez,
+      yani site bu haliyle **hiçbir şey satamaz**. Fiyatlar panelden tek tek
+      ya da Ürünler listesinde toplu düzenleme ile girilebilir.
+
+- [ ] Yönetici şifresini değiştirin (**panelde sağ üst → Profil**, yani
+      `/admin/profile`; SSH gerekmez), demo müşteri hesabını silin
 - [x] ~~Mağaza Ayarları → adres, telefon, e-posta, çalışma saatleri~~ (girildi)
 - [ ] Sosyal medya bağlantılarını gerçek hesaplarla değiştirin (şu an örnek)
 - [ ] Logo ve favicon yükleyin
