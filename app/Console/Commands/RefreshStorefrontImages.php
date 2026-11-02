@@ -40,6 +40,12 @@ class RefreshStorefrontImages extends Command
     /** Afisler yatay dikdortgen. */
     private const BANNER_RATIO = 1.6;
 
+    /** Kac aday fotograf cozumlenip sahne kontrolunden gecirilir. */
+    private const SCENE_CHECK_LIMIT = 25;
+
+    /** Kenar pikselinin bu oranindan fazlasi beyazsa kesme cekimdir. */
+    private const MAX_WHITE_EDGE = 0.6;
+
     /** Slider sirasi => hangi kategoriden fotograf alinsin. */
     private const SLIDER_CATEGORIES = [
         'koltuk-takimlari',
@@ -248,8 +254,7 @@ class RefreshStorefrontImages extends Command
             return null;
         }
 
-        $best = null;
-        $bestScore = PHP_FLOAT_MAX;
+        $ranked = [];
 
         foreach (Product::whereIn('id', $productIds)->pluck('cover') as $cover) {
             if ($cover === null || isset($this->used[$cover])) {
@@ -268,19 +273,84 @@ class RefreshStorefrontImages extends Command
                 continue;
             }
 
-            $score = abs(($size[0] / $size[1]) - $target);
+            $ranked[$cover] = abs(($size[0] / $size[1]) - $target);
+        }
 
-            if ($score < $bestScore) {
-                $best = $cover;
-                $bestScore = $score;
+        asort($ranked);
+
+        // Orana gore siraya dizip ILK SAHNE fotografini al. Beyaz fonda
+        // kesilmis urun cekimi vitrinde ise yaramiyor: buyuk kutuda bos
+        // duruyor ve uzerindeki beyaz yazi okunmuyordu (Calisma Odasi'na
+        // masa, Dekorasyon'a ayna fotografi dusmustu). Cozumleme pahali
+        // oldugu icin yalnizca en iyi birkac aday acilir.
+        $checked = 0;
+
+        foreach (array_keys($ranked) as $cover) {
+            if ($checked++ >= self::SCENE_CHECK_LIMIT) {
+                break;
+            }
+
+            if ($this->looksLikeScene(public_path($cover))) {
+                $this->used[$cover] = true;
+
+                return $cover;
             }
         }
+
+        // Hicbiri sahne degilse orani en uygun olani kullan — gorselsiz
+        // birakmaktan iyidir.
+        $best = array_key_first($ranked);
 
         if ($best !== null) {
             $this->used[$best] = true;
         }
 
         return $best;
+    }
+
+    /**
+     * Fotograf bir MEKAN cekimi mi, yoksa beyaz fonda kesilmis urun mu?
+     *
+     * Kesme cekimlerin kenarlari neredeyse tamamen beyazdir; mekan
+     * cekimlerinde duvar, zemin ve isik degisir. Kenar seridi orneklenip
+     * beyaza yakin piksel orani olculuyor.
+     */
+    private function looksLikeScene(string $path): bool
+    {
+        $image = @imagecreatefromjpeg($path);
+
+        if ($image === false) {
+            return false;
+        }
+
+        $w = imagesx($image);
+        $h = imagesy($image);
+        $samples = 0;
+        $white = 0;
+
+        // Dort kenardan esit arayla ornek al
+        for ($i = 0; $i < 40; $i++) {
+            $x = (int) ($w * $i / 40);
+            $y = (int) ($h * $i / 40);
+
+            foreach ([[$x, 2], [$x, $h - 3], [2, $y], [$w - 3, $y]] as [$px, $py]) {
+                $rgb = @imagecolorat($image, max(0, min($w - 1, $px)), max(0, min($h - 1, $py)));
+
+                if ($rgb === false) {
+                    continue;
+                }
+
+                $samples++;
+
+                if ((($rgb >> 16) & 0xFF) > 242 && (($rgb >> 8) & 0xFF) > 242 && ($rgb & 0xFF) > 242) {
+                    $white++;
+                }
+            }
+        }
+
+        imagedestroy($image);
+
+        return $samples > 0 && ($white / $samples) < self::MAX_WHITE_EDGE;
     }
 
     /** "/kategori/yemek-masalari" -> "yemek-masalari" */

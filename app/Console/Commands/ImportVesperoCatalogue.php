@@ -35,11 +35,39 @@ class ImportVesperoCatalogue extends Command
 
     private const SITEMAP = 'https://www.vespero.com/wp-sitemap-posts-page-1.xml';
 
-    /** Urun sayfasi olmayan kurumsal sayfalar. */
+    /** Urun sayfasi olmayan kurumsal ve liste sayfalari. */
     private const SKIP = [
         'gizlilik', 'iletisim', 'hakkimizda', 'ticari', 'e-katalog',
         'kvkk', 'mesafeli', 'iade', 'sitemap', 'blog',
+        // Bunlar liste sayfasi; urun olarak eklenmislerdi.
+        'uyku-dunyasi', 'salon-takimlari', 'kose-takimlar', 'maksi-takimlar',
     ];
+
+    /**
+     * Sitenin KENDI liste sayfalari => magaza kategorisi.
+     *
+     * Kategoriyi urun slug'indan tahmin etmek yanilmisti: "Aloevera",
+     * "Lusso", "Blue Star" gibi silte modelleri anahtar kelime tasimadigi
+     * icin varsayilana, yani Koltuk Takimlari'na dusuyordu — oysa Vespero'nun
+     * Uyku Dunyasi hattindalar. Liste sayfalari hangi urune baglaniyorsa
+     * dogrusu odur.
+     */
+    private const LISTINGS = [
+        '/uyku-dunyasi/' => 'yataklar',
+        '/salon-takimlari/' => 'koltuk-takimlari',
+        '/kose-takimlar/' => 'kose-takimlari',
+    ];
+
+    /** Liste sayfasindan gelmeyen tekil duzeltmeler. */
+    private const OVERRIDES = [
+        'baza' => 'bazalar',
+        // Uyku Dunyasi listesine baglanmamis oksuz bir sayfa, ama
+        // fotografi silte: liste haritasi yakalayamiyor.
+        'nika' => 'yataklar',
+    ];
+
+    /** @var array<string, string> urun slug => kategori */
+    private array $listingMap = [];
 
     /** Slug'daki anahtar kelimeye gore magaza kategorisi. */
     private const CATEGORIES = [
@@ -65,6 +93,8 @@ class ImportVesperoCatalogue extends Command
         $dry = (bool) $this->option('kuru');
         $wait = max(0, (int) $this->option('bekle')) * 1000;
         $limit = (int) $this->option('limit');
+
+        $this->buildListingMap($fetcher, $wait);
 
         $urls = $this->productUrls($fetcher);
 
@@ -258,9 +288,48 @@ class ImportVesperoCatalogue extends Command
         return array_keys($images);
     }
 
+    /**
+     * Liste sayfalarini gezip "urun slug => kategori" haritasi kurar.
+     *
+     * Uc istek; karsiliginda kategoriyi tahmin etmeyi birakiyoruz.
+     */
+    private function buildListingMap(RemoteFetcher $fetcher, int $wait): void
+    {
+        foreach (self::LISTINGS as $path => $category) {
+            $page = $fetcher->html('https://www.vespero.com'.$path);
+
+            if (! $page['ok']) {
+                $this->warn("Liste sayfasi alinamadi: $path");
+
+                continue;
+            }
+
+            preg_match_all('#href="https://www\.vespero\.com/([a-z0-9-]+)/"#', $page['body'], $m);
+
+            foreach ($m[1] as $slug) {
+                // Ilk liste kazanir; kurumsal baglantilar zaten atlanir.
+                $this->listingMap[$slug] ??= $category;
+            }
+
+            usleep($wait);
+        }
+
+        $this->info(count($this->listingMap).' ürün kategorisi liste sayfalarından okundu.');
+    }
+
     private function category(string $url): string
     {
         $slug = trim(parse_url($url, PHP_URL_PATH) ?? '', '/');
+
+        if (isset(self::OVERRIDES[$slug])) {
+            return self::OVERRIDES[$slug];
+        }
+
+        // Sitenin kendi liste sayfasi ne diyorsa o: "puffy-soft-pedli"
+        // anahtar kelime eslesmesiyle 'puf' sanilip berjere dusmustu.
+        if (isset($this->listingMap[$slug])) {
+            return $this->listingMap[$slug];
+        }
 
         foreach (self::CATEGORIES as $keyword => $category) {
             if (str_contains($slug, $keyword)) {

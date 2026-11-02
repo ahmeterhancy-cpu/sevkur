@@ -74,24 +74,29 @@
                 <a href="{{ localized_route('shop') }}" class="btn btn-ghost btn-sm">{{ __('shop.view_all') }}</a>
             </div>
 
-            <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 lg:gap-4">
+            {{-- Mozaik: ilk oda buyuk kutuyu alir, digerleri cevresine yerlesir.
+                 Esit bes kucuk karede oda fotograflari okunmuyordu. Bes kutu
+                 4x2 izgarayi tam kapatir (2x2 + dort tekli). --}}
+            <div class="grid grid-cols-2 lg:grid-cols-4 auto-rows-[11rem] lg:auto-rows-[13.5rem] gap-3 lg:gap-4">
                 @foreach ($featuredCategories as $category)
+                    @php($feature = $loop->first)
                     <a href="{{ localized_route('category', ['category' => $category->slug]) }}"
-                       class="category-card group block reveal"
+                       class="cat-tile reveal {{ $feature ? 'cat-tile--feature col-span-2 row-span-2' : '' }}"
                        style="--reveal-delay: {{ min($loop->index, 5) * 70 }}ms">
-                        <div class="category-card__media">
-                            <img src="{{ media_url($category->image) }}" alt="{{ $category->t('name') }}" loading="lazy">
+                        <img src="{{ media_url($category->image) }}" alt="{{ $category->t('name') }}"
+                             @if ($feature) fetchpriority="high" @else loading="lazy" @endif>
+
+                        {{-- Fotograf uzerindeki yazi: Tailwind text-white tema
+                             esleme yuzunden guvenilmez, renk satir ici veriliyor. --}}
+                        <div class="cat-tile__body" style="color: #ffffff">
+                            <h3 class="cat-tile__name">{{ $category->t('name') }}</h3>
+
+                            @if ($category->product_total)
+                                <p class="cat-tile__count">
+                                    {{ trans_choice('shop.product_count', $category->product_total, ['count' => $category->product_total]) }}
+                                </p>
+                            @endif
                         </div>
-
-                        <h3 class="mt-4 text-[0.9375rem] font-medium leading-snug">
-                            <span class="category-card__name">{{ $category->t('name') }}</span>
-                        </h3>
-
-                        @if ($category->product_total)
-                            <p class="mt-1 text-[0.8125rem] text-muted">
-                                {{ trans_choice('shop.product_count', $category->product_total, ['count' => $category->product_total]) }}
-                            </p>
-                        @endif
                     </a>
                 @endforeach
             </div>
@@ -148,45 +153,79 @@
          ve "Firsatlar" bolumleri bos kaliyor ve sayfa ince duruyordu. En dolu
          oda kategorileri birer rayda gosteriliyor. --}}
     @foreach ($categoryRails as $rail)
+        @php($category = $rail['kategori'])
+        {{-- Ortadaki ray BOLUNMUS duzende: uc ayni yapidaki ray art arda
+             gelince sayfa tekduze oluyordu. Solda odanin kendi fotografi,
+             sagda urunler. --}}
+        @php($split = $loop->index === 1)
+
         <section class="{{ $loop->odd ? 'bg-cream' : '' }} py-[clamp(3rem,6vw,5.5rem)]">
             <div class="container-x" data-rail>
-                <div class="flex flex-wrap items-end justify-between gap-4 section-head">
-                    <div>
-                        <span class="eyebrow">{{ __('shop.categories') }}</span>
-                        <h2 class="section-title mt-2">{{ $rail['kategori']->t('name') }}</h2>
-                        <p class="section-sub mt-2">
-                            {{ trans_choice('shop.product_count', $rail['toplam'], ['count' => $rail['toplam']]) }}
-                        </p>
-                    </div>
+                <div class="{{ $split ? 'grid lg:grid-cols-12 gap-6 lg:gap-8 items-stretch' : '' }}">
 
-                    <div class="flex items-center gap-2">
-                        <a href="{{ localized_route('category', ['category' => $rail['kategori']->slug]) }}"
-                           class="btn btn-ghost btn-sm">{{ __('shop.view_all') }}</a>
-                        <button type="button" data-rail-prev class="icon-btn" aria-label="{{ __('shop.back') }}">
-                            <x-ui.icon name="chevron-left" :size="18" />
-                        </button>
-                        <button type="button" data-rail-next class="icon-btn" aria-label="{{ __('shop.view') }}">
-                            <x-ui.icon name="chevron-right" :size="18" />
-                        </button>
-                    </div>
-                </div>
+                    @if ($split)
+                        <a href="{{ localized_route('category', ['category' => $category->slug]) }}"
+                           class="cat-tile cat-tile--feature lg:col-span-4 min-h-[18rem] lg:min-h-full reveal">
+                            <img src="{{ media_url($category->image) }}" alt="{{ $category->t('name') }}" loading="lazy">
 
-                {{-- Alt kategoriler: 600 urunluk katalogda gezinmeyi kisaltir --}}
-                @if ($rail['kategori']->children->isNotEmpty())
-                    <div class="flex flex-wrap gap-2 mb-7">
-                        @foreach ($rail['kategori']->children as $child)
-                            <a href="{{ localized_route('category', ['category' => $child->slug]) }}"
-                               class="chip">{{ $child->t('name') }}</a>
-                        @endforeach
-                    </div>
-                @endif
+                            {{-- Fotograf uzerinde beyaz yazi: baslik h3 oldugu icin
+                                 rengi .cat-tile__name uzerinden miras alir. --}}
+                            <div class="cat-tile__body" style="color: #ffffff">
+                                {{-- span satir ici; .cat-tile__name inline-block oldugu icin ayni
+                                     satira binip basligin uzerine geliyordu. --}}
+                                <span class="eyebrow block" style="color: rgba(255,255,255,0.75)">{{ __('shop.categories') }}</span>
+                                <h2 class="cat-tile__name mt-2">{{ $category->t('name') }}</h2>
+                                <p class="cat-tile__count">
+                                    {{ trans_choice('shop.product_count', $rail['toplam'], ['count' => $rail['toplam']]) }}
+                                </p>
+                            </div>
+                        </a>
+                    @endif
 
-                <div class="rail gap-4 lg:gap-6 -mx-4 px-4" data-rail-track>
-                    @foreach ($rail['urunler'] as $product)
-                        <div class="w-[16rem] lg:w-[19rem]">
-                            <x-product-card :product="$product" style="--reveal-delay: {{ min($loop->index, 5) * 70 }}ms" />
+                    <div class="{{ $split ? 'lg:col-span-8 min-w-0' : '' }}">
+                        <div class="flex flex-wrap items-end justify-between gap-4 section-head">
+                            <div>
+                                @unless ($split)
+                                    <span class="eyebrow">{{ __('shop.categories') }}</span>
+                                    <h2 class="section-title mt-2">{{ $category->t('name') }}</h2>
+                                    <p class="section-sub mt-2">
+                                        {{ trans_choice('shop.product_count', $rail['toplam'], ['count' => $rail['toplam']]) }}
+                                    </p>
+                                @else
+                                    <p class="section-sub">{{ __('shop.categories') }}</p>
+                                @endunless
+                            </div>
+
+                            <div class="flex items-center gap-2">
+                                <a href="{{ localized_route('category', ['category' => $category->slug]) }}"
+                                   class="btn btn-ghost btn-sm">{{ __('shop.view_all') }}</a>
+                                <button type="button" data-rail-prev class="icon-btn" aria-label="{{ __('shop.back') }}">
+                                    <x-ui.icon name="chevron-left" :size="18" />
+                                </button>
+                                <button type="button" data-rail-next class="icon-btn" aria-label="{{ __('shop.view') }}">
+                                    <x-ui.icon name="chevron-right" :size="18" />
+                                </button>
+                            </div>
                         </div>
-                    @endforeach
+
+                        {{-- Alt kategoriler: 600 urunluk katalogda gezinmeyi kisaltir --}}
+                        @if ($category->children->isNotEmpty())
+                            <div class="flex flex-wrap gap-2 mb-7">
+                                @foreach ($category->children as $child)
+                                    <a href="{{ localized_route('category', ['category' => $child->slug]) }}"
+                                       class="chip">{{ $child->t('name') }}</a>
+                                @endforeach
+                            </div>
+                        @endif
+
+                        <div class="rail gap-4 lg:gap-6 -mx-4 px-4" data-rail-track>
+                            @foreach ($rail['urunler'] as $product)
+                                <div class="w-[16rem] lg:w-[19rem]">
+                                    <x-product-card :product="$product" style="--reveal-delay: {{ min($loop->index, 5) * 70 }}ms" />
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>

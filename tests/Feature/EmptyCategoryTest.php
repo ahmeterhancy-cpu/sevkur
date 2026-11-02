@@ -25,9 +25,9 @@ class EmptyCategoryTest extends ShopTestCase
 
         $html = $this->get(localized_route('home'))->assertOk()->getContent();
 
-        // Kategori adi ust menude de geciyor; kontrol VITRIN KARTINA bagli.
+        // Kategori adi ust menude de geciyor; kontrol VITRIN KUTUSUNA bagli.
         $this->assertStringNotContainsString(
-            '<span class="category-card__name">'.$empty->t('name').'</span>',
+            'class="cat-tile__name">'.$empty->t('name').'</h3>',
             $html
         );
     }
@@ -45,7 +45,7 @@ class EmptyCategoryTest extends ShopTestCase
         $html = $this->get(localized_route('home'))->assertOk()->getContent();
 
         $this->assertStringContainsString(
-            '<span class="category-card__name">'.$category->t('name').'</span>',
+            'class="cat-tile__name">'.$category->t('name').'</h3>',
             $html
         );
     }

@@ -332,6 +332,104 @@
         pointer-events: none;
     }
 
+    /* ----------------------------------------------------- kategori mozaigi
+     *
+     * Kategoriler esit buyuklukte bes kucuk kare olarak diziliyordu: oda
+     * fotograflari o olcude okunmuyor, sira tekduze duruyordu. Mozaikte ilk
+     * oda buyuk kutuyu aliyor, digerleri cevresine yerlesiyor — hangi odanin
+     * once gosterildigi gorsel olarak anlasiliyor.
+     *
+     * Ad fotografin UZERINDE: altinda duran ince yazi kartlari zayiflatiyordu.
+     * Okunurluk alttan yukselen koyu perdeyle saglaniyor.
+     */
+    .cat-tile {
+        position: relative;
+        display: block;
+        overflow: hidden;
+        border-radius: 6px;
+        background: var(--color-cream);
+        min-height: 13rem;
+    }
+
+    .cat-tile img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .cat-tile:hover img {
+        transform: scale(1.04);
+    }
+
+    /* Perde: yalnizca alt bantta, fotografin ustunu karartmadan */
+    .cat-tile::after {
+        content: ;
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            to top,
+            rgba(8, 8, 8, 0.88) 0%,
+            rgba(8, 8, 8, 0.62) 18%,
+            rgba(8, 8, 8, 0.26) 42%,
+            rgba(8, 8, 8, 0) 72%
+        );
+        pointer-events: none;
+    }
+
+    .cat-tile__body {
+        /* Oda fotograflarinin alti cogu zaman acik zemin (parke, hali,
+           mermer); perde tek basina yetmiyordu. */
+        text-shadow: 0 1px 12px rgba(0, 0, 0, 0.45);
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1;
+        padding: clamp(1rem, 2vw, 1.6rem);
+    }
+
+    .cat-tile__name {
+        /* h1..h5 temel kuralda ink rengi aliyor; kaptan gelen beyazi
+           eziyordu — baslik siyah kalip koyu perdenin uzerinde
+           okunmaz oluyordu. */
+        color: inherit;
+        display: inline-block;
+        font-family: var(--font-display);
+        font-weight: 400;
+        letter-spacing: -0.02em;
+        line-height: 1.1;
+        font-size: 1.125rem;
+    }
+
+    .cat-tile--feature .cat-tile__name {
+        font-size: clamp(1.5rem, 2.6vw, 2.25rem);
+    }
+
+    /* Adin altindan buyuyen ince cizgi — kartlardaki hareketin aynisi */
+    .cat-tile__name::after {
+        content: ;
+        display: block;
+        margin-top: 0.35rem;
+        height: 1px;
+        background: currentColor;
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .cat-tile:hover .cat-tile__name::after {
+        transform: scaleX(1);
+    }
+
+    .cat-tile__count {
+        margin-top: 0.3rem;
+        font-size: 0.8125rem;
+        opacity: 0.85;
+    }
+
     /* -------------------------------------------------------- kategori karti */
     .category-card__media {
         position: relative;

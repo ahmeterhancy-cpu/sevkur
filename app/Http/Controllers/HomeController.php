@@ -200,9 +200,11 @@ class HomeController extends Controller
         // kartta kurulumdan kalma demo gorsel kaliyordu (Aydinlatma'da
         // antika terazi, Ev Tekstili'nde muzelik kilim). Urun girilince
         // kendiliginden geri gelirler.
+        // BES kutu: mozaikte ilki 2x2 yer kapliyor, kalan dordu 4x2
+        // izgarayi tam kapatiyor. Alti kutu alt satirda bosluk birakirdi.
         return $categories
             ->filter(fn (Category $category) => $category->product_total > 0)
-            ->take(6)
+            ->take(5)
             ->values();
     }
 }
