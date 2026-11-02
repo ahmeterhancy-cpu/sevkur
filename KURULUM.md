@@ -22,8 +22,23 @@ php artisan serve --port=8137
   - `admin@sevkurmobilya.com` / `Sevkur2026!` — **canlıya çıkmadan önce değiştirin.**
 - Demo müşteri: `musteri@example.com` / `password`
 
-Yerelde veritabanı SQLite'tır (`database/database.sqlite`), ayrıca kurulum
-gerektirmez.
+Veritabanı MySQL'dir (`DB_CONNECTION=mysql`). Hızlı bir kurulum için SQLite
+de yeterlidir (`DB_CONNECTION=sqlite`, diğer `DB_` satırları gereksiz) ama
+canlı ortam MySQL olduğu için geliştirmeyi de MySQL ile yapmak, yalnızca
+MySQL'de çıkan hataları (sıralama, FULLTEXT, kesin tarih karşılaştırmaları)
+erken yakalar.
+
+Elinizde SQLite ile dolmuş bir katalog varsa veriyi taşıyın:
+
+```bash
+php artisan migrate --force
+php artisan veri:tasi --kaynak=sqlite --hedef=mysql --kuru   # önce sayıları görün
+php artisan veri:tasi --kaynak=sqlite --hedef=mysql
+```
+
+Komut şemayı değil **satırları** kopyalar; hedefte aynı tablolar önce
+boşaltılır, yani iki kez çalıştırılırsa satırlar ikilenmez. Oturum, önbellek
+ve kuyruk tabloları taşınmaz.
 
 ---
 
@@ -103,7 +118,15 @@ php artisan db:seed --force        # yalnızca ilk kurulumda, demo içerik ister
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
+php artisan yayin:kontrol          # eksik ayar kaldı mı
 ```
+
+`yayin:kontrol` aşağıdaki 4. bölümün makine tarafından denetlenebilen
+kısmıdır: APP_DEBUG, APP_ENV, APP_URL, veritabanı sürücüsü, e-posta
+sürücüsü, PayTR bilgileri, yasal şirket bilgileri, yönetici parolası, logo,
+fiyatsız ürün ve boş kategori. "ENGEL" başlığı altındakiler düzeltilmeden
+canlıya çıkılmamalı; komut bu durumda sıfırdan farklı kodla biter, yani
+dağıtım betiğine de konabilir.
 
 SSH yoksa cPanel → **Terminal** ya da **Setup PHP App**'in komut alanını
 kullanın.
@@ -191,12 +214,25 @@ tutmayan istekler `400` ile reddedilir.
       Çözüm: Kozan'dan ürün listesi (Excel/CSV) isteyin — katalog sayfa
       fotoğrafları çıkarılmış durumda, liste gelince eşleştirilebilir.
 
-- [ ] **Mesafeli satış sözleşmesi ve gizlilik politikası metinleri yer
-      tutucudur** — hukuk danışmanınızla güncelleyin
+- [ ] **Yasal metinler TASLAKTIR — hukuk danışmanınıza okutun.** 6502 sayılı
+      Tüketicinin Korunması Hakkında Kanun, Mesafeli Sözleşmeler Yönetmeliği
+      ve KVKK esas alınarak dört dilde yazıldı: Mesafeli Satış Sözleşmesi,
+      KVKK Aydınlatma Metni, Çerez Politikası, Gizlilik Politikası, İade ve
+      Değişim. Kaynakları `database/data/legal/` altındadır; panelden
+      Sayfalar bölümünden de düzenlenebilirler.
+- [ ] **Yasal şirket bilgilerini girin** — Mağaza Ayarları → İletişim →
+      Yasal bilgiler: ticaret unvanı, MERSİS, vergi dairesi/numarası, site
+      adresi. Bu alanlar sözleşmelerin içine kendiliğinden yerleşir;
+      girilmezse metinde `[MERSİS numarası girilmedi]` gibi görünürler.
+- [ ] **Çerez Politikası yalnızca zorunlu çerezleri anlatıyor** (oturum ve
+      CSRF). Google Analytics, Meta Pixel ya da benzeri bir ölçüm kodu
+      eklerseniz metin güncellenmeli ve ziyaretçiden ayrıca onay alınmalı.
 - [ ] Kargo yöntemlerinin ücretlerini ve ücretsiz kargo sınırını ayarlayın
 - [ ] PayTR kimlik bilgilerini girin, `PAYTR_TEST_MODE=1` ile bir test
       siparişi geçin, sonra `0` yapın
-- [ ] `APP_DEBUG=false` olduğunu doğrulayın
+- [ ] `APP_DEBUG=false` ve `MAIL_MAILER=smtp` olduğunu doğrulayın
+      (`php artisan yayin:kontrol` ikisini de denetler; `log` sürücüsünde
+      sipariş onay e-postası müşteriye **gönderilmez**)
 - [ ] Google Search Console'a `https://sevkurmobilya.com/sitemap.xml` ekleyin
 
 ---
