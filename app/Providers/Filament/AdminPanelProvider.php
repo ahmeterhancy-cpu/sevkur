@@ -29,6 +29,9 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            // Canli sunucuda SSH yok; parola yalnizca panelden degistirilebilir
+            // olmali, yoksa kurulum parolasi ("Sevkur2026!") yayinda kalir.
+            ->profile(isSimple: false)
             ->brandName('Sevkur Mobilya')
             // Marka turuncusu dogrudan hex olarak verilir; Color::hex() paletin
             // tonlarini bozdugu icin kullanilmiyor.
