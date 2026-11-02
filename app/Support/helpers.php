@@ -133,6 +133,34 @@ if (! function_exists('contrast_scrim')) {
     }
 }
 
+if (! function_exists('panel_ink')) {
+    /**
+     * Krem pano uzerinde okunacak yazi rengi.
+     *
+     * Slayt metni artik fotografin UZERINDE degil, yanindaki krem panoda
+     * duruyor. Yoneticide acik renk (ornegin beyaz) secilmis bir slaytta
+     * yazi panoda kaybolurdu; acik renkler murekkebe dusuruluyor, koyu
+     * renkler oldugu gibi birakiliyor.
+     */
+    function panel_ink(?string $textColor): string
+    {
+        $hex = ltrim((string) $textColor, '#');
+
+        if (strlen($hex) === 3) {
+            $hex = $hex[0].$hex[0].$hex[1].$hex[1].$hex[2].$hex[2];
+        }
+
+        if (strlen($hex) !== 6) {
+            return 'var(--color-ink)';
+        }
+
+        [$r, $g, $b] = array_map('hexdec', str_split($hex, 2));
+        $luminance = ($r * 0.299 + $g * 0.587 + $b * 0.114) / 255;
+
+        return $luminance > 0.55 ? 'var(--color-ink)' : '#'.$hex;
+    }
+}
+
 if (! function_exists('setting_t')) {
     /**
      * Dile gore ayar okur: once "anahtar_bg", yoksa "anahtar", o da yoksa

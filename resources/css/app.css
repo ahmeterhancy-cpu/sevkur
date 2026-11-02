@@ -332,6 +332,28 @@
         pointer-events: none;
     }
 
+    /* ------------------------------------------------------------------ hero
+     *
+     * Asimetrik editoryal duzen: yazi solda krem panoda, fotograf sagda ve
+     * ekranin kenarina kadar tasiyor. Yazi fotografin uzerinde olmadigi icin
+     * okunurluk fotografin aydinligina bagli degil — perde gerekmiyor.
+     *
+     * Panonun ic boslugu SAYFANIN KENAR PAYIYLA hizali: hero tam genislikte
+     * ama yazi, altindaki bolumlerin baslangic cizgisinde duruyor.
+     */
+    .hero__panel {
+        padding-block: 2.5rem 4.5rem;
+    }
+
+    @media (min-width: 1024px) {
+        .hero__panel {
+            padding-block: 5rem;
+            /* Sol hiza container-x'ten geliyor; burada yalnizca fotografla
+               arasindaki nefes. */
+            padding-right: 3.5rem;
+        }
+    }
+
     /* ----------------------------------------------------- kategori mozaigi
      *
      * Kategoriler esit buyuklukte bes kucuk kare olarak diziliyordu: oda

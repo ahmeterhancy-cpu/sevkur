@@ -7,35 +7,52 @@
 
     {{-- ------------------------------------------------------------------ hero --}}
     @if ($sliders->isNotEmpty())
-        <section class="relative overflow-hidden bg-cream" data-slider="6500">
+        {{-- Asimetrik editoryal hero: yazi fotografin UZERINDE degil, yanindaki
+             krem panoda. Fotograf saga, ekranin kenarina kadar tasiyor. Yazi
+             perdeye muhtac olmadigi icin okunurluk fotografa bagli degil. --}}
+        <section class="hero relative bg-cream overflow-hidden" data-slider="6500">
             <div class="flex transition-transform duration-700 ease-out" data-slider-track>
                 @foreach ($sliders as $slide)
-                    <div class="w-full shrink-0 relative" data-slide>
-                        <div class="absolute inset-0">
-                            <img src="{{ media_url($slide->image) }}" alt="" class="w-full h-full object-cover" @if($loop->first) fetchpriority="high" @else loading="lazy" @endif>
-                            {{-- Fotograf uzerindeki yazi okunabilir kalsin --}}
-                            <div class="absolute inset-0 {{ contrast_scrim($slide->text_color, $slide->text_align) }}"></div>
-                        </div>
-                        <div class="container-x relative min-h-[26rem] lg:min-h-[38rem] flex items-center py-16">
-                            <div class="max-w-lg {{ $slide->text_align === 'center' ? 'mx-auto text-center' : ($slide->text_align === 'right' ? 'ml-auto text-right' : '') }}"
-                                 style="color: {{ $slide->text_color }}">
-                                @if ($slide->t('badge'))
-                                    <span class="eyebrow">{{ $slide->t('badge') }}</span>
-                                @endif
-                                @if ($slide->t('title'))
-                                    <h2 class="mt-3 text-[2rem] lg:text-[3.25rem] leading-[1.1] font-medium" style="color: inherit">
-                                        {{ $slide->t('title') }}
-                                    </h2>
-                                @endif
-                                @if ($slide->t('subtitle'))
-                                    <p class="mt-4 text-[1.0625rem] opacity-80">{{ $slide->t('subtitle') }}</p>
-                                @endif
-                                @if ($slide->link)
-                                    <a href="{{ $slide->link }}" class="btn btn-primary btn-lg mt-8">
-                                        {{ $slide->t('button_text') ?: __('shop.shop') }}
-                                        <x-ui.icon name="arrow-right" :size="16" />
-                                    </a>
-                                @endif
+                    <div class="w-full shrink-0" data-slide>
+                        {{-- Hiza container-x'ten geliyor; fotograf negatif kenar
+                             bosluguyla sagda ekranin disina tasiyor. Tasma
+                             kirpiliyor, bu yuzden biraz fazlasi zararsiz —
+                             100vw kaydirma cubugunu da saydigi icin hesapla
+                             hizalamak yaziyi 31px kaydirmisti. --}}
+                        <div class="container-x lg:grid lg:grid-cols-12 lg:items-stretch">
+
+                            {{-- fotograf: mobilde ustte, masaustunde sagda --}}
+                            <div class="lg:col-span-7 lg:order-2 relative min-h-[15rem] h-[52vw] lg:h-auto lg:min-h-[36rem]
+                                        -mx-4 lg:mx-0 lg:mr-[calc((100vw-var(--spacing-container))/-2-1.5rem)]">
+                                <img src="{{ media_url($slide->image) }}" alt=""
+                                     class="absolute inset-0 w-full h-full object-cover"
+                                     @if ($loop->first) fetchpriority="high" @else loading="lazy" @endif>
+                            </div>
+
+                            {{-- yazi panosu --}}
+                            <div class="lg:col-span-5 lg:order-1 flex items-center hero__panel">
+                                <div class="w-full max-w-[32rem] {{ $slide->text_align === 'center' ? 'mx-auto text-center' : ($slide->text_align === 'right' ? 'ml-auto text-right' : '') }}"
+                                     style="color: {{ panel_ink($slide->text_color) }}">
+
+                                    @if ($slide->t('badge'))
+                                        <span class="eyebrow block">{{ $slide->t('badge') }}</span>
+                                    @endif
+                                    @if ($slide->t('title'))
+                                        <h2 class="mt-4 text-[clamp(2rem,3.2vw,3.5rem)] leading-[1.05] font-normal tracking-[-0.03em]"
+                                            style="color: inherit">
+                                            {{ $slide->t('title') }}
+                                        </h2>
+                                    @endif
+                                    @if ($slide->t('subtitle'))
+                                        <p class="mt-5 text-[1.0625rem] leading-relaxed opacity-70 max-w-[38ch]">{{ $slide->t('subtitle') }}</p>
+                                    @endif
+                                    @if ($slide->link)
+                                        <a href="{{ $slide->link }}" class="btn btn-primary btn-lg mt-9">
+                                            {{ $slide->t('button_text') ?: __('shop.shop') }}
+                                            <x-ui.icon name="arrow-right" :size="16" />
+                                        </a>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -43,21 +60,27 @@
             </div>
 
             @if ($sliders->count() > 1)
-                <button type="button" data-slider-prev aria-label="{{ __('shop.back') }}"
-                        class="hidden lg:flex absolute left-6 top-1/2 -translate-y-1/2 icon-btn w-11 h-11">
-                    <x-ui.icon name="chevron-left" :size="20" />
-                </button>
-                <button type="button" data-slider-next aria-label="{{ __('shop.view') }}"
-                        class="hidden lg:flex absolute right-6 top-1/2 -translate-y-1/2 icon-btn w-11 h-11">
-                    <x-ui.icon name="chevron-right" :size="20" />
-                </button>
+                {{-- Oklar ve noktalar fotografin ortasinda degil, panonun
+                     altinda: editoryal duzende gezinme yaziyla ayni sutunda. --}}
+                <div class="absolute inset-x-0 bottom-7 z-10 pointer-events-none">
+                    <div class="container-x flex items-center gap-4 pointer-events-auto">
+                    <div class="flex gap-2">
+                        <button type="button" data-slider-prev aria-label="{{ __('shop.back') }}" class="icon-btn">
+                            <x-ui.icon name="chevron-left" :size="18" />
+                        </button>
+                        <button type="button" data-slider-next aria-label="{{ __('shop.view') }}" class="icon-btn">
+                            <x-ui.icon name="chevron-right" :size="18" />
+                        </button>
+                    </div>
 
-                <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
-                    @foreach ($sliders as $slide)
-                        <button type="button" data-slider-dot
-                                class="w-2.5 h-2.5 rounded-full bg-ink/25 transition-all [&.is-active]:w-7 [&.is-active]:bg-ink"
-                                aria-label="{{ $loop->iteration }}"></button>
-                    @endforeach
+                    <div class="flex gap-2">
+                        @foreach ($sliders as $slide)
+                            <button type="button" data-slider-dot
+                                    class="w-2.5 h-2.5 rounded-full bg-ink/25 transition-all [&.is-active]:w-7 [&.is-active]:bg-ink"
+                                    aria-label="{{ $loop->iteration }}"></button>
+                            @endforeach
+                        </div>
+                    </div>
                 </div>
             @endif
         </section>
